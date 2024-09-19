@@ -1,29 +1,60 @@
 import React, { useState, useEffect, useRef } from "react";
+import EntrepreneurCard from './EntrepreneurCard'; 
 
-const Carousel = () => {
-  const images = [
-    "/img/jams.jpg",
-    "/img/knitting.jpg",
-    "/img/pottery.jpg",
-    "/img/soaps.jpg",
-    "/img/wicker.jpg"
+const EntrepreneurCarousel = () => {
+  const entrepreneurs = [
+    {
+      name: "Lorena",
+      description: "Security Guard",
+      image: "/img/Lorena.png"
+    },
+    {
+      name: "Ana",
+      description: "Senior Farmer Manager",
+      image: "/img/Ana.png"
+    },
+    {
+      name: "Belén",
+      description: "Worker",
+      image: "/img/Belén.png"
+    },
+    {
+      name: "María",
+      description: "CEO & Founder",
+      image: "/img/María.png"
+    },
+    {
+        name: "Teresa",
+        description: "Farmer",
+        image: "/img/Teresa.png"
+      },
+      {
+        name: "Sarai",
+        description: "Farmer",
+        image: "/img/Sarai.png"
+      },
+      {
+        name: "Marta",
+        description: "Farmer",
+        image: "/img/Marta.png"
+      }
   ];
 
   const [currentIndex, setCurrentIndex] = useState(1); // Empieza en 1, ya que clonamos el primer slide
   const [isTransitioning, setIsTransitioning] = useState(true);
-  const [visibleImages, setVisibleImages] = useState(3); // Default: 3 images visible for large screens
-  const totalImages = images.length;
+  const [visibleImages, setVisibleImages] = useState(4); // 4 imágenes visibles en pantallas grandes
+  const totalImages = entrepreneurs.length;
   const transitionDuration = 500; // Duración de la transición en ms
   const intervalRef = useRef(null);
 
   // Clonamos la última y la primera imagen para hacer el bucle infinito
-  const clonedImages = [images[totalImages - 1], ...images, images[0]];
+  const clonedEntrepreneurs = [entrepreneurs[totalImages - 1], ...entrepreneurs, entrepreneurs[0]];
 
   // Detectar el tamaño de la pantalla y ajustar la cantidad de imágenes visibles
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
-        setVisibleImages(3); // 3 imágenes para pantallas grandes
+        setVisibleImages(4); // 4 imágenes para pantallas grandes
       } else if (window.innerWidth >= 780 && window.innerWidth < 1024) {
         setVisibleImages(2); // 2 imágenes para pantallas medianas
       } else {
@@ -70,7 +101,7 @@ const Carousel = () => {
 
   // Reseteo del carrusel para el bucle infinito sin transición visible
   useEffect(() => {
-    if (currentIndex === clonedImages.length - 1) {
+    if (currentIndex === clonedEntrepreneurs.length - 1) {
       // Si estamos en la última imagen clonada (que es el primer slide real)
       setTimeout(() => {
         setIsTransitioning(false);
@@ -85,27 +116,28 @@ const Carousel = () => {
         setCurrentIndex(totalImages); // Saltamos al último slide real sin transición
       }, transitionDuration);
     }
-  }, [currentIndex, clonedImages.length, totalImages]);
+  }, [currentIndex, clonedEntrepreneurs.length, totalImages]);
 
   return (
-    <div className="bg-[#00B207] bg-opacity-20 p-4 rounded-lg w-full">
-      <h2 className="text-3xl font-bold text-center mb-4">Productos Artesanales</h2>
+    <div className="p-4 rounded-lg w-full">
+      <h2 className="text-3xl font-bold text-center mb-4">Nuestras Emprendedoras Rurales</h2>
       <div className="relative w-full overflow-hidden">
         <div
           className={`flex transition-transform ease-in-out duration-${transitionDuration}ms ${isTransitioning ? '' : 'duration-0'}`}
           style={{
-            transform: `translateX(-${currentIndex * (100 / visibleImages)}%)` // Ajustamos para manejar el número de imágenes visibles (1, 2 o 3)
+            transform: `translateX(-${currentIndex * (100 / visibleImages)}%)` // Ajustamos para manejar el número de imágenes visibles (1, 2 o 4)
           }}
         >
-          {clonedImages.map((image, index) => (
+          {clonedEntrepreneurs.map((entrepreneur, index) => (
             <div
               key={index}
-              className={`w-full ${visibleImages === 2 ? "md:w-1/2" : visibleImages === 3 ? "lg:w-1/3" : "w-full"} h-64 flex-shrink-0 px-2`}
+              className="w-[25%] md:w-[50%] lg:w-[25%] h-auto flex-shrink-0 px-2" // Ancho ajustado para 4 imágenes en pantallas grandes
             >
-              <img
-                src={image}
-                alt={`Slide ${index}`}
-                className="w-full h-full object-cover"
+              {/* Llamamos al componente de las cards */}
+              <EntrepreneurCard
+                name={entrepreneur.name}
+                description={entrepreneur.description}
+                image={entrepreneur.image}
               />
             </div>
           ))}
@@ -128,4 +160,4 @@ const Carousel = () => {
   );
 };
 
-export default Carousel;
+export default EntrepreneurCarousel;
