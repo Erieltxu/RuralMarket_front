@@ -1,0 +1,3 @@
+export const BASE_URL = 'http://127.0.0.1:8000/api/';
+export const USERS = `${BASE_URL}users/`;
+//export const ORDERS = `${BASE_URL}orders/`;
