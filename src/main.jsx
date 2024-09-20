@@ -3,7 +3,6 @@ import  ReactDOM from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'
 import  router    from "./router/index"
 import './index.css'
-import Footer from './components/footer/Footer1'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
