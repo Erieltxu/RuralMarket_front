@@ -55,7 +55,7 @@ const EntrepreneurCarousel = () => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
         setVisibleImages(4); // 4 imágenes para pantallas grandes
-      } else if (window.innerWidth >= 780 && window.innerWidth < 1024) {
+      } else if (window.innerWidth >= 780 && window.innerWidth < 1023) {
         setVisibleImages(2); // 2 imágenes para pantallas medianas
       } else {
         setVisibleImages(1); // 1 imagen para pantallas pequeñas
@@ -80,7 +80,7 @@ const EntrepreneurCarousel = () => {
     stopAutoSlide();
     intervalRef.current = setInterval(() => {
       nextSlide();
-    }, 3000); // Cambia cada 3 segundos
+    }, 4000); // Cambia cada 3 segundos
   };
 
   const stopAutoSlide = () => {
