@@ -1,18 +1,17 @@
-import { useState } from 'react'
 
 import './App.css'
+import ButtonGreen from './components/ButtonGreen';
+import Home from './pages/Home';
 
-import HomePhotoP from './components/HomePhotoP'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+ 
 
   return (
-    <>
-   <HomePhotoP></HomePhotoP>
-    </>
+    <Home></Home>
        
   )
 }
 
-export default Home;
+export default App;
