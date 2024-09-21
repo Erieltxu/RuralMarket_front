@@ -28,7 +28,7 @@ const FrontPageCarousel = () => {
       };
     
       return (
-        <div className="relative w-full max-w-4xl mx-auto overflow-hidden w-[700px]">
+        <div className="relative max-w-4xl mx-auto overflow-hidden w-[700px]">
           {/* Contenedor del carrusel */}
           <div
             className="flex transition-transform ease-in-out duration- "
