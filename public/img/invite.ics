@@ -1,0 +1,44 @@
+BEGIN:VCALENDAR
+PRODID:-//zoom.us//iCalendar Event//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+CLASS:PUBLIC
+BEGIN:VTIMEZONE
+TZID:Europe/Madrid
+TZURL:http://tzurl.org/zoneinfo-outlook/Europe/Madrid
+X-LIC-LOCATION:Europe/Madrid
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+DTSTART:19700329T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+DTSTART:19701025T030000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+DTSTAMP:20240920T104632Z
+DTSTART;TZID=Europe/Madrid:20241009T110000
+DTEND;TZID=Europe/Madrid:20241009T123000
+SUMMARY:Evento: Aprovecha Tu Potencial F5 en LinkedIn (Octubre 2024)
+UID:d5hm2r2vecr7aebjbtfmukpl9damodr7ad43grjqc5jluchg68q2qc9g5ko3il1g74t30c1q60o5knpi60p38b9h60mj0eak64o3kcpg78o30mg
+TZID:Europe/Madrid
+DESCRIPTION:Unirse a este evento de Zoom\nhttps://events.zoom.us/ej/AnWvEuZV1Fs2ptd1KPX0aW_VUgvAbqUMkQ9aRx_GOYyDjvPhvcUK~A-RFjxsnRCnnkLHL-EiP7pSDH5X_LreLw-SvmRduokR1bNwXxT-vO-AESz49JxJu70L-mkimHPezwR3wc5gH-c7UAcAmZ-i-B9vUu-0t2FYg\n\nEvento: Evento: Aprovecha Tu Potencial F5 en LinkedIn (Octubre 2024)\nHora: Oct 9\, 2024\, 11:00 AM Europe/Madrid\nAnfitrión: Fundación Somos F5\n\nVer detalles del evento\nhttps://events.zoom.us/ev/AnWvEuZV1Fs2ptd1KPX0aW_VUgvAbqUMkQ9aRx_GOYyDjvPhvcUK~ArIMLrHdzSwYPCW3q4W2grPB0YMiFZCoGjn3EgVblyOFecKqHnY1tOClcg\n\nInfórmese antes de asistir\nNo comparta esta entrada con otros\nEl código de autenticación\, cuando sea necesario\, se enviará a su dirección de correo electrónico evymaritza3@gmail.com\nInstale/actualice la versión más reciente de Zoom para obtener la mejor experiencia\nEspere o notifique al anfitrión que inicie la sesión por usted\nInicie sesión en Zoom para obtener todas la funciones del evento\n\nActualice Zoom a la versión más reciente para unirse al evento\nhttps://zoom.us/download#client_4meeting
+LOCATION:https://events.zoom.us/ej/AnWvEuZV1Fs2ptd1KPX0aW_VUgvAbqUMkQ9aRx_GOYyDjvPhvcUK~A-RFjxsnRCnnkLHL-EiP7pSDH5X_LreLw-SvmRduokR1bNwXxT-vO-AESz49JxJu70L-mkimHPezwR3wc5gH-c7UAcAmZ-i-B9vUu-0t2FYg
+ATTENDEE;ROLE=REQ-PARTICIPANT;CN=:evymaritza3@gmail.com
+ORGANIZER;ROLE=REQ-PARTICIPANT;CN="Fundación Somos F5":noreply-zoomevents@zoom.us
+BEGIN:VALARM
+TRIGGER:-PT10M
+SUMMARY:Evento: Aprovecha Tu Potencial F5 en LinkedIn (Octubre 2024)
+ACTION:DISPLAY
+DESCRIPTION:Reminder
+END:VALARM
+END:VEVENT
+END:VCALENDAR
