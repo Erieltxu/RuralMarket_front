@@ -40,11 +40,11 @@ const EntrepreneurCarousel = () => {
       }
   ];
 
-  const [currentIndex, setCurrentIndex] = useState(1); // Empieza en 1, ya que clonamos el primer slide
+  const [currentIndex, setCurrentIndex] = useState(1); 
   const [isTransitioning, setIsTransitioning] = useState(true);
-  const [visibleImages, setVisibleImages] = useState(4); // 4 imágenes visibles en pantallas grandes
+  const [visibleImages, setVisibleImages] = useState(4); 
   const totalImages = entrepreneurs.length;
-  const transitionDuration = 500; // Duración de la transición en ms
+  const transitionDuration = 500; 
   const intervalRef = useRef(null);
 
   // Clonamos la última y la primera imagen para hacer el bucle infinito

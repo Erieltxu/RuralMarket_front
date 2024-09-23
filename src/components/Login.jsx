@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import useApi from '../services/useApi';
 import { useNavigate } from 'react-router-dom';
 import { USER_LOGIN } from '../config/urls';
+import arrowIcon from '/icons/arrow.svg'; // Importamos la flecha desde public/icons
 
 function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('');
@@ -43,14 +44,24 @@ function Login({ onLoginSuccess }) {
   };
 
   const handleBackToHome = () => {
-    navigate('/');
+    navigate('/'); // Acción de la flecha: Navega a la página de inicio
   };
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        {/* Agregamos la flecha para regresar */}
+        <div className="flex items-center mb-4">
+          <img
+            src={arrowIcon}  // Mostramos la flecha importada
+            alt="Back Arrow"
+            className="h-6 w-6 cursor-pointer"
+            onClick={handleBackToHome}  // Lógica de redirección al hacer clic
+          />
+        </div>
+
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Acceso
+          Iniciar sesión
         </h2>
       </div>
 
@@ -79,11 +90,6 @@ function Login({ onLoginSuccess }) {
               <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                 Contraseña
               </label>
-              <div className="text-sm">
-                <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                  ¿Olvidó contraseña?
-                </a>
-              </div>
             </div>
             <div className="mt-2">
               <input
@@ -104,7 +110,7 @@ function Login({ onLoginSuccess }) {
           <div>
             <button
               type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="flex w-full justify-center rounded-md bg-customGreen px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Entrar
             </button>
@@ -112,9 +118,9 @@ function Login({ onLoginSuccess }) {
         </form>
 
         <p className="mt-10 text-center text-sm text-gray-500">
-          ¿No estás registrado?{' '}
+          ¿No tienes una cuenta?{' '}
           <a href="#" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-            Regístrate aquí
+            Regístrate
           </a>
         </p>
       </div>

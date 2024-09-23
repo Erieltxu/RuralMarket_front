@@ -41,13 +41,13 @@ const Navbar = () => {
             </div>
 
             {/* Enlaces de navegación visibles en desktop */}
-            <div className="bg-purple-700 p-2 mt-2">
+            <div className="bg-customPurple p-2 mt-2">
                 <NavigationLinks />
             </div>
 
             {/* Menú desplegable en móvil */}
             {isMenuOpen && (
-                <div className="md:hidden bg-purple-700 p-2 mt-2">
+                <div className="md:hidden bg-customPurple p-2 mt-2">
                     <nav className="space-y-2">
                         <a href="#" className="block text-white">Inicio</a>
                         <a href="#" className="block text-white">Tienda</a>
