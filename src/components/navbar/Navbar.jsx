@@ -14,29 +14,19 @@ const Navbar = () => {
     };
 
     return (
-        <header className="p-4 shadow-md">
-            {/* Flex container para el layout responsivo */}
-            <div className="flex justify-between items-center">
-                {/* Logo a la izquierda */}
+        <header className="py-3 ">
+            <div className="flex justify-between items-center mx-5">
                 <Logo />
-
-                {/* Menú hamburguesa solo visible en móvil */}
                 <HamburgerMenu toggleMenu={toggleMenu} />
-
-                {/* Barra de búsqueda visible en desktop, oculta en móvil */}
                 <div className="hidden md:flex flex-grow justify-center">
                     <SearchBar />
                 </div>
-
-                {/* Iconos de usuario y carrito visibles en desktop */}
                 <div className="hidden md:flex items-center">
                     <UserIcon />
                     <ShoppingCart />
                 </div>
             </div>
-
-            {/* Barra de búsqueda visible en móvil, oculta en desktop */}
-            <div className="md:hidden">
+            <div className="md:hidden m-5">
                 <SearchBar />
             </div>
 
@@ -44,16 +34,14 @@ const Navbar = () => {
             <div className="bg-customPurple p-2 mt-2">
                 <NavigationLinks />
             </div>
-
-            {/* Menú desplegable en móvil */}
             {isMenuOpen && (
                 <div className="md:hidden bg-customPurple p-2 mt-2">
                     <nav className="space-y-2">
-                        <a href="#" className="block text-white">Inicio</a>
-                        <a href="#" className="block text-white">Tienda</a>
-                        <a href="#" className="block text-white">Darse de alta como emprendedora</a>
-                        <a href="#" className="block text-white">Quiénes somos</a>
-                        <a href="#" className="block text-white">Contacto</a>
+                        <a href="#" className="block text-#1a1a1a">Inicio</a>
+                        <a href="#" className="block text-#1a1a1a">Tienda</a>
+                        <a href="#" className="block text-#1a1a1a">Darse de alta como emprendedora</a>
+                        <a href="#" className="block text-#1a1a1a">Quiénes somos</a>
+                        <a href="#" className="block text-#1a1a1a">Contacto</a>
                         <UserIcon />
                         <ShoppingCart />
                     </nav>

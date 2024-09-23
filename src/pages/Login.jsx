@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import useApi from '../services/useApi';
 import { useNavigate } from 'react-router-dom';
 import { USER_LOGIN } from '../config/urls';
-import arrowIcon from '/icons/arrow.svg'; // Importamos la flecha desde public/icons
+import arrowIcon from '/icons/arrow.svg'; // Importamos la flecha
+import eyeIcon from '/icons/eye.svg'; // Importamos el icono del ojito
+import eyeOffIcon from '/icons/eye-off.svg'; // Importamos el icono del ojito cerrado
 
 function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar u ocultar la contraseña
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
 
@@ -20,9 +23,7 @@ function Login({ onLoginSuccess }) {
 
   useEffect(() => {
     if (data) {
-      console.log('Login successful:', data);
       localStorage.setItem('token', data.token);
-      console.log('Token set in localStorage:', localStorage.getItem('token'));
 
       if (onLoginSuccess) {
         onLoginSuccess({ username }, data.token);
@@ -44,24 +45,27 @@ function Login({ onLoginSuccess }) {
   };
 
   const handleBackToHome = () => {
-    navigate('/'); // Acción de la flecha: Navega a la página de inicio
+    navigate('/');
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        {/* Agregamos la flecha para regresar */}
         <div className="flex items-center mb-4">
           <img
-            src={arrowIcon}  // Mostramos la flecha importada
+            src={arrowIcon}
             alt="Back Arrow"
             className="h-6 w-6 cursor-pointer"
-            onClick={handleBackToHome}  // Lógica de redirección al hacer clic
+            onClick={handleBackToHome}
           />
         </div>
 
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Iniciar sesión
+          Acceso
         </h2>
       </div>
 
@@ -80,7 +84,7 @@ function Login({ onLoginSuccess }) {
                 onChange={(e) => setUsername(e.target.value)}
                 required
                 autoComplete="username"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400"
               />
             </div>
           </div>
@@ -91,16 +95,22 @@ function Login({ onLoginSuccess }) {
                 Contraseña
               </label>
             </div>
-            <div className="mt-2">
+            <div className="mt-2 relative">
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 "
+              />
+              <img
+                src={showPassword ? eyeOffIcon : eyeIcon} 
+                alt="Toggle Password Visibility"
+                className="absolute inset-y-0 right-0 h-5 w-5 cursor-pointer mr-3 mt-2.5"
+                onClick={togglePasswordVisibility}  
               />
             </div>
           </div>
@@ -118,9 +128,9 @@ function Login({ onLoginSuccess }) {
         </form>
 
         <p className="mt-10 text-center text-sm text-gray-500">
-          ¿No tienes una cuenta?{' '}
+          ¿No estás registrado?{' '}
           <a href="#" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-            Regístrate
+            Regístrate aquí
           </a>
         </p>
       </div>

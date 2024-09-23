@@ -5,16 +5,16 @@ const UserIcon = () => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate('/login'); // Cambia "/login" a la ruta correspondiente a tu página de login
+        navigate('/login');
     };
 
     return (
-        <div className="ml-4">
+        <div className="mx-4">
             <img
-                src="/user-icon.png"
+                src="../../../public/img/user-icon.svg"
                 alt="User Icon"
-                className="h-8 w-8 cursor-pointer"
-                onClick={handleClick} // Ejecuta la función para redirigir al hacer clic
+                className="h-6 w-6 cursor-pointer"
+                onClick={handleClick} 
             />
         </div>
     );
