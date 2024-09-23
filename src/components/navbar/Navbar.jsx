@@ -29,7 +29,7 @@ const Navbar = () => {
             <div className="md:hidden m-5">
                 <SearchBar />
             </div>
-            <div className="bg-fuchsia-700 py-3 mt-3">
+            <div className="bg-customPurple py-3 mt-3">
                 <NavigationLinks />
             </div>
             {isMenuOpen && (
