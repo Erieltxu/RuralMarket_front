@@ -1,6 +1,7 @@
 import React from "react";
-import Carousel from "../components/Carousel";
+import Carousel from "../components/frontPage/Carousel";
 import FrontPagePhoto from "../components/frontPage/FrontPagePhoto"
+import EntrepreneurCarousel from "../components/frontPage/EntrepreneurCarousel"
 
 const Home = () => {
   return (
@@ -9,7 +10,7 @@ const Home = () => {
       <FrontPagePhoto></FrontPagePhoto>
       </div>
     <div className="home-page">
-      <h2 className="text-3xl font-bold text-center mb-4">Productos Artesanos</h2>
+      <EntrepreneurCarousel />
       <Carousel />
     </div>
     </>

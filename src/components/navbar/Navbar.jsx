@@ -29,11 +29,13 @@ const Navbar = () => {
             <div className="md:hidden m-5">
                 <SearchBar />
             </div>
-            <div className="bg-customPurple py-3 mt-3">
+
+            {/* Enlaces de navegación visibles en desktop */}
+            <div className="bg-customPurple p-2 mt-2">
                 <NavigationLinks />
             </div>
             {isMenuOpen && (
-                <div className="md:hidden bg-#E6E6E6-700 p-2 mt-2 ml-2 shadow-lg">
+                <div className="md:hidden bg-customPurple p-2 mt-2">
                     <nav className="space-y-2">
                         <a href="#" className="block text-#1a1a1a">Inicio</a>
                         <a href="#" className="block text-#1a1a1a">Tienda</a>
