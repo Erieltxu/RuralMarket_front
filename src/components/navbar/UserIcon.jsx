@@ -1,10 +1,10 @@
 const UserIcon = () => {
     return (
-        <div className="ml-4">
+        <div className="mx-4">
             <img
-                src="/user-icon.png"
+                src="../../../public/img/user-icon.svg"
                 alt="User Icon"
-                className="h-8 w-8 cursor-pointer"
+                className="h-6  w-6 cursor-pointer"
             />
         </div>
     );
