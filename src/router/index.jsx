@@ -3,6 +3,9 @@ import Layout1 from "../layout/Layout";
 import Home from "../pages/Home";
 import '../index.css';
 import Login from "../pages/Login";
+import Product from "../pages/Product";
+import UploadProduct from "../components/UploadProduct";
+
 
 const router = createBrowserRouter([
   {
@@ -14,8 +17,16 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: 'login', 
+        path: 'login',
         element: <Login />,
+      },
+      {
+        path: 'product',
+        element: <Product/>,
+      },
+      {
+        path: 'uploadProduct',
+        element: <UploadProduct />
       },
     ],
   },
