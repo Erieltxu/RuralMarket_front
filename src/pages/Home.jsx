@@ -1,5 +1,5 @@
 import React from "react";
-import Carousel from "../components/Carousel";
+import Carousel from "../components/frontPage/Carousel";
 import FrontPagePhoto from "../components/frontPage/FrontPagePhoto"
 
 const Home = () => {

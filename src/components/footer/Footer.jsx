@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="bg-[#853A76] text-white py-6">
+    <footer className="bg-customPurple text-white py-6">
       <div className="container mx-auto px-4 flex flex-col lg:flex-row justify-between items-center lg:items-start space-y-2 lg:space-y-2">
         
         {/* Sección izquierda - Logo, descripción y correo */}
@@ -14,7 +14,7 @@ const Footer = () => {
             <p className="mb-4 text-white lg:max-w-md">
               Morbi cursus porttitor enim lobortis molestie. Duis gravida turpis dui, eget bibendum magna congue nec.
             </p>
-            <a href="mailto:proxy@gmail.com" className="bg-[#3BB77E] text-white px-4 py-2 font-semibold rounded-md hover:bg-green-600 w-max">
+            <a href="mailto:proxy@gmail.com" className="bg-customGreen text-white px-4 py-2 font-semibold rounded-md hover:bg-customGreenL w-max">
               Proxy@gmail.com
             </a>
           </div>
@@ -34,7 +34,7 @@ const Footer = () => {
 
           {/* Texto de copyright, alineado a la derecha en desktop */}
           <div className="text-center lg:text-right mt-4 lg:mt-12 lg:self-end">
-            <p className="text-xs">© 2024, <span className="text-[#3BB77E]">Rural Market</span>. All rights reserved.</p>
+            <p className="text-xs">© 2024, <span className="text-customGreen">Rural Market</span>. All rights reserved.</p>
           </div>
         </div>
       </div>

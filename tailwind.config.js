@@ -13,9 +13,9 @@ md: 'calc(var(--radius) - 2px)',
 sm: 'calc(var(--radius) - 4px)'
 },
 colors: {
-'customPurple': 'hsl(314, 40%, 37%)',
-'customGreen': 'hsl(123, 100%, 35%)',
-'customGreenL':"hsl(123, 100%, 20%)",
+'customPurple': 'hsl(312, 40%, 37%)', // #853A76
+'customGreen': 'hsl(123, 100%, 35%)', // #00B207
+'customGreenL':"hsl(123, 100%, 20%)", // #00B207
 card: {
 DEFAULT: 'hsl(var(--card))',
 foreground: 'hsl(var(--card-foreground))'
