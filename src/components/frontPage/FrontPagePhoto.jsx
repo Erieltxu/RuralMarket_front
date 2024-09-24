@@ -1,8 +1,10 @@
 import React from 'react'
 import FrontPageCarousel from './FrontPageCarousel';
 import ButtonGreen from '../ButtonGreen';
+import { useNavigate } from 'react-router-dom';
 
 const FrontPagePhoto = () => {
+    const navigate = useNavigate();
     const images = [
         // "/img/jams.jpg",
         "/img/home1.png",
@@ -23,7 +25,6 @@ const FrontPagePhoto = () => {
                             className="w-full h-auto object-cover rounded-lg"
                         />
 
-                        {/* Texto sobre la imagen */}
                         <div className="absolute top-4 left-4 sm:left-4 flex flex-col items-start sm:items-end p-4 rounded-lg">
                             <div className="text-left sm:text-left text-white">
                                 {/* Frase dividida en dos líneas */}
@@ -39,7 +40,7 @@ const FrontPagePhoto = () => {
                             <ButtonGreen
                                 backgroundColor="bg-green-500" 
                                 textColor="text-white" 
-                                href="/comprar"
+                                onClick={() => navigate('/product')}
                                 className="px-4 py-2 text-sm"
                             >
                                 Compra ahora →
@@ -50,7 +51,7 @@ const FrontPagePhoto = () => {
                             <ButtonGreen
                                 backgroundColor="bg-white"
                                 textColor="text-green-500"
-                                href="/comprar"
+                                href="/product"
                                 className="px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 text-base sm:text-lg md:text-xl"
                             >
                                 Compra ahora →

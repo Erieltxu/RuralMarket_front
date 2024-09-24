@@ -3,12 +3,3 @@
 @tailwind utilities;
 
 
-body {
-    margin: 0 ;
-    padding: 0;
-}
-@media (max-width: 600px) {
-    .FrontPageCarousel{
-        display: none; /* Oculta el componente en pantallas pequeñas */
-    }
-}
