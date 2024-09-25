@@ -119,9 +119,9 @@ const EntrepreneurCarousel = () => {
   }, [currentIndex, clonedEntrepreneurs.length, totalImages]);
 
   return (
-    <div className="p-4 rounded-lg w-full">
+    <div className="p-4 rounded-lg w-full -mt-4">
       <h2 className="text-3xl font-bold text-center mb-4">Nuestras Emprendedoras Rurales</h2>
-      <div className="relative w-full overflow-hidden">
+      <div className="relative w-full overflow-hidden -mt-4">
         <div
           className={`flex transition-transform ease-in-out duration-${transitionDuration}ms ${isTransitioning ? '' : 'duration-0'}`}
           style={{
