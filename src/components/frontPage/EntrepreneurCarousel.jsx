@@ -1,76 +1,49 @@
 import React, { useState, useEffect, useRef } from "react";
-import EntrepreneurCard from './EntrepreneurCard'; 
+import EntrepreneurCard from './EntrepreneurCard';  // Asegúrate de que este componente esté definido correctamente
+import useApi from '../../services/useApi';  // Tu hook personalizado
+import { USERS } from '../../config/urls';  // URL correcta de la API
 
 const EntrepreneurCarousel = () => {
-  const entrepreneurs = [
-    {
-      name: "Lorena",
-      description: "Security Guard",
-      image: "/img/Lorena.png"
-    },
-    {
-      name: "Ana",
-      description: "Senior Farmer Manager",
-      image: "/img/Ana.png"
-    },
-    {
-      name: "Belén",
-      description: "Worker",
-      image: "/img/Belén.png"
-    },
-    {
-      name: "María",
-      description: "CEO & Founder",
-      image: "/img/María.png"
-    },
-    {
-        name: "Teresa",
-        description: "Farmer",
-        image: "/img/Teresa.png"
-      },
-      {
-        name: "Sarai",
-        description: "Farmer",
-        image: "/img/Sarai.png"
-      },
-      {
-        name: "Marta",
-        description: "Farmer",
-        image: "/img/Marta.png"
-      }
-  ];
-
-  const [currentIndex, setCurrentIndex] = useState(1); 
+  const [currentIndex, setCurrentIndex] = useState(1);  // Comenzar en el índice 1
   const [isTransitioning, setIsTransitioning] = useState(true);
-  const [visibleImages, setVisibleImages] = useState(4); 
-  const totalImages = entrepreneurs.length;
-  const transitionDuration = 500; 
+  const [visibleImages, setVisibleImages] = useState(4);  // Mostrar 4 imágenes por defecto
+  const transitionDuration = 500;  // Duración de la transición en milisegundos
   const intervalRef = useRef(null);
 
-  // Clonamos la última y la primera imagen para hacer el bucle infinito
-  const clonedEntrepreneurs = [entrepreneurs[totalImages - 1], ...entrepreneurs, entrepreneurs[0]];
+  // Llamada a la API para obtener la lista de usuarios
+  const { data: users, loading, error } = useApi({
+    apiEndpoint: USERS,  // URL que debes verificar en el backend
+    method: 'GET'
+  });
 
-  // Detectar el tamaño de la pantalla y ajustar la cantidad de imágenes visibles
+  // Filtrar los usuarios que tienen el tipo 'seller' (emprendedoras)
+  const entrepreneurs = users ? users.filter(user => user.user_type === 'seller') : [];
+  const totalImages = entrepreneurs.length;
+
+  // Clonamos la primera y última emprendedora para hacer el efecto de carrusel infinito
+  const clonedEntrepreneurs = totalImages ? [entrepreneurs[totalImages - 1], ...entrepreneurs, entrepreneurs[0]] : [];
+
+  // Ajustar la cantidad de imágenes visibles según el tamaño de la pantalla
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
-        setVisibleImages(4); // 4 imágenes para pantallas grandes
-      } else if (window.innerWidth >= 780 && window.innerWidth < 1023) {
-        setVisibleImages(2); // 2 imágenes para pantallas medianas
+        setVisibleImages(4);  // 4 imágenes para pantallas grandes
+      } else if (window.innerWidth >= 780 && window.innerWidth < 1024) {
+        setVisibleImages(2);  // 2 imágenes para pantallas medianas
       } else {
-        setVisibleImages(1); // 1 imagen para pantallas pequeñas
+        setVisibleImages(1);  // 1 imagen para pantallas pequeñas
       }
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize(); // Ajuste inicial
+    handleResize();  // Ajuste inicial
 
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
-  // Cambiar automáticamente cada 3 segundos
+  // Comenzar el carrusel automático
   useEffect(() => {
     startAutoSlide();
     return () => stopAutoSlide();
@@ -80,7 +53,7 @@ const EntrepreneurCarousel = () => {
     stopAutoSlide();
     intervalRef.current = setInterval(() => {
       nextSlide();
-    }, 4000); // Cambia cada 3 segundos
+    }, 4000);  // Cambia cada 4 segundos
   };
 
   const stopAutoSlide = () => {
@@ -99,21 +72,19 @@ const EntrepreneurCarousel = () => {
     setCurrentIndex((prevIndex) => prevIndex - 1);
   };
 
-  // Reseteo del carrusel para el bucle infinito sin transición visible
+  // Reseteo del carrusel para el efecto infinito sin transición visible
   useEffect(() => {
     if (currentIndex === clonedEntrepreneurs.length - 1) {
-      // Si estamos en la última imagen clonada (que es el primer slide real)
       setTimeout(() => {
         setIsTransitioning(false);
-        setCurrentIndex(1); // Saltamos al primer slide real sin transición
-      }, transitionDuration); // Duración de la transición antes de resetear
+        setCurrentIndex(1);  // Saltamos al primer slide real sin transición
+      }, transitionDuration);
     }
 
     if (currentIndex === 0) {
-      // Si estamos en el primer slide clonado (que es el último slide real)
       setTimeout(() => {
         setIsTransitioning(false);
-        setCurrentIndex(totalImages); // Saltamos al último slide real sin transición
+        setCurrentIndex(totalImages);  // Saltamos al último slide real sin transición
       }, transitionDuration);
     }
   }, [currentIndex, clonedEntrepreneurs.length, totalImages]);
@@ -122,26 +93,28 @@ const EntrepreneurCarousel = () => {
     <div className="p-4 rounded-lg w-full">
       <h2 className="text-3xl font-bold text-center mb-4">Nuestras Emprendedoras Rurales</h2>
       <div className="relative w-full overflow-hidden">
+        {loading && <p>Cargando emprendedoras...</p>}
+        {error && <p>Error: {error}</p>}
+        
         <div
           className={`flex transition-transform ease-in-out duration-${transitionDuration}ms ${isTransitioning ? '' : 'duration-0'}`}
           style={{
-            transform: `translateX(-${currentIndex * (100 / visibleImages)}%)` // Ajustamos para manejar el número de imágenes visibles (1, 2 o 4)
+            transform: `translateX(-${currentIndex * (100 / visibleImages)}%)`
           }}
         >
           {clonedEntrepreneurs.map((entrepreneur, index) => (
             <div
               key={index}
-              className="w-[25%] md:w-[50%] lg:w-[25%] h-auto flex-shrink-0 px-2" // Ancho ajustado para 4 imágenes en pantallas grandes
+              className="w-[25%] md:w-[50%] lg:w-[25%] h-auto flex-shrink-0 px-2"
             >
-              {/* Llamamos al componente de las cards */}
               <EntrepreneurCard
-                name={entrepreneur.name}
-                description={entrepreneur.description}
-                image={entrepreneur.image}
+                name={entrepreneur.username}  // Asegúrate de que el campo 'username' esté en la respuesta
+                image={entrepreneur.photo}  // Asegúrate de que 'photo' esté presente y sea una URL válida
               />
             </div>
           ))}
         </div>
+
         {/* Botones de navegación */}
         <button
           onClick={prevSlide}

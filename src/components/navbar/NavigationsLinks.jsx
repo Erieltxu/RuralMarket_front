@@ -1,14 +1,13 @@
-
-
+import { Link } from 'react-router-dom'; 
 
 const NavigationLinks = () => {
   return (
     <nav className="hidden md:flex space-x-9 bg-customPurple justify-center ">
-      <a href="#" className="text-white">Inicio</a>
-      <a href="#" className="text-white">Tienda</a>
-      <a href="#" className="text-white">Darse de alta como emprendedora</a>
-      <a href="#" className="text-white">Quiénes somos</a>
-      <a href="#" className="text-white">Contacto</a>
+      <Link to="/" className="text-white">Inicio</Link> 
+      <Link to="/tienda" className="text-white">Tienda</Link> 
+      <Link to="/alta-emprendedora" className="text-white">Darse de alta como emprendedora</Link>
+      <Link to="/quienes-somos" className="text-white">Quiénes somos</Link>
+      <Link to="/contacto" className="text-white">Contacto</Link> 
     </nav>
   );
 };
