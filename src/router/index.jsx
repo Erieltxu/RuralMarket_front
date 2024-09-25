@@ -4,7 +4,9 @@ import Home from "../pages/Home";
 import '../index.css';
 import Login from "../pages/Login";
 import Product from "../pages/Product";
-import UploadProduct from "../components/UploadProduct";
+import ProductStore from "../components/Store/ProductStore"
+
+
 
 
 const router = createBrowserRouter([
@@ -25,8 +27,8 @@ const router = createBrowserRouter([
         element: <Product/>,
       },
       {
-        path: 'uploadProduct',
-        element: <UploadProduct />
+        path: 'productStore',
+        element: <ProductStore />
       },
     ],
   },
