@@ -5,6 +5,7 @@ import '../index.css';
 import Login from "../pages/Login";
 import Product from "../pages/Product";
 import UploadProduct from "../components/UploadProduct";
+import Entrepreneurs from "../pages/Entrepreneurs";
 
 
 const router = createBrowserRouter([
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: 'uploadProduct',
         element: <UploadProduct />
+      },
+      {
+        path: 'entrepreneurs',
+        element: <Entrepreneurs />
       },
     ],
   },

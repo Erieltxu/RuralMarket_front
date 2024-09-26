@@ -8,9 +8,9 @@ const SearchBar = () => {
             <input
                 type="text"
                 placeholder="Búsqueda"
-                className="pl-2 py-1  rounded-md focus:outline-none w-full "
+                className="pl-2 py-1 focus:outline-none w-full "
             />
-            <button className="bg-green-500 text-white px-4 py-1 rounded-r-md  ">
+            <button className="bg-customGreen text-white px-4 py-1 rounded-md md:rounded-lg">
                 Búsqueda
             </button>
         </div>
