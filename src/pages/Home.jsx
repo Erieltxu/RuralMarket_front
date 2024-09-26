@@ -11,8 +11,7 @@ const Home = () => {
       <FrontPagePhoto></FrontPagePhoto>
       </div>
     <div className="home-page">
-      
-      <Carousel />
+    <Carousel />
     </div>
     </>
   );

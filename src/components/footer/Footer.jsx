@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="bg-customPurple text-white py-6">
+    <footer className="bg-customPurple text-white py-6 mt-auto">
       <div className="container mx-auto px-4 flex flex-col lg:flex-row justify-between items-center lg:items-start space-y-2 lg:space-y-2">
         
         {/* Sección izquierda - Logo, descripción y correo */}
@@ -43,10 +43,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
-
-
-
-
-
-  
