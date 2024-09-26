@@ -3,23 +3,9 @@ import Layout1 from "../layout/Layout";
 import Home from "../pages/Home";
 import '../index.css';
 import Login from "../pages/Login";
-import Register from "../pages/Register";
-import Profile from "../pages/Profile";
-import ContactPage from "../pages/ContactPage";
-import RegisterSeller from "../pages/RegisterSeller";
-
-import Product from "../components/createProduct/ProductList"
+import Product from "../pages/Product";
+import UploadProduct from "../components/UploadProduct";
 import Entrepreneurs from "../pages/Entrepreneurs";
-import ProductList from "../components/createProduct/ProductList";
-
-
-const handleLogout = () => {
- 
-  localStorage.removeItem('token');
-
-
-  window.location.href = '/';
-};
 
 
 const router = createBrowserRouter([
@@ -62,10 +48,6 @@ const router = createBrowserRouter([
       {
         path: 'uploadProduct',
         element: <UploadProduct />
-      },
-      {
-        path: 'quienessomos',
-        element: <Entrepreneurs />
       },
     ],
   },
