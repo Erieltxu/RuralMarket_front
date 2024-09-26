@@ -1,4 +1,4 @@
-import ProductList from '../components/ProductList'
+import ProductList from '../components/createProduct/ProductList'
 import React from 'react'
 
 const Product = () => {

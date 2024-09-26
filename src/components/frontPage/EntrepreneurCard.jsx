@@ -1,7 +1,7 @@
 // EntrepreneurCard.jsx
 import React from 'react';
 
-const EntrepreneurCard = ({ name, description, image }) => {
+const EntrepreneurCard = ({ name, image }) => {
   return (
     <div className="bg-white rounded-lg shadow-lg p-4 text-center">
       <img
@@ -11,7 +11,6 @@ const EntrepreneurCard = ({ name, description, image }) => {
       />
       <div className="mt-4">
         <h3 className="text-xl font-bold">{name}</h3>
-        <p className="text-sm text-gray-500">{description}</p>
       </div>
     </div>
   );
