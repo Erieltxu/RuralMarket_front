@@ -16,8 +16,8 @@ function RegisterSeller() {
   const [province, setProvince] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [description, setDescription] = useState('');
-  const [photo, setPhoto] = useState(null); // Photo upload
-  const [userType] = useState('seller'); // Tipo de usuario predefinido como 'vendedora'
+  const [photo, setPhoto] = useState(null); 
+  const [userType] = useState('seller'); 
   const [showPassword, setShowPassword] = useState(false); 
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
   const [submitted, setSubmitted] = useState(false);
@@ -95,9 +95,9 @@ function RegisterSeller() {
   };
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <div className="flex items-center mb-4">
+    <div className="flex min-h-screen items-center justify-center px-6 py-12 bg-gray-100">
+      <div className="w-full max-w-md h-full max-h-[90vh] overflow-y-auto bg-white p-6 shadow-lg rounded-lg">
+        <div className="flex justify-start mb-4">
           <img
             src={arrowIcon}
             alt="Back Arrow"
@@ -106,12 +106,10 @@ function RegisterSeller() {
           />
         </div>
 
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-900 text-center mb-4">
           Crear cuenta de Vendedora
         </h2>
-      </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Campo de Nombre de usuario */}
           <div>
@@ -127,7 +125,7 @@ function RegisterSeller() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
               />
             </div>
           </div>
@@ -146,7 +144,7 @@ function RegisterSeller() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
               />
             </div>
           </div>
@@ -165,7 +163,7 @@ function RegisterSeller() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
               />
               <img
                 src={showPassword ? eyeIcon : eyeOffIcon}
@@ -190,7 +188,7 @@ function RegisterSeller() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
               />
               <img
                 src={showConfirmPassword ? eyeIcon : eyeOffIcon}
@@ -224,134 +222,136 @@ function RegisterSeller() {
                 onChange={(e) => setPhone(e.target.value)}
                 required
                 maxLength={9}
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
               />
             </div>
-          </div>
-
-          {/* Campo de Dirección */}
-          <div>
-            <label htmlFor="address" className="block text-sm font-medium leading-6 text-gray-900">
-              Dirección
-            </label>
-            <div className="mt-2">
-              <input
-                id="address"
-                name="address"
-                type="text"
-                placeholder="Dirección"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                required
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
             </div>
-          </div>
 
-          {/* Campo de Provincia */}
-          <div>
-            <label htmlFor="province" className="block text-sm font-medium leading-6 text-gray-900">
-              Provincia
-            </label>
-            <div className="mt-2">
-              <input
-                id="province"
-                name="province"
-                type="text"
-                placeholder="Provincia"
-                value={province}
-                onChange={(e) => setProvince(e.target.value)}
-                required
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
+{/* Campo de Dirección */}
+<div>
+  <label htmlFor="address" className="block text-sm font-medium leading-6 text-gray-900">
+    Dirección
+  </label>
+  <div className="mt-2">
+    <input
+      id="address"
+      name="address"
+      type="text"
+      placeholder="Dirección"
+      value={address}
+      onChange={(e) => setAddress(e.target.value)}
+      required
+      className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+    />
+  </div>
+</div>
 
-          {/* Campo de Código Postal */}
-          <div>
-            <label htmlFor="postalCode" className="block text-sm font-medium leading-6 text-gray-900">
-              Código Postal
-            </label>
-            <div className="mt-2">
-              <input
-                id="postalCode"
-                name="postalCode"
-                type="text"
-                placeholder="Código Postal"
-                value={postalCode}
-                onChange={(e) => setPostalCode(e.target.value)}
-                required
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
+{/* Campo de Provincia */}
+<div>
+  <label htmlFor="province" className="block text-sm font-medium leading-6 text-gray-900">
+    Provincia
+  </label>
+  <div className="mt-2">
+    <input
+      id="province"
+      name="province"
+      type="text"
+      placeholder="Provincia"
+      value={province}
+      onChange={(e) => setProvince(e.target.value)}
+      required
+      className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+    />
+  </div>
+</div>
 
-          {/* Campo de Descripción */}
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
-              Descripción
-            </label>
-            <div className="mt-2">
-              <textarea
-                id="description"
-                name="description"
-                placeholder="Descripción (máximo 250 caracteres)"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                maxLength={250}
-                required
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
+{/* Campo de Código Postal */}
+<div>
+  <label htmlFor="postalCode" className="block text-sm font-medium leading-6 text-gray-900">
+    Código Postal
+  </label>
+  <div className="mt-2">
+    <input
+      id="postalCode"
+      name="postalCode"
+      type="text"
+      placeholder="Código Postal"
+      value={postalCode}
+      onChange={(e) => setPostalCode(e.target.value)}
+      required
+      className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+    />
+  </div>
+</div>
 
-          {/* Campo de Foto */}
-          <div>
-            <label htmlFor="photo" className="block text-sm font-medium leading-6 text-gray-900">
-              Foto de perfil
-            </label>
-            <div className="mt-2">
-              <input
-                id="photo"
-                name="photo"
-                type="file"
-                accept="image/*"
-                onChange={handlePhotoUpload}
-                required
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
+{/* Campo de Descripción */}
+<div>
+  <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
+    Descripción
+  </label>
+  <div className="mt-2">
+    <textarea
+      id="description"
+      name="description"
+      placeholder="Descripción (máximo 250 caracteres)"
+      value={description}
+      onChange={(e) => setDescription(e.target.value)}
+      maxLength={250}
+      required
+      className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+    />
+  </div>
+</div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
-          {loading && <p className="text-sm text-gray-600">Registrando...</p>}
-          {data && <p className="text-sm text-green-600">Registro exitoso</p>}
+{/* Campo de Foto */}
+<div>
+  <label htmlFor="photo" className="block text-sm font-medium leading-6 text-gray-900">
+    Foto de perfil
+  </label>
+  <div className="mt-2">
+    <input
+      id="photo"
+      name="photo"
+      type="file"
+      accept="image/*"
+      onChange={handlePhotoUpload}
+      required
+      className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+    />
+  </div>
+</div>
 
-          <div>
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-xl bg-customGreen px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              disabled={loading}
-            >
-              Crear cuenta de Vendedora
-            </button>
-          </div>
+{error && <p className="text-sm text-red-600">{error}</p>}
+{loading && <p className="text-sm text-gray-600">Registrando...</p>}
+{data && <p className="text-sm text-green-600">Registro exitoso</p>}
 
-          <div className="mt-4 text-center">
-            <p className="text-sm text-gray-600">
-              Ya tienes una cuenta?{' '}
-              <span
-                onClick={handleLoginRedirect}
-                className="font-bold cursor-pointer text-indigo-600 hover:underline"
-              >
-                Inicia sesión
-              </span>
-            </p>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+<div>
+  <button
+    type="submit"
+    className="flex w-full justify-center rounded-xl bg-customGreen px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-customGreenL focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+    disabled={loading}
+  >
+    Crear cuenta de Vendedora
+  </button>
+</div>
+
+<div className="mt-4 text-center">
+  <p className="text-sm text-gray-600">
+    ¿Ya tienes una cuenta?{' '}
+    <span
+      onClick={handleLoginRedirect}
+      className="font-bold cursor-pointer text-indigo-600 hover:underline"
+    >
+      Inicia sesión
+    </span>
+  </p>
+</div>
+</form>
+</div>
+</div>
+);
 }
 
 export default RegisterSeller;
+
+         

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import EntrepreneurCard from './EntrepreneurCard';  // Asegúrate de que este componente esté definido correctamente
-import useApi from '../../services/useApi';  // Tu hook personalizado
-import { USERS } from '../../config/urls';  // URL correcta de la API
+import EntrepreneurCard from './EntrepreneurCard';  // Componente de tarjeta de emprendedora
+import useApi from '../../services/useApi';  // Hook personalizado para la API
+import { USERS } from '../../config/urls';  // URL de la API
 
 const EntrepreneurCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(1);  // Comenzar en el índice 1
@@ -12,7 +12,7 @@ const EntrepreneurCarousel = () => {
 
   // Llamada a la API para obtener la lista de usuarios
   const { data: users, loading, error } = useApi({
-    apiEndpoint: USERS,  // URL que debes verificar en el backend
+    apiEndpoint: USERS,
     method: 'GET'
   });
 
@@ -26,12 +26,14 @@ const EntrepreneurCarousel = () => {
   // Ajustar la cantidad de imágenes visibles según el tamaño de la pantalla
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) {
+      if (window.innerWidth >= 900) {
         setVisibleImages(4);  // 4 imágenes para pantallas grandes
-      } else if (window.innerWidth >= 780 && window.innerWidth < 1024) {
-        setVisibleImages(2);  // 2 imágenes para pantallas medianas
+      } else if (window.innerWidth >= 590 && window.innerWidth < 900) {
+        setVisibleImages(3);  // 3 imágenes para pantallas medianas
+      } else if (window.innerWidth >= 390 && window.innerWidth < 590) {
+        setVisibleImages(2);  // 2 imágenes para pantallas más pequeñas
       } else {
-        setVisibleImages(1);  // 1 imagen para pantallas pequeñas
+        setVisibleImages(1);  // 1 imagen para pantallas muy pequeñas
       }
     };
 
@@ -90,14 +92,14 @@ const EntrepreneurCarousel = () => {
   }, [currentIndex, clonedEntrepreneurs.length, totalImages]);
 
   return (
-    <div className="p-4 rounded-lg w-full">
+    <div className="container mx-auto px-4 py-8">
       <h2 className="text-3xl font-bold text-center mb-4">Nuestras Emprendedoras Rurales</h2>
       <div className="relative w-full overflow-hidden">
         {loading && <p>Cargando emprendedoras...</p>}
         {error && <p>Error: {error}</p>}
         
         <div
-          className={`flex transition-transform ease-in-out duration-${transitionDuration}ms ${isTransitioning ? '' : 'duration-0'}`}
+          className={`flex transition-transform ease-in-out ${isTransitioning ? 'duration-500' : 'duration-0'}`}
           style={{
             transform: `translateX(-${currentIndex * (100 / visibleImages)}%)`
           }}
@@ -105,11 +107,11 @@ const EntrepreneurCarousel = () => {
           {clonedEntrepreneurs.map((entrepreneur, index) => (
             <div
               key={index}
-              className="w-[25%] md:w-[50%] lg:w-[25%] h-auto flex-shrink-0 px-2"
+              className={`w-[${100 / visibleImages}%] h-auto flex-shrink-0 px-2 rounded-lg overflow-hidden`}  // Ajuste dinámico para las imágenes visibles con borde y margen
             >
               <EntrepreneurCard
-                name={entrepreneur.username}  // Asegúrate de que el campo 'username' esté en la respuesta
-                image={entrepreneur.photo}  // Asegúrate de que 'photo' esté presente y sea una URL válida
+                name={entrepreneur.username}  // Mostrar el nombre del emprendedor
+                image={entrepreneur.photo}  // Mostrar la imagen del emprendedor (debe ser una URL válida)
               />
             </div>
           ))}

@@ -7,9 +7,8 @@ import Register from "../pages/Register";
 import Profile from "../pages/Profile";
 import ContactPage from "../pages/ContactPage";
 import RegisterSeller from "../pages/RegisterSeller";
-import Product from "../pages/Product";
-import UploadProduct from "../components/UploadProduct";
-
+import UploadProduct from "../components/Store/ProductStore"
+import Product from "../components/createProduct/ProductList"
 
 // Función handleLogout que maneja el cierre de sesión
 const handleLogout = () => {
@@ -49,7 +48,6 @@ const router = createBrowserRouter([
       {
         path: 'altaemprendedora',
         element: <RegisterSeller />,
-
       },
       {
         path: 'product',
