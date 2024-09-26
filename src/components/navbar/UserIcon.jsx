@@ -48,10 +48,12 @@ const UserIcon = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('token'); 
-        window.dispatchEvent(new Event('storage')); 
+        localStorage.removeItem('token'); // Elimina el token
+        localStorage.removeItem('user_type'); // Elimina el user_type
+        window.dispatchEvent(new Event('storage')); // Dispara un evento de almacenamiento para actualizar otros componentes
         setShowDropdown(false);
-        navigate('/');
+        navigate('/'); // Redirige a la página de inicio
+        window.location.reload(); 
     };
 
     const handleSettings = () => {
