@@ -14,15 +14,15 @@ const FrontPagePhoto = () => {
     ];
 
     return (
-        <div className="container mx-auto px-4 py-8 -mt-8">
-
+        <div className="container  p-4 rounded-lg w-full -mt-8">
+          p-4 rounded-lg w-full 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
                 <div className="relative col-span-2">
                     <img
                         src="/img/home2.png"
                         alt="Productos Frescos y Sanos"
-                        className="w-full h-auto object-cover rounded-lg"
+                        className="w-full h-auto object-cover rounded-lg "
                     />
 
                     <div className="absolute top-4 left-4 sm:left-4 flex flex-col items-start sm:items-end p-4 rounded-lg">
@@ -61,7 +61,7 @@ const FrontPagePhoto = () => {
 
                 </div>
 
-                <div className="grid grid-rows-2 gap-4">
+                <div className="grid grid-rows-2 gap-4 ">
                     
                         <img
                             src="/img/home3.png"
@@ -83,10 +83,10 @@ const FrontPagePhoto = () => {
                     <img
                         src="/img/home1.png"
                         alt="Conoce a Rural Market"
-                        className="w-full h-auto object-cover rounded-lg"
+                        className="w-full h-auto object-cover rounded-lg h-[570px]"
                     />
                 </div>
-                <div className="flex flex-col justify-center -mt-8">
+                <div className="flex flex-col justify-center mt-4">
                     <h2 className="text-3xl font-bold mb-4">Conoce a Rural Market</h2>
                     <p className="text-gray-700">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam...Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
