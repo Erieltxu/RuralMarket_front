@@ -37,6 +37,7 @@ function Profile({ onLogout }) {
     useEffect(() => {
         if (userData) {
             setUser({
+                first_name: userData.first_name || '',
                 username: userData.username || '',
                 email: userData.email || '',
                 password: '',
@@ -89,6 +90,7 @@ function Profile({ onLogout }) {
                 formData.append('confirm_password', user.confirm_password);
             }
             if (user.user_type === 'seller') { 
+                formData.append('first_name', user.first_name);
                 formData.append('phone', user.phone);
                 formData.append('address', user.address);
                 formData.append('province', user.province);
@@ -233,6 +235,17 @@ function Profile({ onLogout }) {
 
                         {user.user_type === 'seller' && (
                             <>
+                                 <div>
+                                    <label className="block text-sm font-medium leading-6 text-gray-900">Nombre</label>
+                                    <input
+                                        type="text"
+                                        name="first_name"
+                                        value={user.first_name}
+                                        onChange={handleChange}
+                                        required
+                                        className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                                    />
+                                </div>
                                 <div>
                                     <label className="block text-sm font-medium leading-6 text-gray-900">Teléfono</label>
                                     <input
