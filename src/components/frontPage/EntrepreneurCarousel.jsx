@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import EntrepreneurCard from './EntrepreneurCard';  
+import useApi from '../../services/useApi';  
 import { USERS } from '../../config/urls';  
 
 const EntrepreneurCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(1);  
   const [isTransitioning, setIsTransitioning] = useState(true);
-  const [visibleImages, setVisibleImages] = useState(4);
+  const [visibleImages, setVisibleImages] = useState(4);  
   const transitionDuration = 500;  
   const intervalRef = useRef(null);
 
@@ -19,6 +20,7 @@ const EntrepreneurCarousel = () => {
   const entrepreneurs = users ? users.filter(user => user.user_type === 'seller') : [];
   const totalImages = entrepreneurs.length;
 
+
   const clonedEntrepreneurs = totalImages ? [entrepreneurs[totalImages - 1], ...entrepreneurs, entrepreneurs[0]] : [];
 
 
@@ -29,9 +31,9 @@ const EntrepreneurCarousel = () => {
       } else if (window.innerWidth >= 590 && window.innerWidth < 900) {
         setVisibleImages(3);  
       } else if (window.innerWidth >= 390 && window.innerWidth < 590) {
-        setVisibleImages(2); 
+        setVisibleImages(2);  
       } else {
-        setVisibleImages(1); 
+        setVisibleImages(1);  
       }
     };
 
@@ -43,7 +45,6 @@ const EntrepreneurCarousel = () => {
     };
   }, []);
 
-
   useEffect(() => {
     startAutoSlide();
     return () => stopAutoSlide();
@@ -53,7 +54,7 @@ const EntrepreneurCarousel = () => {
     stopAutoSlide();
     intervalRef.current = setInterval(() => {
       nextSlide();
-    }, 4000);
+    }, 4000);  
   };
 
   const stopAutoSlide = () => {
@@ -72,12 +73,12 @@ const EntrepreneurCarousel = () => {
     setCurrentIndex((prevIndex) => prevIndex - 1);
   };
 
-
+ 
   useEffect(() => {
     if (currentIndex === clonedEntrepreneurs.length - 1) {
       setTimeout(() => {
         setIsTransitioning(false);
-        setCurrentIndex(1); 
+        setCurrentIndex(1);  
       }, transitionDuration);
     }
 
@@ -108,14 +109,14 @@ const EntrepreneurCarousel = () => {
               className={`w-[${100 / visibleImages}%] h-auto flex-shrink-0 px-2 rounded-lg overflow-hidden`}  
             >
               <EntrepreneurCard
-                name={entrepreneur.username} 
+                name={entrepreneur.username}  
                 image={entrepreneur.photo}  
               />
             </div>
           ))}
         </div>
 
-      
+        
         <button
           onClick={prevSlide}
           className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
