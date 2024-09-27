@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 
 const Carousel = () => {
   const images = [
-    "/img/jams.jpg",
-    "/img/knitting.jpg",
-    "/img/pottery.jpg",
-    "/img/soaps.jpg",
-    "/img/wicker.jpg"
+    "/img/vallicuerra1.png",
+    "/img/vallicuerra2.png",
+    "/img/Shiit2.png",
+    "/img/Shiit1.png",
+    "/img/ringo2.png",
+    "/img/acougo1.png"
   ];
 
   const [currentIndex, setCurrentIndex] = useState(1); // Empieza en 1, ya que clonamos el primer slide
@@ -89,7 +90,7 @@ const Carousel = () => {
 
   return (
     <div className="bg-[#00B207] bg-opacity-20 p-4 rounded-lg w-full">
-      <h2 className="text-3xl font-bold text-center mb-4">Productos Artesanales</h2>
+      <h2 className="text-3xl font-bold text-center mb-4">Productos y Servicios</h2>
       <div className="relative w-full overflow-hidden">
         <div
           className={`flex transition-transform ease-in-out duration-${transitionDuration}ms ${isTransitioning ? '' : 'duration-0'}`}
@@ -100,7 +101,7 @@ const Carousel = () => {
           {clonedImages.map((image, index) => (
             <div
               key={index}
-              className={`w-full ${visibleImages === 2 ? "md:w-1/2" : visibleImages === 3 ? "lg:w-1/3" : "w-full"} h-64 flex-shrink-0 px-2`}
+              className={`w-full ${visibleImages === 2 ? "md:w-1/2" : visibleImages === 3 ? "lg:w-1/3" : "w-full"} h-80 flex-shrink-0 px-2`} // Cambié de h-64 a h-80
             >
               <img
                 src={image}

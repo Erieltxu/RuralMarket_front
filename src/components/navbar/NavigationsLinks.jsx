@@ -1,46 +1,37 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import useApi from '../../services/useApi'; // Usando tu hook useApi
-import { USER_DETAIL } from '../../config/urls';
 
 const NavigationLinks = () => {
-  const [userType, setUserType] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userType, setUserType] = useState(null);  // Estado para almacenar el tipo de usuario
+  const [loggedIn, setLoggedIn] = useState(false);  // Estado para verificar si el usuario está logueado
 
-  const { data: userData, loading, error } = useApi({
-    apiEndpoint: USER_DETAIL,
-    method: 'GET',
-    headers: {
-      Authorization: `Token ${localStorage.getItem('token')}`,
-    },
-  });
-
+  // Obtener el token y el user_type desde el localStorage
   useEffect(() => {
-    if (userData) {
-      setUserType(userData.user_type);
-      setIsLoggedIn(true); // Usuario logueado
+    const token = localStorage.getItem('token');
+    const storedUserType = localStorage.getItem('user_type');
+
+    if (token && storedUserType) {
+      setLoggedIn(true);
+      setUserType(storedUserType);
     } else {
-      setIsLoggedIn(false); // Usuario no logueado
+      setLoggedIn(false);
+      setUserType(null);
     }
-  }, [userData]);
+  }, []);  // Se ejecuta solo una vez al cargar el componente
 
   return (
-    <nav className="hidden md:flex space-x-9 bg-customPurple justify-center ">
-      {/* Mostrar tipo de usuario y estado de login para depuración */}
-      <p>{`User Type: ${userType}`}</p>
-      <p>{`Logged In: ${isLoggedIn}`}</p>
-
+    <nav className="hidden md:flex space-x-9 bg-customPurple justify-center">
       <Link to="/" className="text-white">Inicio</Link>
       <Link to="/productStore" className="text-white">Tienda</Link>
-
-      {/* Mostrar "Darse de alta como emprendedora" si el usuario no está logueado o es comprador */}
-      {!isLoggedIn || (userType === 'buyer') ? (
+      
+      {/* Si no está logueado o si el tipo de usuario es "buyer", mostrar "Darse de alta como emprendedora" */}
+      {!loggedIn || userType === 'buyer' ? (
         <Link to="/altaemprendedora" className="text-white">Darse de alta como emprendedora</Link>
       ) : null}
 
-      {/* Mostrar "Dar de alta un producto" solo si el usuario es vendedor */}
-      {isLoggedIn && userType === 'seller' && (
-        <Link to="/alta-producto" className="text-white">Dar de alta un producto</Link>
+      {/* Si el tipo de usuario es "seller", mostrar "Dar de alta un producto" */}
+      {loggedIn && userType === 'seller' && (
+        <Link to="/altaProducto" className="text-white">Dar de alta un producto</Link>
       )}
 
       <Link to="/quienessomos" className="text-white">Quiénes somos</Link>

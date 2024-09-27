@@ -10,16 +10,15 @@ const FrontPagePhoto = () => {
     ];
 
     return (
-        <div className="container  p-4 w-full-mt-8">
+        <div className=" p-8 rounded-lg w-full -mt-4">
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className=" relative grid grid-cols-1 md:grid-cols-3 gap-4 ">
 
-                <div className="relative col-span-2  ">
-
+                <div className=" col-span-2">
                     <img
-                        src="/public/img/Home11.jpg"
+                        src="/img/home0.png"
                         alt="Productos Frescos y Sanos"
-                        className="w-full h-auto rounded-[10px]"
+                        className="h-[700px] w-full object-cover rounded-lg rounded-[15px]"
                     />
 
                     <div className="absolute top-4 left-4 sm:left-4 flex flex-col items-start sm:items-end p-4 rounded-[5px] bg-customBlackTrans">
@@ -56,34 +55,36 @@ const FrontPagePhoto = () => {
 
                 </div>
 
-                <div className="grid grid-rows-2 gap-4 ">
+                <div className="grid grid-rows-2 gap-4 h-[700px] w-full">
 
                     <img
-                        src="/img/home3.png"
+                        src="/img/home0.png"
                         alt="Frutas y Verduras"
-                        className="w-full h-full object-cover rounded-lg hidden md:block"
+                        className="w-full h-full object-cover rounded-lg hidden md:block rounded-[15px]"
                     />
                     <img
-                        src="/img/home4.png"
+                        src="/img/home0.png"
                         alt="Cesta de Productos"
-                        className="w-full h-full object-cover rounded-[10px] hidden md:block"
+                        className="w-full h-full object-cover rounded-lg hidden md:block rounded-[15px]"
                     />
                 </div>
 
             </div>
 
 
-            <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-8 ">
-                <div className="hidden md:block">
-                    <img
-                        src="/img/home1.png"
-                        alt="Conoce a Rural Market"
-                        className="w-full h-auto object-cover rounded-lg h-[570px]"
-                    />
+            <div className=" relative grid grid-cols-1 md:grid-cols-2 gap-4 mt-4  ">
+                <div className="hidden md:block  ">
+                     
+                        <img
+                            src="/img/home1.png"
+                            alt="Conoce a Rural Market"
+                            className=" w-[900px] h-full object-cover -lg rounded-[15px]"
+                        />
+                    
                 </div>
-                <div className="flex flex-col justify-center mt-4">
+                <div className="flex flex-col justify-center ">
                     <h2 className="text-3xl font-bold mb-4">Conoce a Rural Market</h2>
-                    <p className="text-gray-700">
+                    <p className="text-gray-700">rounded
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam...Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
                     </p>
                     <p className="text-gray-700 mt-4">
@@ -98,6 +99,7 @@ const FrontPagePhoto = () => {
                 </div>
 
             </div>
+            
             <div className=' justify-center container mx-auto flex -mt-10'>
                 <img
                     src="/img/SectionHeading 2.png"
