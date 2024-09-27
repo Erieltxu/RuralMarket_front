@@ -12,7 +12,7 @@ const FrontPageCarousel = () => {
 
   return (
     <div className="relative max-w-4xl mx-auto overflow-hidden w-full">
-      {/* Contenedor del carrusel */}
+
       <div className="flex justify-center space-x-4">
         {images.slice(0, imagesPerPage).map((image, index) => (
           <div
