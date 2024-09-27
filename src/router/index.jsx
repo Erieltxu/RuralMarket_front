@@ -9,6 +9,7 @@ import ContactPage from "../pages/ContactPage";
 import RegisterSeller from "../pages/RegisterSeller";
 import UploadProduct from "../components/Store/ProductStore"
 import Product from "../components/createProduct/ProductList"
+import Entrepreneurs from "../pages/Entrepreneurs";
 
 
 const handleLogout = () => {
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: 'uploadProduct',
         element: <UploadProduct />
+      },
+      {
+        path: 'quienessomos',
+        element: <Entrepreneurs />
       },
     ],
   },
