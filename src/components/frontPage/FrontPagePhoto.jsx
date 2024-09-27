@@ -20,7 +20,7 @@ const FrontPagePhoto = () => {
 
                 <div className=" col-span-2">
                     <img
-                        src="/img/home0.png"
+                        src="../../../public/img/Home11.jpg"
                         alt="Productos Frescos y Sanos"
                         className="h-[700px] w-full object-cover rounded-lg rounded-[15px]"
                     />
@@ -60,9 +60,14 @@ const FrontPagePhoto = () => {
 
                 </div>
 
+<<<<<<< HEAD
                 <div className="hidden md:grid grid-rows-2 w-full md:h-[700px] gap-8">
+=======
+                <div className="hidden md:grid grid-rows-2 gap-4 w-full md:h-[700px]">
+
+>>>>>>> a3cc6c5 (DONE:modal resizing TODO: add users)
                     <img
-                        src="/img/home0.png"
+                        src="../../../public/img/arbolHongos.jpg"
                         alt="Frutas y Verduras"
                         className="w-full h-full object-cover rounded-lg rounded-[15px] gap-8"
                     />
@@ -81,7 +86,11 @@ const FrontPagePhoto = () => {
                 <div className="hidden md:block  ">
 
                     <img
+<<<<<<< HEAD
                         src="/img/home1.png"
+=======
+                        src="../../../public/img/raviolon.png"
+>>>>>>> a3cc6c5 (DONE:modal resizing TODO: add users)
                         alt="Conoce a Rural Market"
                         className=" w-[900px] h-full object-cover -lg rounded-[15px]"
                     />
