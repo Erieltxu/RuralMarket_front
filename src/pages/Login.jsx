@@ -8,7 +8,7 @@ function Login() {
   const [password, setPassword] = useState(''); 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
-  const [userType, setUserType] = useState(null); // Agregar estado para el tipo de usuario
+  const [userType, setUserType] = useState(null);
   const navigate = useNavigate();
 
   const { data, loading, error: apiError } = useApi({
@@ -18,14 +18,14 @@ function Login() {
     headers: { 'Content-Type': 'application/json' },
   });
 
-  // Después de iniciar sesión correctamente, obtener los detalles del usuario
+ 
   useEffect(() => {
     if (data && data.token) {
       localStorage.setItem('token', data.token);
       console.log("Token almacenado en localStorage:", localStorage.getItem('token'));
       window.dispatchEvent(new Event('storage'));
 
-      // Llamar a la API de detalles del usuario inmediatamente después de iniciar sesión
+ 
       const fetchUserDetails = async () => {
         const response = await fetch(USER_DETAIL, {
           headers: {
@@ -33,10 +33,10 @@ function Login() {
           },
         });
         const userDetails = await response.json();
-        localStorage.setItem('user_type', userDetails.user_type);  // Guardar user_type en localStorage
+        localStorage.setItem('user_type', userDetails.user_type);  
 
-        // Recargar la página y redirigir a la página principal
-        window.location.href = '/'; // Recarga la página y redirige a la página principal
+        
+        window.location.href = '/'; 
       };
 
       fetchUserDetails();
