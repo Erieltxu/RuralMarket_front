@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const FrontPagePhoto = () => {
     const navigate = useNavigate();
     const images = [
-        // "/img/jams.jpg",
+  
         "/img/home1.png",
         "/img/home1.png",
         "/img/home1.png",
@@ -27,7 +27,7 @@ const FrontPagePhoto = () => {
 
                     <div className="absolute top-4 left-4 sm:left-4 flex flex-col items-start sm:items-end p-4 rounded-lg">
                         <div className="text-left sm:text-left text-white">
-                            {/* Frase dividida en dos líneas */}
+                        
                             <h2 className="text-xl sm:text-3xl md:text-3xl lg:text-5xl font-bold mb-4">
                                 <span>Productos Frescos</span> <br />
                                 <span>& Sanos</span>

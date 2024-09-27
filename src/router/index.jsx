@@ -7,7 +7,20 @@ import Product from "../pages/Product";
 import UploadProduct from "../components/UploadProduct";
 import Entrepreneurs from "../pages/Entrepreneurs";
 
+<<<<<<< HEAD
 
+=======
+
+const handleLogout = () => {
+ 
+  localStorage.removeItem('token');
+
+
+  window.location.href = '/';
+};
+
+
+>>>>>>> f463d55 (DONE: deleted comments  TODO call back)
 const router = createBrowserRouter([
   {
     path: '/',

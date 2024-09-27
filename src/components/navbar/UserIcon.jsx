@@ -48,11 +48,11 @@ const UserIcon = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('token'); // Elimina el token
-        localStorage.removeItem('user_type'); // Elimina el user_type
-        window.dispatchEvent(new Event('storage')); // Dispara un evento de almacenamiento para actualizar otros componentes
+        localStorage.removeItem('token'); 
+        localStorage.removeItem('user_type'); 
+        window.dispatchEvent(new Event('storage')); 
         setShowDropdown(false);
-        navigate('/'); // Redirige a la página de inicio
+        navigate('/'); 
         window.location.reload(); 
     };
 
