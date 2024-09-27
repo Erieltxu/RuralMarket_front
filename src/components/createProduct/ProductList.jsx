@@ -1,5 +1,5 @@
-// ProductList.js
 import React, { useState } from 'react';
+import CreateProductForm from './CreateProductForm';
 
 const initialProducts = [
     { id: 1, name: 'Tomate', category: 'Frutas', price: 2.99, imageUrl: '/img/tomato.png' },
@@ -31,7 +31,8 @@ function ProductList() {
         <div className="max-w-4xl mx-auto p-4">
             <h1 className="text-3xl font-bold mb-4">Catálogo de Productos</h1>
 
-            {/* Search input */}
+            <CreateProductForm addProduct={addProduct} />
+
             <input
                 type="text"
                 placeholder="Buscar productos..."
@@ -39,7 +40,6 @@ function ProductList() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
             />
-
 
             <div className="flex justify-end mb-4">
                 <select
