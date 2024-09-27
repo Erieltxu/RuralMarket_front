@@ -35,7 +35,7 @@ const Navbar = () => {
                 <NavigationLinks />
             </div>
             {isMenuOpen && (
-                <div className="md:hidden bg-customPurple p-2 mt-2">
+                <div className="md:hidden bg-white p-2 mt-2">
                     <nav className="space-y-2">
                         <a href="#" className="block text-#1a1a1a">Inicio</a>
                         <a href="#" className="block text-#1a1a1a">Tienda</a>

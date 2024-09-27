@@ -16,7 +16,7 @@ const FrontPagePhoto = () => {
 
                 <div className=" col-span-2">
                     <img
-                        src="/img/home0.png"
+                        src="../../../public/img/Home11.jpg"
                         alt="Productos Frescos y Sanos"
                         className="h-[700px] w-full object-cover rounded-lg rounded-[15px]"
                     />
@@ -55,10 +55,10 @@ const FrontPagePhoto = () => {
 
                 </div>
 
-                <div className="grid grid-rows-2 gap-4 h-[700px] w-full">
+                <div className="hidden md:grid grid-rows-2 gap-4 w-full md:h-[700px]">
 
                     <img
-                        src="/img/home0.png"
+                        src="../../../public/img/arbolHongos.jpg"
                         alt="Frutas y Verduras"
                         className="w-full h-full object-cover rounded-lg hidden md:block rounded-[15px]"
                     />
@@ -74,13 +74,13 @@ const FrontPagePhoto = () => {
 
             <div className=" relative grid grid-cols-1 md:grid-cols-2 gap-4 mt-4  ">
                 <div className="hidden md:block  ">
-                     
-                        <img
-                            src="/img/home1.png"
-                            alt="Conoce a Rural Market"
-                            className=" w-[900px] h-full object-cover -lg rounded-[15px]"
-                        />
-                    
+
+                    <img
+                        src="../../../public/img/raviolon.png"
+                        alt="Conoce a Rural Market"
+                        className=" w-[900px] h-full object-cover -lg rounded-[15px]"
+                    />
+
                 </div>
                 <div className="flex flex-col justify-center ">
                     <h2 className="text-3xl font-bold mb-4">Conoce a Rural Market</h2>
@@ -99,7 +99,7 @@ const FrontPagePhoto = () => {
                 </div>
 
             </div>
-            
+
             <div className=' justify-center container mx-auto flex -mt-10'>
                 <img
                     src="/img/SectionHeading 2.png"
