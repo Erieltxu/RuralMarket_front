@@ -7,10 +7,17 @@ import Product from "../pages/Product";
 import UploadProduct from "../components/UploadProduct";
 import Entrepreneurs from "../pages/Entrepreneurs";
 import ProductList from "../components/createProduct/ProductList";
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 
 =======
+=======
+import PasswordReset from '../pages/password/PasswordReset';
+import PasswordResetComplete from '../pages/password/PasswordResetComplete';
+import PasswordResetConfirm from '../pages/password/PasswordResetConfirm';
+import PasswordResetDone from '../pages/password/PasswordResetDone';
+>>>>>>> 13dbe14 (DONE styles modified. TODO small changes)
 
 const handleLogout = () => {
  
@@ -67,6 +74,29 @@ const router = createBrowserRouter([
         path: 'uploadProduct',
         element: <UploadProduct />
       },
+<<<<<<< HEAD
+=======
+      {
+        path: 'quienessomos',
+        element: <Entrepreneurs />
+      },
+      {
+        path: 'password_reset',
+        element: <PasswordReset />
+      },
+      {
+        path: 'password_reset/done',
+        element: <PasswordResetDone />
+      },
+      {
+        path: 'reset/:uid/:token',
+        element: <PasswordResetConfirm />
+      },
+      {
+        path: 'reset/done',
+        element: <PasswordResetComplete />
+      },
+>>>>>>> 13dbe14 (DONE styles modified. TODO small changes)
     ],
   },
 ]);

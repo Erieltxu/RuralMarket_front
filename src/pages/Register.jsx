@@ -175,23 +175,13 @@ function Register() {
             </div>
           </div>
 
+          {/* Campo oculto para el tipo de usuario (comprador) */}
           <input
             id="userType"
             name="userType"
             type="hidden"
-            value={userType}
+            value={userType} 
           />
-
-          <div>
-            <label htmlFor="userType" className="block text-sm font-medium leading-6 text-gray-900">
-              Tipo de usuario
-            </label>
-            <div className="mt-2">
-              <div className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 bg-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm">
-                Comprador
-              </div>
-            </div>
-          </div>
 
           {error && <p className="text-sm text-red-600">{error}</p>}
           {loading && <p className="text-sm text-gray-600">Registrando...</p>}
