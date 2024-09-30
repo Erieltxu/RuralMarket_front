@@ -10,6 +10,7 @@ import RegisterSeller from "../pages/RegisterSeller";
 import UploadProduct from "../components/Store/ProductStore"
 import Product from "../components/createProduct/ProductList"
 import Entrepreneurs from "../pages/Entrepreneurs";
+import ProductList from "../components/createProduct/ProductList";
 
 
 const handleLogout = () => {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
       {
         path: 'product',
         element: <Product/>,
+      },
+      {
+        path: 'productlist',
+        element: <ProductList/>,
       },
       {
         path: 'uploadProduct',

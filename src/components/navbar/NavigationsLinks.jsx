@@ -22,16 +22,16 @@ const NavigationLinks = () => {
   return (
     <nav className="hidden md:flex space-x-9 bg-customPurple justify-center">
       <Link to="/" className="text-white">Inicio</Link>
-      <Link to="/productStore" className="text-white">Tienda</Link>
+      <Link to="/productlist" className="text-white">Tienda</Link>
       
    
       {!loggedIn || userType === 'buyer' ? (
         <Link to="/altaemprendedora" className="text-white">Darse de alta como emprendedora</Link>
       ) : null}
 
-     
+      <Link to="" className="text-white">Nuestras emprendedoras</Link>
       {loggedIn && userType === 'seller' && (
-        <Link to="/altaProducto" className="text-white">Dar de alta un producto</Link>
+        <Link to="/product" className="text-white">Dar de alta un producto</Link>
       )}
 
       <Link to="/quienessomos" className="text-white">Quiénes somos</Link>

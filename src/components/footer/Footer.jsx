@@ -29,13 +29,12 @@ const Footer = () => {
               <a href="#" className="text-white hover:underline text-sm lg:text-base">Faqs</a>
               <a href="#" className="text-white hover:underline text-sm lg:text-base">Términos & Condiciones</a>
               <a href="#" className="text-white hover:underline text-sm lg:text-base">Política de privacidad</a>
+              <p className="text-xs">© 2024, <span className="text-customGreen">Rural Market</span>. All rights reserved.</p>
             </div>
           </div>
 
           {/* Texto de copyright, alineado a la derecha en desktop */}
-          <div className="text-center lg:text-right mt-4 lg:mt-12 lg:self-end">
-            <p className="text-xs">© 2024, <span className="text-customGreen">Rural Market</span>. All rights reserved.</p>
-          </div>
+        
         </div>
       </div>
     </footer>

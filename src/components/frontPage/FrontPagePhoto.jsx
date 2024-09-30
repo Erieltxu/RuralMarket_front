@@ -12,7 +12,7 @@ const FrontPagePhoto = () => {
     return (
         <div className=" p-8 rounded-lg w-full -mt-4">
 
-            <div className=" relative grid grid-cols-1 md:grid-cols-3 gap-4 ">
+            <div className=" relative grid grid-cols-1 md:grid-cols-3 gap-8 ">
 
                 <div className=" col-span-2">
                     <img
@@ -55,7 +55,7 @@ const FrontPagePhoto = () => {
 
                 </div>
 
-                <div className="hidden md:grid grid-rows-2 gap-4 w-full md:h-[700px]">
+                <div className="hidden md:grid grid-rows-2 gap-8 w-full md:h-[700px]">
 
                     <img
                         src="../../../public/img/arbolHongos.jpg"
@@ -72,7 +72,7 @@ const FrontPagePhoto = () => {
             </div>
 
 
-            <div className=" relative grid grid-cols-1 md:grid-cols-2 gap-4 mt-4  ">
+            <div className=" relative grid grid-cols-1 md:grid-cols-2 gap-4 mt-8  ">
                 <div className="hidden md:block  ">
 
                     <img

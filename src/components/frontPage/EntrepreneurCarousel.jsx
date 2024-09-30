@@ -7,22 +7,18 @@ const EntrepreneurCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(1);  
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [visibleImages, setVisibleImages] = useState(4);  
-  const transitionDuration = 500;  
+  const transitionDuration = 100;  
   const intervalRef = useRef(null);
-
 
   const { data: users, loading, error } = useApi({
     apiEndpoint: USERS,
     method: 'GET'
   });
 
-
   const entrepreneurs = users ? users.filter(user => user.user_type === 'seller') : [];
   const totalImages = entrepreneurs.length;
 
-
   const clonedEntrepreneurs = totalImages ? [entrepreneurs[totalImages - 1], ...entrepreneurs, entrepreneurs[0]] : [];
-
 
   useEffect(() => {
     const handleResize = () => {
@@ -73,7 +69,6 @@ const EntrepreneurCarousel = () => {
     setCurrentIndex((prevIndex) => prevIndex - 1);
   };
 
- 
   useEffect(() => {
     if (currentIndex === clonedEntrepreneurs.length - 1) {
       setTimeout(() => {
@@ -100,23 +95,23 @@ const EntrepreneurCarousel = () => {
         <div
           className={`flex transition-transform ease-in-out ${isTransitioning ? 'duration-500' : 'duration-0'}`}
           style={{
-            transform: `translateX(-${currentIndex * (100 / visibleImages)}%)`
+            transform: `translateX(-${currentIndex * (100 / visibleImages)}%)`,
+            gap: '1rem',  // Espacio entre las tarjetas
           }}
         >
           {clonedEntrepreneurs.map((entrepreneur, index) => (
             <div
               key={index}
-              className={`w-[${100 / visibleImages}%] h-auto flex-shrink-0 px-2 rounded-lg overflow-hidden`}  
+              className={`w-[${100 / visibleImages}%] h-auto flex-shrink-0 p-3`}  // Padding entre las tarjetas
             >
               <EntrepreneurCard
-                name={entrepreneur.username}  
+                name={entrepreneur.first_name}  
                 image={entrepreneur.photo}  
               />
             </div>
           ))}
         </div>
 
-        
         <button
           onClick={prevSlide}
           className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
