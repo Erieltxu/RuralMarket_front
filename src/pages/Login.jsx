@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useApi from '../services/useApi';
 import { USER_LOGIN, USER_DETAIL } from '../config/urls';
+import eyeIcon from '/icons/eye.svg';
+import eyeOffIcon from '/icons/eye-off.svg';
 
 function Login() {
   const [username, setUsername] = useState(''); 
@@ -9,6 +11,7 @@ function Login() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [userType, setUserType] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const { data, loading, error: apiError } = useApi({
@@ -18,14 +21,12 @@ function Login() {
     headers: { 'Content-Type': 'application/json' },
   });
 
- 
   useEffect(() => {
     if (data && data.token) {
       localStorage.setItem('token', data.token);
       console.log("Token almacenado en localStorage:", localStorage.getItem('token'));
       window.dispatchEvent(new Event('storage'));
 
- 
       const fetchUserDetails = async () => {
         const response = await fetch(USER_DETAIL, {
           headers: {
@@ -35,7 +36,6 @@ function Login() {
         const userDetails = await response.json();
         localStorage.setItem('user_type', userDetails.user_type);  
 
-        
         window.location.href = '/'; 
       };
 
@@ -57,6 +57,14 @@ function Login() {
 
   const handleRegisterRedirect = () => {
     navigate('/registro');
+  };
+
+  const handleForgotPassword = () => {
+    navigate('/password_reset'); // Ruta de recuperación de contraseña
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -93,12 +101,18 @@ function Login() {
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+              <img
+                src={showPassword ? eyeIcon : eyeOffIcon}
+                alt="Mostrar/Ocultar contraseña"
+                className="absolute inset-y-0 right-0 h-5 w-5 cursor-pointer mr-3 mt-2.5"
+                onClick={togglePasswordVisibility}
               />
             </div>
           </div>
@@ -124,6 +138,19 @@ function Login() {
                 className="font-bold cursor-pointer text-indigo-600 hover:underline"
               >
                 Regístrate
+              </span>
+            </p>
+          </div>
+
+          {/* Frase de "¿Ha olvidado su contraseña?" */}
+          <div className="mt-2 text-center">
+            <p className="text-sm text-gray-600">
+              ¿Ha olvidado su contraseña?{' '}
+              <span
+                onClick={handleForgotPassword}
+                className="font-bold cursor-pointer text-indigo-600 hover:underline"
+              >
+                Pinche aquí
               </span>
             </p>
           </div>
