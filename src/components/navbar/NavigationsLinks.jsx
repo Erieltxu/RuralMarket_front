@@ -22,14 +22,24 @@ const NavigationLinks = () => {
   return (
     <nav className="hidden font-bold md:flex space-x-9 bg-customPurple justify-between w-full px-10">
       <Link to="/" className="text-white">Inicio</Link>
+<<<<<<< HEAD
       <Link to="/productStore" className="text-white">Tienda</Link>
 
 
+=======
+      <Link to="/productlist" className="text-white">Tienda</Link>
+      
+   
+>>>>>>> 6f55683 (DONE add photos TODO time)
       {!loggedIn || userType === 'buyer' ? (
         <Link to="/altaemprendedora" className="text-white">Darse de alta como emprendedora</Link>
       ) : null}
 
+<<<<<<< HEAD
 
+=======
+      <Link to="" className="text-white">Nuestras emprendedoras</Link>
+>>>>>>> 6f55683 (DONE add photos TODO time)
       {loggedIn && userType === 'seller' && (
         <Link to="/product" className="text-white">Dar de alta un producto</Link>
       )}

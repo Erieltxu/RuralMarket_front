@@ -6,6 +6,7 @@ import Login from "../pages/Login";
 import Product from "../pages/Product";
 import UploadProduct from "../components/UploadProduct";
 import Entrepreneurs from "../pages/Entrepreneurs";
+import ProductList from "../components/createProduct/ProductList";
 
 <<<<<<< HEAD
 
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
       {
         path: 'product',
         element: <Product />,
+      },
+      {
+        path: 'productlist',
+        element: <ProductList/>,
       },
       {
         path: 'productlist',

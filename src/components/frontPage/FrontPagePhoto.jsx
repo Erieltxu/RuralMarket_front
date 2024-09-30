@@ -16,7 +16,11 @@ const FrontPagePhoto = () => {
     return (
         <div className=" p-8 rounded-lg w-full -mt-4 ">
 
+<<<<<<< HEAD
             <div className=" relative grid grid-cols-1 md:grid-cols-3 gap-8">
+=======
+            <div className=" relative grid grid-cols-1 md:grid-cols-3 gap-8 ">
+>>>>>>> 6f55683 (DONE add photos TODO time)
 
                 <div className=" col-span-2">
                     <img
@@ -61,9 +65,13 @@ const FrontPagePhoto = () => {
                 </div>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <div className="hidden md:grid grid-rows-2 w-full md:h-[700px] gap-8">
 =======
                 <div className="hidden md:grid grid-rows-2 gap-4 w-full md:h-[700px]">
+=======
+                <div className="hidden md:grid grid-rows-2 gap-8 w-full md:h-[700px]">
+>>>>>>> 6f55683 (DONE add photos TODO time)
 
 >>>>>>> a3cc6c5 (DONE:modal resizing TODO: add users)
                     <img
