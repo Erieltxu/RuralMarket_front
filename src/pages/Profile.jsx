@@ -37,6 +37,7 @@ function Profile({ onLogout }) {
     useEffect(() => {
         if (userData) {
             setUser({
+                first_name: userData.first_name || '',
                 username: userData.username || '',
                 email: userData.email || '',
                 password: '',
@@ -78,27 +79,31 @@ function Profile({ onLogout }) {
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-
+    
         try {
             const formData = new FormData();
+    
             formData.append('username', user.username);
             formData.append('email', user.email);
             formData.append('current_password', user.current_password);
+    
             if (user.password) {
                 formData.append('password', user.password);
                 formData.append('confirm_password', user.confirm_password);
             }
-            if (user.user_type === 'seller') { 
+    
+            if (user.user_type === 'seller') {
+                formData.append('first_name', user.first_name);
                 formData.append('phone', user.phone);
                 formData.append('address', user.address);
                 formData.append('province', user.province);
-                formData.append('postalCode', user.postalCode);
+                formData.append('zip_code', user.postalCode);  // Cambiado de 'postalCode' a 'zip_code' como en el registro
                 formData.append('description', user.description);
                 if (user.photo) {
                     formData.append('photo', user.photo);
                 }
             }
-
+    
             const response = await fetch(UPDATE_USER, {
                 method: 'PUT',
                 headers: {
@@ -106,11 +111,13 @@ function Profile({ onLogout }) {
                 },
                 body: formData,
             });
-
+    
             if (!response.ok) {
-                throw new Error('Error al actualizar el perfil');
+                const errorData = await response.json();  // Obtener detalles del error desde la respuesta
+                throw new Error(errorData.message || 'Error al actualizar el perfil');
             }
-
+    
+            // Aquí podrías manejar una redirección o un mensaje de éxito
         } catch (error) {
             setUpdateError(error.message);
         } finally {
@@ -233,6 +240,17 @@ function Profile({ onLogout }) {
 
                         {user.user_type === 'seller' && (
                             <>
+                                 <div>
+                                    <label className="block text-sm font-medium leading-6 text-gray-900">Nombre</label>
+                                    <input
+                                        type="text"
+                                        name="first_name"
+                                        value={user.first_name}
+                                        onChange={handleChange}
+                                        required
+                                        className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                                    />
+                                </div>
                                 <div>
                                     <label className="block text-sm font-medium leading-6 text-gray-900">Teléfono</label>
                                     <input

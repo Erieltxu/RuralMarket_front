@@ -7,14 +7,14 @@ const UserIcon = () => {
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
 
- 
+
     useEffect(() => {
-        checkAuthentication(); 
+        checkAuthentication();
     }, []);
 
     useEffect(() => {
         const handleStorageChange = () => {
-            checkAuthentication(); 
+            checkAuthentication();
         };
 
         window.addEventListener('storage', handleStorageChange);
@@ -49,9 +49,11 @@ const UserIcon = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('token'); 
+        localStorage.removeItem('user_type'); 
         window.dispatchEvent(new Event('storage')); 
         setShowDropdown(false);
-        navigate('/');
+        navigate('/'); 
+        window.location.reload(); 
     };
 
     const handleSettings = () => {
@@ -59,7 +61,7 @@ const UserIcon = () => {
         setShowDropdown(false);
     };
 
-    
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -91,7 +93,7 @@ const UserIcon = () => {
                                     className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
                                     onClick={handleSettings}
                                 >
-                               
+
                                     <img
                                         src="/icons/settings.svg"
                                         alt="Settings Icon"
@@ -103,7 +105,7 @@ const UserIcon = () => {
                                     className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
                                     onClick={handleLogout}
                                 >
-                               
+
                                     <img
                                         src="/icons/logout.svg"
                                         alt="Logout Icon"

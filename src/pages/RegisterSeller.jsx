@@ -7,6 +7,7 @@ import eyeIcon from '/icons/eye.svg';
 import eyeOffIcon from '/icons/eye-off.svg'; 
 
 function RegisterSeller() {
+  const [firstName, setFirstName] = useState('');
   const [username, setUsername] = useState(''); 
   const [email, setEmail] = useState(''); 
   const [password, setPassword] = useState(''); 
@@ -27,7 +28,7 @@ function RegisterSeller() {
   const { data, loading, error: apiError } = useApi({
     apiEndpoint: submitted ? USERS_REGISTER : null, 
     method: 'POST',
-    body: { username, email, password, phone, address, province, postal_code: postalCode, description, user_type: userType, photo },
+    body: { first_name: firstName, username, email, password, phone, address, province, zip_code: postalCode, user_description: description, user_type: userType, photo },
     headers: { 'Content-Type': 'multipart/form-data' },
   });
 
@@ -66,8 +67,8 @@ function RegisterSeller() {
       return;
     }
 
-    if (description.length > 250) {
-      setError('La descripción no debe superar los 250 caracteres.');
+    if (description.length > 700) {
+      setError('La descripción no debe superar los 700 caracteres.');
       return;
     }
 
@@ -112,6 +113,23 @@ function RegisterSeller() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Campo de Nombre de usuario */}
+          <div>
+            <label htmlFor="firstName" className="block text-sm font-medium leading-6 text-gray-900">
+              Nombre
+            </label>
+            <div className="mt-2">
+              <input
+                id="firstName"
+                name="firstName"
+                type="text"
+                placeholder="Nombre"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+              />
+            </div>
+          </div>
           <div>
             <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
               Nombre de usuario
@@ -293,10 +311,10 @@ function RegisterSeller() {
     <textarea
       id="description"
       name="description"
-      placeholder="Descripción (máximo 250 caracteres)"
+      placeholder="Descripción (máximo 700 caracteres)"
       value={description}
       onChange={(e) => setDescription(e.target.value)}
-      maxLength={250}
+      maxLength={700}
       required
       className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
     />

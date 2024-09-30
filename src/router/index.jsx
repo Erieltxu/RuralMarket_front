@@ -9,17 +9,19 @@ import ContactPage from "../pages/ContactPage";
 import RegisterSeller from "../pages/RegisterSeller";
 import UploadProduct from "../components/Store/ProductStore"
 import Product from "../components/createProduct/ProductList"
+import Entrepreneurs from "../pages/Entrepreneurs";
+import ProductList from "../components/createProduct/ProductList";
 
-// Función handleLogout que maneja el cierre de sesión
+
 const handleLogout = () => {
-  // Elimina el token del almacenamiento local
+ 
   localStorage.removeItem('token');
 
-  // Redirige al usuario a la página de inicio o login
+
   window.location.href = '/';
 };
 
-// Crear el router con las rutas y pasar handleLogout a Profile
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -39,7 +41,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'perfil',
-        element: <Profile onLogout={handleLogout} />, // Pasamos la función handleLogout como prop
+        element: <Profile onLogout={handleLogout} />, 
       },
       {
         path: 'contacto',
@@ -54,8 +56,16 @@ const router = createBrowserRouter([
         element: <Product/>,
       },
       {
+        path: 'productlist',
+        element: <ProductList/>,
+      },
+      {
         path: 'uploadProduct',
         element: <UploadProduct />
+      },
+      {
+        path: 'quienessomos',
+        element: <Entrepreneurs />
       },
     ],
   },

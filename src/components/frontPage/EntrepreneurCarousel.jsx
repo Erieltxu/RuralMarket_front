@@ -1,63 +1,62 @@
 import React, { useState, useEffect, useRef } from "react";
-import EntrepreneurCard from './EntrepreneurCard';  // Componente de tarjeta de emprendedora
-import useApi from '../../services/useApi';  // Hook personalizado para la API
-import { USERS } from '../../config/urls';  // URL de la API
+import EntrepreneurCard from './EntrepreneurCard';  
+import useApi from '../../services/useApi';  
+import { USERS } from '../../config/urls';  
 
 const EntrepreneurCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(1);  // Comenzar en el índice 1
-  const [isTransitioning, setIsTransitioning] = useState(true);
-  const [visibleImages, setVisibleImages] = useState(4);  // Mostrar 4 imágenes por defecto
-  const transitionDuration = 500;  // Duración de la transición en milisegundos
+  const [currentIndex, setCurrentIndex] = useState(0);  // Iniciamos el índice en 0
+  const [isTransitioning, setIsTransitioning] = useState(true);  // Controla si la transición está activada
+  const [visibleImages, setVisibleImages] = useState(4);  // Número de imágenes visibles basado en la pantalla
+  const transitionDuration = 500;  // Duración de la transición
   const intervalRef = useRef(null);
 
-  // Llamada a la API para obtener la lista de usuarios
   const { data: users, loading, error } = useApi({
     apiEndpoint: USERS,
     method: 'GET'
   });
 
-  // Filtrar los usuarios que tienen el tipo 'seller' (emprendedoras)
   const entrepreneurs = users ? users.filter(user => user.user_type === 'seller') : [];
   const totalImages = entrepreneurs.length;
 
-  // Clonamos la primera y última emprendedora para hacer el efecto de carrusel infinito
-  const clonedEntrepreneurs = totalImages ? [entrepreneurs[totalImages - 1], ...entrepreneurs, entrepreneurs[0]] : [];
+  // Clonamos las imágenes al principio y al final del array para crear el ciclo continuo
+  const extendedEntrepreneurs = [...entrepreneurs, ...entrepreneurs];
 
-  // Ajustar la cantidad de imágenes visibles según el tamaño de la pantalla
+  // Manejamos el número de imágenes visibles basado en el tamaño de la pantalla
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 900) {
-        setVisibleImages(4);  // 4 imágenes para pantallas grandes
+        setVisibleImages(4);  
       } else if (window.innerWidth >= 590 && window.innerWidth < 900) {
-        setVisibleImages(3);  // 3 imágenes para pantallas medianas
+        setVisibleImages(3);  
       } else if (window.innerWidth >= 390 && window.innerWidth < 590) {
-        setVisibleImages(2);  // 2 imágenes para pantallas más pequeñas
+        setVisibleImages(2);  
       } else {
-        setVisibleImages(1);  // 1 imagen para pantallas muy pequeñas
+        setVisibleImages(1);  
       }
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize();  // Ajuste inicial
+    handleResize();  // Llamamos la función inmediatamente para ajustar según la ventana actual
 
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
-  // Comenzar el carrusel automático
   useEffect(() => {
     startAutoSlide();
     return () => stopAutoSlide();
-  }, [currentIndex]);
+  }, []);
 
+  // Función para iniciar el slide automático
   const startAutoSlide = () => {
     stopAutoSlide();
     intervalRef.current = setInterval(() => {
       nextSlide();
-    }, 4000);  // Cambia cada 4 segundos
+    }, 3000);  // Avanza cada 4 segundos
   };
 
+  // Detiene el auto-slide
   const stopAutoSlide = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -65,31 +64,31 @@ const EntrepreneurCarousel = () => {
   };
 
   const nextSlide = () => {
-    setIsTransitioning(true);
     setCurrentIndex((prevIndex) => prevIndex + 1);
   };
 
   const prevSlide = () => {
-    setIsTransitioning(true);
     setCurrentIndex((prevIndex) => prevIndex - 1);
   };
 
-  // Reseteo del carrusel para el efecto infinito sin transición visible
+  // Este efecto maneja el ciclo continuo cuando llegamos al final de las imágenes duplicadas
   useEffect(() => {
-    if (currentIndex === clonedEntrepreneurs.length - 1) {
+    if (currentIndex === totalImages) {
+      // Desactivamos la transición antes de mover al inicio para evitar el efecto de desplazamiento
+      setIsTransitioning(false);
       setTimeout(() => {
-        setIsTransitioning(false);
-        setCurrentIndex(1);  // Saltamos al primer slide real sin transición
-      }, transitionDuration);
+        setCurrentIndex(0);  // Reiniciamos el índice
+      }, 0); // Esperamos a que la transición termine antes de ajustar el índice
     }
 
-    if (currentIndex === 0) {
+    // Reactivamos la transición después de ajustar el índice
+    if (currentIndex === 0 || currentIndex !== totalImages) {
       setTimeout(() => {
-        setIsTransitioning(false);
-        setCurrentIndex(totalImages);  // Saltamos al último slide real sin transición
-      }, transitionDuration);
+        setIsTransitioning(true);
+      }, 50);  // Reactivamos la transición tras un pequeño retraso
     }
-  }, [currentIndex, clonedEntrepreneurs.length, totalImages]);
+
+  }, [currentIndex, totalImages]);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -99,25 +98,25 @@ const EntrepreneurCarousel = () => {
         {error && <p>Error: {error}</p>}
         
         <div
-          className={`flex transition-transform ease-in-out ${isTransitioning ? 'duration-500' : 'duration-0'}`}
+          className={`flex transition-transform ease-in-out ${isTransitioning ? `duration-${transitionDuration}ms` : 'duration-0'}`}
           style={{
-            transform: `translateX(-${currentIndex * (100 / visibleImages)}%)`
+            transform: `translateX(-${currentIndex * (100 / visibleImages)}%)`,
+            gap: '1rem',  // Espacio entre las tarjetas
           }}
         >
-          {clonedEntrepreneurs.map((entrepreneur, index) => (
+          {extendedEntrepreneurs.map((entrepreneur, index) => (
             <div
               key={index}
-              className={`w-[${100 / visibleImages}%] h-auto flex-shrink-0 px-2 rounded-lg overflow-hidden`}  // Ajuste dinámico para las imágenes visibles con borde y margen
+              className={`w-[${100 / visibleImages}%] h-auto flex-shrink-0 p-3`}  // Padding entre las tarjetas
             >
               <EntrepreneurCard
-                name={entrepreneur.username}  // Mostrar el nombre del emprendedor
-                image={entrepreneur.photo}  // Mostrar la imagen del emprendedor (debe ser una URL válida)
+                name={entrepreneur.first_name}  
+                image={entrepreneur.photo}  
               />
             </div>
           ))}
         </div>
 
-        {/* Botones de navegación */}
         <button
           onClick={prevSlide}
           className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
