@@ -1,13 +1,17 @@
 import React from 'react'
-import ProductsBoard from './ProductsBoard';
+import ProductsBoard from './ProductsBoard'
+
+
+
 
 const ProductStore = () => {
   return (
     <>
-    
-    
-    <ProductsBoard />
-    
+
+      <ProductsBoard />
+     
+
+
     </>
   )
 }

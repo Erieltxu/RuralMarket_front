@@ -31,7 +31,7 @@ const NavigationLinks = () => {
 
       {/* Si el tipo de usuario es "seller", mostrar "Dar de alta un producto" */}
       {loggedIn && userType === 'seller' && (
-        <Link to="/altaProducto" className="text-white">Dar de alta un producto</Link>
+        <Link to="/product" className="text-white">Dar de alta un producto</Link>
       )}
 
       <Link to="/quienessomos" className="text-white">Quiénes somos</Link>

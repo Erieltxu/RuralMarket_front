@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import CreateProductForm from './CreateProductForm';
+import CreateProductForm from '../createProduct/CreateProductForm';
 
 const initialProducts = [
     { id: 1, name: 'Tomate', category: 'Frutas', price: 2.99, imageUrl: '/img/tomato.png' },
@@ -23,16 +23,22 @@ function ProductList() {
         return matchesCategory && matchesSearch;
     });
 
+    // Función para agregar un nuevo producto a la lista
     const addProduct = (newProduct) => {
-        setProducts([...products, newProduct]);
+        // Creamos un id único para el nuevo producto
+        const newId = products.length + 1;
+        const productWithId = { ...newProduct, id: newId };
+        setProducts([...products, productWithId]);
     };
 
     return (
         <div className="max-w-4xl mx-auto p-4">
             <h1 className="text-3xl font-bold mb-4">Catálogo de Productos</h1>
 
+            {/* Formulario para crear nuevos productos */}
             <CreateProductForm addProduct={addProduct} />
 
+            {/* Campo de búsqueda */}
             <input
                 type="text"
                 placeholder="Buscar productos..."
@@ -41,6 +47,7 @@ function ProductList() {
                 onChange={(e) => setSearchTerm(e.target.value)}
             />
 
+            {/* Filtro por categoría */}
             <div className="flex justify-end mb-4">
                 <select
                     className="p-2 border rounded-md"
@@ -55,11 +62,13 @@ function ProductList() {
                 </select>
             </div>
 
+            {/* Lista de productos filtrados */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {filteredProducts.map((product) => (
                     <div key={product.id} className="border rounded-lg p-4 shadow">
                         <img
-                            src={product.imageUrl}
+                            src={product.imageUrl ? product.imageUrl : '/img/placeholder.png'}
+
                             alt={product.name}
                             className="w-full h-40 object-cover mb-2 rounded-md"
                         />
