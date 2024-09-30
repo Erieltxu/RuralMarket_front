@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import UseApi from '../services/useApi'; 
+import axios from 'axios';
+import UseApi from '../services/useApi';
 import { USER_DETAIL, UPDATE_USER, DELETE_USER } from '../config/urls';
+import eyeIcon from '/icons/eye.svg';
+import eyeOffIcon from '/icons/eye-off.svg';
 
 function Profile({ onLogout }) {
     const [user, setUser] = useState({
@@ -10,49 +13,44 @@ function Profile({ onLogout }) {
         password: '',
         confirm_password: '',
         current_password: '',
-        user_type: '',
         phone: '',
         address: '',
         province: '',
         postalCode: '',
         description: '',
         photo: null,
+        user_type: '',
     });
-    const [previewPhoto, setPreviewPhoto] = useState(null); 
+    const [previewPhoto, setPreviewPhoto] = useState(null);
     const [isConfirmed, setIsConfirmed] = useState(false);
     const [updateError, setUpdateError] = useState(null);
     const [deleteError, setDeleteError] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const { data: userData, loading: userLoading, error: userError } = UseApi({ apiEndpoint: USER_DETAIL });
+    
     const navigate = useNavigate();
-
-    const { data: userData, loading, error } = UseApi({
-        apiEndpoint: USER_DETAIL,
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Token ${localStorage.getItem('token')}`,
-        },
-    });
 
     useEffect(() => {
         if (userData) {
             setUser({
-                first_name: userData.first_name || '',
                 username: userData.username || '',
                 email: userData.email || '',
                 password: '',
                 confirm_password: '',
                 current_password: '',
-                user_type: userData.user_type || '',  
                 phone: userData.phone || '',
                 address: userData.address || '',
                 province: userData.province || '',
                 postalCode: userData.zip_code || '',
                 description: userData.user_description || '',
                 photo: userData.photo || null,
+                user_type: userData.user_type || '',
             });
-            if (userData.user_type === 'seller' && userData.photo) {
-                setPreviewPhoto(userData.photo); 
+            if (userData.photo) {
+                setPreviewPhoto(userData.photo);
             }
         }
     }, [userData]);
@@ -82,44 +80,37 @@ function Profile({ onLogout }) {
     
         try {
             const formData = new FormData();
-    
             formData.append('username', user.username);
             formData.append('email', user.email);
             formData.append('current_password', user.current_password);
     
+            // Si se está cambiando la contraseña, la incluimos
             if (user.password) {
                 formData.append('password', user.password);
                 formData.append('confirm_password', user.confirm_password);
             }
     
-            if (user.user_type === 'seller') {
-                formData.append('first_name', user.first_name);
-                formData.append('phone', user.phone);
-                formData.append('address', user.address);
-                formData.append('province', user.province);
-                formData.append('zip_code', user.postalCode);  // Cambiado de 'postalCode' a 'zip_code' como en el registro
-                formData.append('description', user.description);
-                if (user.photo) {
-                    formData.append('photo', user.photo);
-                }
+            // Solo agregamos la foto si se ha seleccionado una
+            if (user.photo instanceof File) {
+                formData.append('photo', user.photo);
             }
     
-            const response = await fetch(UPDATE_USER, {
-                method: 'PUT',
+            // Realizamos la solicitud PATCH
+            await axios.patch(UPDATE_USER, formData, {
                 headers: {
+                    'Content-Type': 'multipart/form-data',
                     Authorization: `Token ${localStorage.getItem('token')}`,
                 },
-                body: formData,
             });
     
-            if (!response.ok) {
-                const errorData = await response.json();  // Obtener detalles del error desde la respuesta
-                throw new Error(errorData.message || 'Error al actualizar el perfil');
-            }
-    
-            // Aquí podrías manejar una redirección o un mensaje de éxito
+            console.log('Perfil actualizado correctamente');
         } catch (error) {
-            setUpdateError(error.message);
+            if (error.response) {
+                console.error('Error al actualizar el perfil:', error.response.data);
+            } else {
+                console.error('Error al actualizar el perfil:', error.message);
+            }
+            setUpdateError('Error al actualizar el perfil');
         } finally {
             setIsSubmitting(false);
         }
@@ -127,23 +118,19 @@ function Profile({ onLogout }) {
 
     const handleDeleteProfile = async () => {
         if (!isConfirmed) return;
+
         try {
-            const response = await fetch(DELETE_USER, {
-                method: 'DELETE',
+            await axios.delete(DELETE_USER, {
                 headers: {
                     Authorization: `Token ${localStorage.getItem('token')}`,
                 },
             });
-            if (!response.ok) {
-                throw new Error('Error al borrar el perfil');
-            }
 
             localStorage.removeItem('token');
             onLogout();
             navigate('/');
-            
         } catch (error) {
-            setDeleteError(error.message);
+            setDeleteError('Error al borrar el perfil');
         }
     };
 
@@ -151,9 +138,21 @@ function Profile({ onLogout }) {
         setIsConfirmed(e.target.checked);
     };
 
+    const toggleCurrentPasswordVisibility = () => {
+        setShowCurrentPassword(!showCurrentPassword);
+    };
+
+    const toggleNewPasswordVisibility = () => {
+        setShowNewPassword(!showNewPassword);
+    };
+
+    const toggleConfirmPasswordVisibility = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+    };
+
     return (
-        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-gray-100">
-            <div className="w-full max-w-md mx-auto bg-white p-6 shadow-lg rounded-lg max-h-screen overflow-y-auto">
+        <div className="flex min-h-full flex-col justify-center items-center px-6 py-12 bg-gray-100">
+            <div className="w-full max-w-md h-full max-h-[90vh] overflow-y-auto bg-white p-6 shadow-lg rounded-lg">
                 <div className="flex justify-start mb-4">
                     <img
                         src="/icons/arrow.svg"
@@ -163,37 +162,30 @@ function Profile({ onLogout }) {
                     />
                 </div>
 
-                <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-900 text-center mb-4">Perfil de {user.username}</h2>
+                <h2 className="text-2xl font-bold text-gray-900 text-center mb-4">
+                    Perfil de {user.username}
+                </h2>
 
-                {user.user_type === 'seller' && (
-                    <div className="flex justify-center mb-4">
-                        <img
-                            src={previewPhoto || '/icons/default-user.svg'}  
-                            alt="Foto de perfil"
-                            className="h-24 w-24 rounded-full object-cover"
-                        />
-                    </div>
-                )}
-
-                {loading ? (
-                    <p>Cargando detalles del perfil...</p>
-                ) : error ? (
-                    <p className="text-red-600">Error al cargar el perfil: {error.message}</p>
+                {userLoading ? (
+                    <p className="text-gray-600">Cargando detalles del perfil...</p>
+                ) : userError ? (
+                    <p className="text-red-600">Error al cargar el perfil</p>
                 ) : (
                     <form onSubmit={handleUpdateProfile} className="space-y-6">
                         <div>
-                            <label className="block text-sm font-medium leading-6 text-gray-900">Nombre de usuario</label>
+                            <label className="block text-sm font-medium text-gray-900">Nombre de usuario</label>
                             <input
                                 type="text"
                                 name="username"
                                 value={user.username}
-                                readOnly
+                                onChange={handleChange}
+                                required
                                 className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium leading-6 text-gray-900">Correo electrónico</label>
+                            <label className="block text-sm font-medium text-gray-900">Correo electrónico</label>
                             <input
                                 type="email"
                                 name="email"
@@ -205,54 +197,67 @@ function Profile({ onLogout }) {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium leading-6 text-gray-900">Contraseña actual</label>
-                            <input
-                                type="password"
-                                name="current_password"
-                                value={user.current_password}
-                                onChange={handleChange}
-                                required
-                                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                            />
+                            <label className="block text-sm font-medium text-gray-900">Contraseña actual</label>
+                            <div className="relative">
+                                <input
+                                    type={showCurrentPassword ? 'text' : 'password'}
+                                    name="current_password"
+                                    value={user.current_password}
+                                    onChange={handleChange}
+                                    required
+                                    className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                                />
+                                <img
+                                    src={showCurrentPassword ? eyeIcon : eyeOffIcon}
+                                    alt="Mostrar/Ocultar contraseña actual"
+                                    className="absolute inset-y-0 right-0 h-5 w-5 cursor-pointer mr-3 mt-2.5"
+                                    onClick={toggleCurrentPasswordVisibility}
+                                />
+                            </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium leading-6 text-gray-900">Nueva contraseña</label>
-                            <input
-                                type="password"
-                                name="password"
-                                value={user.password}
-                                onChange={handleChange}
-                                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                            />
+                            <label className="block text-sm font-medium text-gray-900">Nueva contraseña</label>
+                            <div className="relative">
+                                <input
+                                    type={showNewPassword ? 'text' : 'password'}
+                                    name="password"
+                                    value={user.password}
+                                    onChange={handleChange}
+                                    className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                                />
+                                <img
+                                    src={showNewPassword ? eyeIcon : eyeOffIcon}
+                                    alt="Mostrar/Ocultar nueva contraseña"
+                                    className="absolute inset-y-0 right-0 h-5 w-5 cursor-pointer mr-3 mt-2.5"
+                                    onClick={toggleNewPasswordVisibility}
+                                />
+                            </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium leading-6 text-gray-900">Confirmar nueva contraseña</label>
-                            <input
-                                type="password"
-                                name="confirm_password"
-                                value={user.confirm_password}
-                                onChange={handleChange}
-                                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                            />
+                            <label className="block text-sm font-medium text-gray-900">Confirmar nueva contraseña</label>
+                            <div className="relative">
+                                <input
+                                    type={showConfirmPassword ? 'text' : 'password'}
+                                    name="confirm_password"
+                                    value={user.confirm_password}
+                                    onChange={handleChange}
+                                    className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                                />
+                                <img
+                                    src={showConfirmPassword ? eyeIcon : eyeOffIcon}
+                                    alt="Mostrar/Ocultar confirmar nueva contraseña"
+                                    className="absolute inset-y-0 right-0 h-5 w-5 cursor-pointer mr-3 mt-2.5"
+                                    onClick={toggleConfirmPasswordVisibility}
+                                />
+                            </div>
                         </div>
 
                         {user.user_type === 'seller' && (
                             <>
-                                 <div>
-                                    <label className="block text-sm font-medium leading-6 text-gray-900">Nombre</label>
-                                    <input
-                                        type="text"
-                                        name="first_name"
-                                        value={user.first_name}
-                                        onChange={handleChange}
-                                        required
-                                        className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                                    />
-                                </div>
                                 <div>
-                                    <label className="block text-sm font-medium leading-6 text-gray-900">Teléfono</label>
+                                    <label className="block text-sm font-medium text-gray-900">Teléfono</label>
                                     <input
                                         type="text"
                                         name="phone"
@@ -263,7 +268,7 @@ function Profile({ onLogout }) {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium leading-6 text-gray-900">Dirección</label>
+                                    <label className="block text-sm font-medium text-gray-900">Dirección</label>
                                     <input
                                         type="text"
                                         name="address"
@@ -274,7 +279,7 @@ function Profile({ onLogout }) {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium leading-6 text-gray-900">Provincia</label>
+                                    <label className="block text-sm font-medium text-gray-900">Provincia</label>
                                     <input
                                         type="text"
                                         name="province"
@@ -285,7 +290,7 @@ function Profile({ onLogout }) {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium leading-6 text-gray-900">Código Postal</label>
+                                    <label className="block text-sm font-medium text-gray-900">Código Postal</label>
                                     <input
                                         type="text"
                                         name="postalCode"
@@ -296,7 +301,7 @@ function Profile({ onLogout }) {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium leading-6 text-gray-900">Descripción</label>
+                                    <label className="block text-sm font-medium text-gray-900">Descripción</label>
                                     <textarea
                                         name="description"
                                         value={user.description}
@@ -307,7 +312,7 @@ function Profile({ onLogout }) {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium leading-6 text-gray-900">Foto de perfil</label>
+                                    <label className="block text-sm font-medium text-gray-900">Foto de perfil</label>
                                     <input
                                         type="file"
                                         name="photo"
@@ -318,12 +323,12 @@ function Profile({ onLogout }) {
                             </>
                         )}
 
-                        {updateError && <p className="text-sm text-red-600">{updateError}</p>}
+                        {updateError && <p className="text-red-600">{updateError}</p>}
 
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="flex w-full justify-center rounded-xl bg-customGreen px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-customGreenL focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            className="w-full mt-4 rounded-xl bg-customGreen text-white py-2 px-4 hover:bg-customGreenL"
                         >
                             {isSubmitting ? 'Actualizando...' : 'Actualizar perfil'}
                         </button>
@@ -346,12 +351,12 @@ function Profile({ onLogout }) {
                     <button
                         onClick={handleDeleteProfile}
                         disabled={!isConfirmed || isSubmitting}
-                        className="flex w-full justify-center rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                        className="w-full mt-4 rounded-xl bg-red-600 text-white py-2 px-4 hover:bg-red-700"
                     >
                         {isSubmitting ? 'Borrando...' : 'Borrar perfil'}
                     </button>
 
-                    {deleteError && <p className="text-sm text-red-600">{deleteError}</p>}
+                    {deleteError && <p className="text-red-600">{deleteError}</p>}
                 </div>
             </div>
         </div>
