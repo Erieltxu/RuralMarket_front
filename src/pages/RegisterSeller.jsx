@@ -28,7 +28,7 @@ function RegisterSeller() {
   const { data, loading, error: apiError } = useApi({
     apiEndpoint: submitted ? USERS_REGISTER : null, 
     method: 'POST',
-    body: { username, email, password, phone, address, province, postal_code: postalCode, description, user_type: userType, photo },
+    body: { first_name: firstName, username, email, password, phone, address, province, zip_code: postalCode, user_description: description, user_type: userType, photo },
     headers: { 'Content-Type': 'multipart/form-data' },
   });
 
@@ -112,15 +112,15 @@ function RegisterSeller() {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-       
+          {/* Campo de Nombre de usuario */}
           <div>
-            <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
+            <label htmlFor="firstName" className="block text-sm font-medium leading-6 text-gray-900">
               Nombre
             </label>
             <div className="mt-2">
               <input
-                id="first-name"
-                name="first-name"
+                id="firstName"
+                name="firstName"
                 type="text"
                 placeholder="Nombre"
                 value={firstName}
@@ -148,7 +148,7 @@ function RegisterSeller() {
             </div>
           </div>
 
-      
+          {/* Campo de Correo electrónico */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
               Correo electrónico
@@ -167,7 +167,7 @@ function RegisterSeller() {
             </div>
           </div>
 
-       
+          {/* Campo de Contraseña */}
           <div>
             <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
               Contraseña
@@ -192,7 +192,7 @@ function RegisterSeller() {
             </div>
           </div>
 
-       
+          {/* Campo de Repetir contraseña */}
           <div>
             <label htmlFor="confirm-password" className="block text-sm font-medium leading-6 text-gray-900">
               Repetir contraseña
@@ -217,7 +217,7 @@ function RegisterSeller() {
             </div>
           </div>
 
-   
+          {/* Campo oculto para el tipo de usuario (vendedora) */}
           <input
             id="userType"
             name="userType"
@@ -225,7 +225,7 @@ function RegisterSeller() {
             value={userType} 
           />
 
-   
+          {/* Campo de Teléfono */}
           <div>
             <label htmlFor="phone" className="block text-sm font-medium leading-6 text-gray-900">
               Teléfono
@@ -245,7 +245,7 @@ function RegisterSeller() {
             </div>
             </div>
 
-
+{/* Campo de Dirección */}
 <div>
   <label htmlFor="address" className="block text-sm font-medium leading-6 text-gray-900">
     Dirección
@@ -264,7 +264,7 @@ function RegisterSeller() {
   </div>
 </div>
 
-
+{/* Campo de Provincia */}
 <div>
   <label htmlFor="province" className="block text-sm font-medium leading-6 text-gray-900">
     Provincia
@@ -283,7 +283,7 @@ function RegisterSeller() {
   </div>
 </div>
 
-
+{/* Campo de Código Postal */}
 <div>
   <label htmlFor="postalCode" className="block text-sm font-medium leading-6 text-gray-900">
     Código Postal
@@ -302,7 +302,7 @@ function RegisterSeller() {
   </div>
 </div>
 
-
+{/* Campo de Descripción */}
 <div>
   <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
     Descripción
@@ -321,7 +321,7 @@ function RegisterSeller() {
   </div>
 </div>
 
-
+{/* Campo de Foto */}
 <div>
   <label htmlFor="photo" className="block text-sm font-medium leading-6 text-gray-900">
     Foto de perfil
