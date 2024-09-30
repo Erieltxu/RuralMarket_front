@@ -3,8 +3,17 @@ import Layout1 from "../layout/Layout";
 import Home from "../pages/Home";
 import '../index.css';
 import Login from "../pages/Login";
+<<<<<<< HEAD
 import Product from "../pages/Product";
 import UploadProduct from "../components/UploadProduct";
+=======
+import Register from "../pages/Register";
+import Profile from "../pages/Profile";
+import ContactPage from "../pages/ContactPage";
+import RegisterSeller from "../pages/RegisterSeller";
+
+import Product from "../components/createProduct/ProductList"
+>>>>>>> b2055af (DONE: add button category TODO :post products)
 import Entrepreneurs from "../pages/Entrepreneurs";
 import ProductList from "../components/createProduct/ProductList";
 <<<<<<< HEAD
@@ -71,30 +80,18 @@ const router = createBrowserRouter([
         element: <ProductList/>,
       },
       {
-        path: 'uploadProduct',
-        element: <UploadProduct />
+        path: 'productStore',
+        element: <ProductStore />
       },
 <<<<<<< HEAD
 =======
       {
-        path: 'quienessomos',
-        element: <Entrepreneurs />
+        path: '/store',
+        element: <Store />
       },
       {
-        path: 'password_reset',
-        element: <PasswordReset />
-      },
-      {
-        path: 'password_reset/done',
-        element: <PasswordResetDone />
-      },
-      {
-        path: 'reset/:uid/:token',
-        element: <PasswordResetConfirm />
-      },
-      {
-        path: 'reset/done',
-        element: <PasswordResetComplete />
+        path: '/productManager',
+        element: <ProductManager />
       },
 >>>>>>> 13dbe14 (DONE styles modified. TODO small changes)
     ],
