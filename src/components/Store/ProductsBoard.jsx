@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import ButtonGreen from '../ButtonGreen';
 >>>>>>> b2055af (DONE: add button category TODO :post products)
+=======
+>>>>>>> d89ef6a (DONE: finish product  resgister)
 
 const initialProducts = [
     { id: 1, name: 'Tomate', category: 'Frutas', price: 2.99, imageUrl: '/img/tomato.png' },
@@ -16,10 +19,13 @@ function ProductsBoard({ addToCart }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('Todos');
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     const [quantities, setQuantities] = useState({}); // Estado para manejar la cantidad de cada producto
     const [error, setError] = useState(null); // Estado para manejar errores
 >>>>>>> b2055af (DONE: add button category TODO :post products)
+=======
+>>>>>>> d89ef6a (DONE: finish product  resgister)
 
     const categories = ['Todos', 'Frutas', 'Verduras'];
 
@@ -30,6 +36,7 @@ function ProductsBoard({ addToCart }) {
         return matchesCategory && matchesSearch;
     });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     // Incrementar la cantidad del producto
@@ -62,6 +69,8 @@ function ProductsBoard({ addToCart }) {
     };
 
 >>>>>>> b2055af (DONE: add button category TODO :post products)
+=======
+>>>>>>> d89ef6a (DONE: finish product  resgister)
     return (
         <div>
             <h1 className="text-3xl font-bold mb-4">Catálogo de Productos</h1>
@@ -89,11 +98,14 @@ function ProductsBoard({ addToCart }) {
             </div>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             {/* Mostrar mensaje de error si lo hay */}
             {error && <div className="text-red-500 mb-4">{error}</div>}
 
 >>>>>>> b2055af (DONE: add button category TODO :post products)
+=======
+>>>>>>> d89ef6a (DONE: finish product  resgister)
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {filteredProducts.map((product) => (
                     <div key={product.id} className="border rounded-lg p-4 shadow">
@@ -105,6 +117,7 @@ function ProductsBoard({ addToCart }) {
                         <h2 className="text-xl font-bold mb-1">{product.name}</h2>
                         <p className="text-gray-500">{product.category}</p>
                         <p className="text-green-600 font-semibold">€{product.price.toFixed(2)}</p>
+<<<<<<< HEAD
 <<<<<<< HEAD
                         <button
                             className="bg-blue-500 text-white p-2 mt-2 rounded-md"
@@ -145,6 +158,14 @@ function ProductsBoard({ addToCart }) {
                         </ButtonGreen>
 
 >>>>>>> b2055af (DONE: add button category TODO :post products)
+=======
+                        <button
+                            className="bg-blue-500 text-white p-2 mt-2 rounded-md"
+                            onClick={() => addToCart(product)}
+                        >
+                            Agregar al carrito
+                        </button>
+>>>>>>> d89ef6a (DONE: finish product  resgister)
                     </div>
                 ))}
             </div>
@@ -153,9 +174,15 @@ function ProductsBoard({ addToCart }) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 export default ProductsBoard
 =======
 export default ProductsBoard;
 >>>>>>> b2055af (DONE: add button category TODO :post products)
+=======
+
+
+export default ProductsBoard
+>>>>>>> d89ef6a (DONE: finish product  resgister)

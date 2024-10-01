@@ -17,17 +17,24 @@ import Product from "../components/createProduct/ProductList"
 import Entrepreneurs from "../pages/Entrepreneurs";
 import ProductList from "../components/createProduct/ProductList";
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 
 =======
 =======
+=======
+>>>>>>> d89ef6a (DONE: finish product  resgister)
 import PasswordReset from '../pages/password/PasswordReset';
 import PasswordResetComplete from '../pages/password/PasswordResetComplete';
 import PasswordResetConfirm from '../pages/password/PasswordResetConfirm';
 import PasswordResetDone from '../pages/password/PasswordResetDone';
 >>>>>>> 13dbe14 (DONE styles modified. TODO small changes)
 
+=======
+
+
+>>>>>>> 005ec80 (DONE: finish product  resgister)
 const handleLogout = () => {
  
   localStorage.removeItem('token');
@@ -80,18 +87,18 @@ const router = createBrowserRouter([
         element: <ProductList/>,
       },
       {
-        path: 'productStore',
-        element: <ProductStore />
+        path: 'productlist',
+        element: <ProductList/>,
       },
 <<<<<<< HEAD
 =======
       {
-        path: '/store',
-        element: <Store />
+        path: 'uploadProduct',
+        element: <UploadProduct />
       },
       {
-        path: '/productManager',
-        element: <ProductManager />
+        path: 'quienessomos',
+        element: <Entrepreneurs />
       },
 >>>>>>> 13dbe14 (DONE styles modified. TODO small changes)
     ],
