@@ -3,13 +3,11 @@ import ProductsBoard from './ProductsBoard'
 
 
 
-
 const ProductStore = () => {
   return (
     <>
 
       <ProductsBoard />
-     
 
 
     </>

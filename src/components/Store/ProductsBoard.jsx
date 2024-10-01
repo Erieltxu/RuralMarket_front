@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import ButtonGreen from '../ButtonGreen';
 
 const initialProducts = [
     { id: 1, name: 'Tomate', category: 'Frutas', price: 2.99, imageUrl: '/img/tomato.png' },
@@ -12,8 +11,6 @@ const initialProducts = [
 function ProductsBoard({ addToCart }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('Todos');
-    const [quantities, setQuantities] = useState({}); // Estado para manejar la cantidad de cada producto
-    const [error, setError] = useState(null); // Estado para manejar errores
 
     const categories = ['Todos', 'Frutas', 'Verduras'];
 
@@ -23,35 +20,6 @@ function ProductsBoard({ addToCart }) {
         const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
         return matchesCategory && matchesSearch;
     });
-
-    // Incrementar la cantidad del producto
-    const incrementQuantity = (productId) => {
-        setQuantities((prevQuantities) => ({
-            ...prevQuantities,
-            [productId]: (prevQuantities[productId] || 1) + 1,
-        }));
-    };
-
-    // Decrementar la cantidad del producto
-    const decrementQuantity = (productId) => {
-        setQuantities((prevQuantities) => ({
-            ...prevQuantities,
-            [productId]: Math.max((prevQuantities[productId] || 1) - 1, 1),
-        }));
-    };
-
-    // Manejar agregar al carrito
-    const handleAddToCart = (product) => {
-        try {
-            const quantity = quantities[product.id] || 1; // Obtener la cantidad seleccionada (por defecto 1)
-            addToCart({ ...product, quantity }); // Agregar el producto con la cantidad seleccionada al carrito
-            setError(null); // Limpiar errores si la acción fue exitosa
-        } catch (err) {
-            // Manejo del error si ocurre
-            setError('Hubo un problema al agregar el producto al carrito. Inténtalo de nuevo.');
-            console.error('Error al agregar al carrito:', err);
-        }
-    };
 
     return (
         <div>
@@ -79,9 +47,6 @@ function ProductsBoard({ addToCart }) {
                 </select>
             </div>
 
-            {/* Mostrar mensaje de error si lo hay */}
-            {error && <div className="text-red-500 mb-4">{error}</div>}
-
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {filteredProducts.map((product) => (
                     <div key={product.id} className="border rounded-lg p-4 shadow">
@@ -93,37 +58,12 @@ function ProductsBoard({ addToCart }) {
                         <h2 className="text-xl font-bold mb-1">{product.name}</h2>
                         <p className="text-gray-500">{product.category}</p>
                         <p className="text-green-600 font-semibold">€{product.price.toFixed(2)}</p>
-
-                        <div className="flex items-center mb-2">
-                            <button
-                                className="bg-gray-200 p-1 rounded"
-                                onClick={() => decrementQuantity(product.id)}
-                            >
-                                -
-                            </button>
-                            <span className="mx-2">{quantities[product.id] || 1}</span>
-                            <button
-                                className="bg-gray-200 p-1 rounded"
-                                onClick={() => incrementQuantity(product.id)}
-                            >
-                                +
-                            </button>
-                        </div>
-
-                        {/* <button
-                            className="bg-blue-500 text-white p-2 mt-2 rounded-md w-full"
-                            onClick={() => handleAddToCart(product)}
+                        <button
+                            className="bg-blue-500 text-white p-2 mt-2 rounded-md"
+                            onClick={() => addToCart(product)}
                         >
                             Agregar al carrito
-                        </button> */}
-                        <ButtonGreen
-                            backgroundColor="bg-green-500"
-                            textColor="text-white"
-                            onClick={() => handleAddToCart(product)}
-                        >
-                            Agregar al carrito
-                        </ButtonGreen>
-
+                        </button>
                     </div>
                 ))}
             </div>
@@ -131,4 +71,6 @@ function ProductsBoard({ addToCart }) {
     );
 }
 
-export default ProductsBoard;
+
+
+export default ProductsBoard
