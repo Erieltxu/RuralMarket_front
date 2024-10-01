@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 
 const PopUp = ({ message, type, onClose }) => {
     return (
