@@ -1,15 +1,6 @@
 import { useEffect } from "react";
 
 const PopUp = ({ message, type, onClose }) => {
-    
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            onClose(); // Llamamos a la función para cerrar el popup después de 1 segundo
-        }, 1000);
-
-        return () => clearTimeout(timer); // Limpiamos el temporizador si el componente se desmonta antes
-    }, [onClose]);
-
 
     return (
         <div 
