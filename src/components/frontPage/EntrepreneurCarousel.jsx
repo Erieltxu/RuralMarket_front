@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Link } from 'react-router-dom';  // Importamos Link
 import EntrepreneurCard from './EntrepreneurCard';  
 import useApi from '../../services/useApi';  
 import { USERS } from '../../config/urls';  
 
 const EntrepreneurCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);  // Iniciamos el índice en 0
-  const [isTransitioning, setIsTransitioning] = useState(true);  // Controla si la transición está activada
-  const [visibleImages, setVisibleImages] = useState(4);  // Número de imágenes visibles basado en la pantalla
-  const transitionDuration = 500;  // Duración de la transición
+  const [currentIndex, setCurrentIndex] = useState(0);  
+  const [isTransitioning, setIsTransitioning] = useState(true);  
+  const [visibleImages, setVisibleImages] = useState(4);  
+  const transitionDuration = 500;  
   const intervalRef = useRef(null);
 
   const { data: users, loading, error } = useApi({
@@ -18,17 +19,15 @@ const EntrepreneurCarousel = () => {
   const entrepreneurs = users ? users.filter(user => user.user_type === 'seller') : [];
   const totalImages = entrepreneurs.length;
 
-  // Clonamos las imágenes al principio y al final del array para crear el ciclo continuo
   const extendedEntrepreneurs = [...entrepreneurs, ...entrepreneurs];
 
-  // Manejamos el número de imágenes visibles basado en el tamaño de la pantalla
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 900) {
         setVisibleImages(4);  
-      } else if (window.innerWidth >= 590 && window.innerWidth < 900) {
+      } else if (window.innerWidth >= 691 && window.innerWidth < 1000) {
         setVisibleImages(3);  
-      } else if (window.innerWidth >= 390 && window.innerWidth < 590) {
+      } else if (window.innerWidth >= 500 && window.innerWidth < 690) {
         setVisibleImages(2);  
       } else {
         setVisibleImages(1);  
@@ -36,7 +35,7 @@ const EntrepreneurCarousel = () => {
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize();  // Llamamos la función inmediatamente para ajustar según la ventana actual
+    handleResize();  
 
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -48,15 +47,13 @@ const EntrepreneurCarousel = () => {
     return () => stopAutoSlide();
   }, []);
 
-  // Función para iniciar el slide automático
   const startAutoSlide = () => {
     stopAutoSlide();
     intervalRef.current = setInterval(() => {
       nextSlide();
-    }, 3000);  // Avanza cada 4 segundos
+    }, 3000);  
   };
 
-  // Detiene el auto-slide
   const stopAutoSlide = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -71,28 +68,30 @@ const EntrepreneurCarousel = () => {
     setCurrentIndex((prevIndex) => prevIndex - 1);
   };
 
-  // Este efecto maneja el ciclo continuo cuando llegamos al final de las imágenes duplicadas
   useEffect(() => {
     if (currentIndex === totalImages) {
-      // Desactivamos la transición antes de mover al inicio para evitar el efecto de desplazamiento
       setIsTransitioning(false);
       setTimeout(() => {
-        setCurrentIndex(0);  // Reiniciamos el índice
-      }, 0); // Esperamos a que la transición termine antes de ajustar el índice
+        setCurrentIndex(0);  
+      }, 0); 
     }
 
-    // Reactivamos la transición después de ajustar el índice
     if (currentIndex === 0 || currentIndex !== totalImages) {
       setTimeout(() => {
         setIsTransitioning(true);
-      }, 50);  // Reactivamos la transición tras un pequeño retraso
+      }, 50);  
     }
 
   }, [currentIndex, totalImages]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold text-center mb-4">Nuestras Emprendedoras Rurales</h2>
+    <div className="p-9 rounded-lg w-full -mt-4">
+      {/* Título como enlace */}
+      <Link to="/nuestrasemprendedoras">
+        <h2 className="text-3xl font-bold text-center mb-4 cursor-pointer">
+          Nuestras Emprendedoras Rurales
+        </h2>
+      </Link>
       <div className="relative w-full overflow-hidden">
         {loading && <p>Cargando emprendedoras...</p>}
         {error && <p>Error: {error}</p>}
@@ -101,18 +100,22 @@ const EntrepreneurCarousel = () => {
           className={`flex transition-transform ease-in-out ${isTransitioning ? `duration-${transitionDuration}ms` : 'duration-0'}`}
           style={{
             transform: `translateX(-${currentIndex * (100 / visibleImages)}%)`,
-            gap: '1rem',  // Espacio entre las tarjetas
+            gap: '1rem',  
           }}
         >
           {extendedEntrepreneurs.map((entrepreneur, index) => (
             <div
               key={index}
-              className={`w-[${100 / visibleImages}%] h-auto flex-shrink-0 p-3`}  // Padding entre las tarjetas
+              style={{ width: `${100 / visibleImages}%` }} 
+              className="h-auto p-3 flex-shrink-0" 
             >
-              <EntrepreneurCard
-                name={entrepreneur.first_name}  
-                image={entrepreneur.photo}  
-              />
+              {/* Usamos Link para hacer la foto clickeable */}
+              <Link to={`/nuestrasemprendedoras/${entrepreneur.id}`}>
+                <EntrepreneurCard
+                  name={entrepreneur.first_name}  
+                  image={entrepreneur.photo}  
+                />
+              </Link>
             </div>
           ))}
         </div>

@@ -15,6 +15,8 @@ import PasswordReset from '../pages/password/PasswordReset';
 import PasswordResetComplete from '../pages/password/PasswordResetComplete';
 import PasswordResetConfirm from '../pages/password/PasswordResetConfirm';
 import PasswordResetDone from '../pages/password/PasswordResetDone';
+import EntrepreneursView from '../pages/EntrepreneursView';
+import PrivacyPolicy from '../components/PrivacyPolicy';
 
 const handleLogout = () => {
  
@@ -85,6 +87,18 @@ const router = createBrowserRouter([
       {
         path: 'reset/done',
         element: <PasswordResetComplete />
+      },
+      {
+        path: 'nuestrasemprendedoras',
+        element: <EntrepreneursView />
+      },
+      {
+        path: 'nuestrasemprendedoras/:id',
+        element: <EntrepreneursView />
+      },
+      {
+        path: '/politica_privacidad',
+        element: <PrivacyPolicy />
       },
     ],
   },

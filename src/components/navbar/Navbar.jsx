@@ -67,6 +67,7 @@ const Navbar = () => {
                     </div>
                     <nav className="font-bold flex flex-col space-y-2 ">
                         <Link to="/" className="text-#1a1a1a" onClick={closeMenu}>Inicio</Link>
+                        <Link to="/nuestrasemprendedoras" className="text-white">Nuestras emprendedoras</Link>
                         <Link to="/productStore" className="text-#1a1a1a" onClick={closeMenu}>Tienda</Link>
 
                         {!loggedIn || userType === 'buyer' ? (
