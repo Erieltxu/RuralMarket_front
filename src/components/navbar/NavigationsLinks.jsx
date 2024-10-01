@@ -29,7 +29,7 @@ const NavigationLinks = () => {
         <Link to="/altaemprendedora" className="text-white">Darse de alta como emprendedora</Link>
       ) : null}
 
-      <Link to="" className="text-white">Nuestras emprendedoras</Link>
+      <Link to="/nuestrasemprendedoras" className="text-white">Nuestras emprendedoras</Link>
       {loggedIn && userType === 'seller' && (
         <Link to="/product" className="text-white">Dar de alta un producto</Link>
       )}
