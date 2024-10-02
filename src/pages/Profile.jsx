@@ -174,6 +174,12 @@ function Profile({ onLogout }) {
                     Perfil de {user.username}
                 </h2>
 
+                {previewPhoto && (
+                    <div className="flex justify-center mb-4">
+                        <img src={previewPhoto} alt="Foto de perfil" className="w-24 h-24 rounded-full object-cover" />
+                    </div>
+                )}
+                
                 {userLoading ? (
                     <p className="text-gray-600">Cargando detalles del perfil...</p>
                 ) : userError ? (
