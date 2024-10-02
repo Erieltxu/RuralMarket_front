@@ -2,175 +2,157 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PRODUCT, CATEGORIES } from '../../config/urls';
 import ButtonGreen from '../ButtonGreen';
-import ProductDetails from '../createProduct/ProductDetails';
-import CategoryForm from '../createProduct/CategoryForm';
+import CategoryForm from '../createProduct/CategoryForm'; // Importamos el componente CategoryForm
 
-function CreateProductForm({ addProduct }) {
-    const [productName, setProductName] = useState('');
-    const [productCategory, setProductCategory] = useState('');
-    const [productDescription, setProductDescription] = useState('');
-    const [productPrice, setProductPrice] = useState('');
-    const [productStock, setProductStock] = useState('');
-    const [productImage, setProductImage] = useState(null);
-    const [message, setMessage] = useState('');
+function ProductStore() {
+    const [products, setProducts] = useState([]); // Estado para almacenar todos los productos
+    const [categories, setCategories] = useState(['Todos']); // Estado para las categorías, incluyendo 'Todos'
+    const [selectedCategory, setSelectedCategory] = useState('Todos'); // Categoría seleccionada por el usuario
+    const [searchTerm, setSearchTerm] = useState(''); // Estado para el término de búsqueda
+    const [quantities, setQuantities] = useState({}); // Estado para manejar las cantidades
     const [errors, setErrors] = useState({});
-    const [categories, setCategories] = useState([]);
-    const [newCategory, setNewCategory] = useState('');
-    const [newCategoryDescription, setNewCategoryDescription] = useState('');
-    const [isAddingCategory, setIsAddingCategory] = useState(false);
 
-    // Función para cargar categorías
+    // Obtener categorías desde el backend (una sola vez)
     const fetchCategories = async () => {
         try {
-            const response = await axios.get(CATEGORIES);
-            setCategories(response.data);
+            const response = await axios.get(CATEGORIES, {
+                headers: {
+                    Authorization: `Token ${localStorage.getItem('token')}`,
+                },
+            });
+            setCategories(['Todos', ...response.data]); // Agregar 'Todos' al principio de la lista
         } catch (error) {
-            console.error('Error al cargar las categorías:', error);
+            console.error('Error al cargar las categorías', error);
+        }
+    };
+
+    // Obtener productos desde el backend (una sola vez)
+    const fetchProducts = async () => {
+        try {
+            const response = await axios.get(PRODUCT, {
+                headers: {
+                    Authorization: `Token ${localStorage.getItem('token')}`,
+                },
+            });
+            setProducts(response.data); // Establecer los productos en el estado
+        } catch (error) {
+            console.error('Error al cargar los productos', error);
         }
     };
 
     useEffect(() => {
-        fetchCategories(); // Cargar categorías al inicio
+        // Cargar las categorías y productos una sola vez al montar el componente
+        fetchCategories();
+        fetchProducts();
     }, []);
 
-    const handleImageChange = (e) => {
-        setProductImage(e.target.files[0]); // Manejar la selección de la imagen
+    // Filtrar productos por categoría y término de búsqueda localmente (sin hacer solicitudes al backend)
+    const filteredProducts = products.filter((product) => {
+        const matchesCategory = selectedCategory === 'Todos' || product.category === selectedCategory;
+        const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesCategory && matchesSearch;
+    });
+
+    // Función para incrementar la cantidad del producto
+    const incrementQuantity = (productId) => {
+        setQuantities((prevQuantities) => ({
+            ...prevQuantities,
+            [productId]: (prevQuantities[productId] || 1) + 1,
+        }));
     };
 
-    const validateForm = () => {
-        let formErrors = {};
-        if (!productName) formErrors.productName = 'El nombre del producto es obligatorio.';
-        if (!productCategory) formErrors.productCategory = 'Selecciona o agrega una categoría.';
-        if (!productPrice || isNaN(productPrice.replace(',', '.')) || parseFloat(productPrice.replace(',', '.')) <= 0) {
-            formErrors.productPrice = 'Introduce un precio válido.';
-        }
-        if (!productStock || isNaN(productStock) || productStock < 0) {
-            formErrors.productStock = 'El stock debe ser un número positivo.';
-        }
-        if (!productImage) formErrors.productImage = 'Debes subir una imagen del producto.';
-        return formErrors;
+    // Función para decrementar la cantidad del producto
+    const decrementQuantity = (productId) => {
+        setQuantities((prevQuantities) => ({
+            ...prevQuantities,
+            [productId]: Math.max((prevQuantities[productId] || 1) - 1, 1),
+        }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const formErrors = validateForm();
-        if (Object.keys(formErrors).length > 0) {
-            setErrors(formErrors);
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('name', productName);
-        formData.append('category', productCategory); // ID de la categoría
-        formData.append('description', productDescription);
-        formData.append('price', parseFloat(productPrice.replace(',', '.'))); // Asegúrate de que sea un número
-        formData.append('stock', parseInt(productStock, 10)); // Asegúrate de que sea un número
-        formData.append('photo', productImage); // Envía la imagen
-
-        try {
-            setMessage('Creando producto...');
-            const response = await axios.post(PRODUCT, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Token ${localStorage.getItem('token')}`,
-                },
-            });
-            if (response && response.status === 201) {
-                addProduct(response.data); // Añadir el producto creado a la lista
-                resetForm(); // Reiniciar el formulario
-                setMessage('Producto creado exitosamente.');
-            } else {
-                setMessage('Error al crear el producto. Inténtalo nuevamente.');
-                setErrors({ api: response.data });
-            }
-        } catch (error) {
-            console.error('Error al crear el producto:', error);
-            setMessage('Error al crear el producto. Inténtalo nuevamente.');
-            setErrors({ api: 'Error al crear el producto. Inténtalo nuevamente.' });
-        }
-    };
-
-    const handleAddCategory = async () => {
-        if (!newCategory || !newCategoryDescription) {
-            setMessage('Por favor, completa el nombre y la descripción de la categoría.');
-            return;
-        }
-        try {
-            const newCategoryData = {
-                name: newCategory,
-                description: newCategoryDescription,
-            };
-            const response = await axios.post(CATEGORIES, newCategoryData);
-            if (response.status === 201) {
-                setCategories([...categories, response.data]); // Añadir la nueva categoría al estado actual
-                setProductCategory(response.data.id); // Seleccionar la nueva categoría automáticamente
-                setNewCategory('');
-                setNewCategoryDescription('');
-                setIsAddingCategory(false);
-                setMessage('Categoría agregada exitosamente.');
-            }
-        } catch (error) {
-            console.error('Error al agregar la categoría:', error);
-        }
-    };
-
-    const resetForm = () => {
-        setProductName('');
-        setProductCategory('');
-        setProductDescription('');
-        setProductPrice('');
-        setProductStock('');
-        setProductImage(null);
-        setMessage('');
-        setErrors({});
+    // Función para manejar agregar el producto al carrito
+    const handleAddToCart = (product) => {
+        const quantity = quantities[product.id] || 1;
+        console.log(`Añadido al carrito: ${product.name} - Cantidad: ${quantity}`);
+        // Aquí puedes agregar la lógica para añadir el producto al carrito en el backend o localStorage
     };
 
     return (
-        <form onSubmit={handleSubmit} className='max-w-md mx-auto p-4 mb-6 border rounded-lg shadow'>
-            {message && <p className="text-red-500">{message}</p>}
-            <CategoryForm 
-                productCategory={productCategory} 
-                setProductCategory={setProductCategory} 
-                categories={categories} 
-                isAddingCategory={isAddingCategory} 
-                setIsAddingCategory={setIsAddingCategory} 
-                newCategory={newCategory} 
-                setNewCategory={setNewCategory} 
-                newCategoryDescription={newCategoryDescription} 
-                setNewCategoryDescription={setNewCategoryDescription} 
-                handleAddCategory={handleAddCategory} 
-                errors={errors} 
+        <div className="max-w-4xl mx-auto p-4">
+            <h1 className="text-3xl font-bold mb-4">Catálogo de Productos</h1>
+
+            {/* Campo de búsqueda */}
+            <input
+                type="text"
+                placeholder="Buscar productos..."
+                className="w-full p-2 mb-4 border rounded-md"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <ProductDetails 
-                productName={productName} 
-                setProductName={setProductName} 
-                productPrice={productPrice} 
-                setProductPrice={setProductPrice} 
-                productStock={productStock} 
-                setProductStock={setProductStock} 
-                productImage={productImage} 
-                handleImageChange={handleImageChange} 
-                errors={errors} 
+
+            {/* Filtro de categoría */}
+            <CategoryForm
+                productCategory={selectedCategory}
+                setProductCategory={setSelectedCategory}
+                categories={categories}
+                isAddingCategory={false}
+                newCategory={''}
+                newCategoryDescription={''}
+                handleAddCategory={() => { }}
+                errors={errors}
             />
-           
-            <ButtonGreen
-                backgroundColor="bg-green-500"
-                textColor="text-white"
-                type="submit"
-            >
-                Crear Producto
-            </ButtonGreen>
-            {Object.keys(errors).length > 0 && (
-                <button 
-                    type="button" 
-                    onClick={resetForm} 
-                    className="mt-2 bg-red-500 text-white p-2 rounded"
-                >
-                    Limpiar Formulario
-                </button>
-            )}
-        </form>
+
+            {/* Mostrar productos filtrados */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {filteredProducts.map((product) => (
+                    <div key={product.id} className="border rounded-lg p-4 shadow">
+                        <img
+                            src={product.photo}
+                            alt={product.name}
+                            className="w-full h-40 object-cover mb-2 rounded-md"
+                        />
+                        <h2 className="text-xl font-bold mb-1">{product.name}</h2>
+                        <p className="text-gray-500">{product.category}</p>
+                        <p className="text-gray-500">{product.seller.username}</p> {/* Nombre del vendedor */}
+                        <p className="text-gray-700 mb-2">{product.description}</p> {/* Descripción del producto */}
+                        <p className="text-gray-600">Stock: {product.stock}</p> {/* Stock del producto */}
+                        <p className="text-green-600 font-semibold">
+                            {typeof product.price === 'string' ? (
+                                `€${parseFloat(product.price).toFixed(2).replace('.', ',')}`
+                            ) : (
+                                'Precio no disponible'
+                            )}
+                        </p>
+
+                        {/* Controles de cantidad */}
+                        <div className="flex items-center mt-2">
+                            <button
+                                className="bg-gray-200 p-1 rounded"
+                                onClick={() => decrementQuantity(product.id)}
+                            >
+                                -
+                            </button>
+                            <span className="mx-2">{quantities[product.id] || 1}</span>
+                            <button
+                                className="bg-gray-200 p-1 rounded"
+                                onClick={() => incrementQuantity(product.id)}
+                            >
+                                +
+                            </button>
+                        </div>
+
+                        {/* Botón para agregar al carrito */}
+                        <ButtonGreen
+                            backgroundColor="bg-green-500"
+                            textColor="text-white"
+                            onClick={() => handleAddToCart(product)}
+                        >
+                            Agregar al carrito
+                        </ButtonGreen>
+                    </div>
+                ))}
+            </div>
+        </div>
     );
 }
 
-export default CreateProductForm;
+export default ProductStore;

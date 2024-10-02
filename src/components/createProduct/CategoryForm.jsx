@@ -1,5 +1,5 @@
 import React from 'react';
-import PopUp from '../PopUp';
+
 
 const CategoryForm = ({
     productCategory,
@@ -64,14 +64,7 @@ const CategoryForm = ({
                     >
                         Guardar categoría
                     </button>
-                    {showPopup && (
-                        <PopUp
-                            message={popupMessage}
-                            type={popupType}
-                            onClose={() => setShowPopup(false)}
-                        />
-                        
-                    )}
+                    
                 </div>
 
             )}

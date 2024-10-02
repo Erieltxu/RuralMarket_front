@@ -22,7 +22,7 @@ const NavigationLinks = () => {
   return (
     <nav className="hidden font-bold md:flex space-x-9 bg-customPurple justify-between w-full px-10">
       <Link to="/" className="text-white">Inicio</Link>
-      <Link to="/productlist" className="text-white">Tienda</Link>
+      <Link to="/Store" className="text-white">Tienda</Link>
 
 
       {!loggedIn || userType === 'buyer' ? (

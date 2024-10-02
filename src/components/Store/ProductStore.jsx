@@ -5,20 +5,14 @@ import ButtonGreen from '../ButtonGreen';
 import CategoryForm from '../createProduct/CategoryForm'; // Importamos el componente CategoryForm
 
 function ProductStore() {
-    const [products, setProducts] = useState([]);
-    const [categories, setCategories] = useState(['Todos']);
-    const [selectedCategory, setSelectedCategory] = useState('Todos');
-    const [searchTerm, setSearchTerm] = useState('');
-    const [quantities, setQuantities] = useState({});
-    const [isAddingCategory, setIsAddingCategory] = useState(false);
-    const [newCategory, setNewCategory] = useState('');
-    const [newCategoryDescription, setNewCategoryDescription] = useState('');
+    const [products, setProducts] = useState([]); // Estado para almacenar todos los productos
+    const [categories, setCategories] = useState(['Todos']); // Estado para las categorías, incluyendo 'Todos'
+    const [selectedCategory, setSelectedCategory] = useState('Todos'); // Categoría seleccionada por el usuario
+    const [searchTerm, setSearchTerm] = useState(''); // Estado para el término de búsqueda
+    const [quantities, setQuantities] = useState({}); // Estado para manejar las cantidades
     const [errors, setErrors] = useState({});
-    const [showPopup, setShowPopup] = useState(false);
-    const [popupMessage, setPopupMessage] = useState('');
-    const [popupType, setPopupType] = useState('');
 
-    // Obtener categorías desde el backend
+    // Obtener categorías desde el backend (una sola vez)
     const fetchCategories = async () => {
         try {
             const response = await axios.get(CATEGORIES, {
@@ -26,13 +20,13 @@ function ProductStore() {
                     Authorization: `Token ${localStorage.getItem('token')}`,
                 },
             });
-            setCategories(['Todos', ...response.data]); // Agregar 'Todos' al principio
+            setCategories(['Todos', ...response.data]); // Agregar 'Todos' al principio de la lista
         } catch (error) {
             console.error('Error al cargar las categorías', error);
         }
     };
 
-    // Obtener productos desde el backend
+    // Obtener productos desde el backend (una sola vez)
     const fetchProducts = async () => {
         try {
             const response = await axios.get(PRODUCT, {
@@ -40,54 +34,46 @@ function ProductStore() {
                     Authorization: `Token ${localStorage.getItem('token')}`,
                 },
             });
-            setProducts(response.data);
+            setProducts(response.data); // Establecer los productos en el estado
         } catch (error) {
             console.error('Error al cargar los productos', error);
         }
     };
 
     useEffect(() => {
+        // Cargar las categorías y productos una sola vez al montar el componente
         fetchCategories();
         fetchProducts();
     }, []);
 
-    // Filtrar productos por categoría
+    // Filtrar productos por categoría y término de búsqueda localmente
     const filteredProducts = products.filter((product) => {
         const matchesCategory = selectedCategory === 'Todos' || product.category === selectedCategory;
         const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
         return matchesCategory && matchesSearch;
     });
 
-    // Manejo de agregar nueva categoría
-    const handleAddCategory = async () => {
-        if (newCategory.trim() === '' || newCategoryDescription.trim() === '') {
-            setErrors({ ...errors, newCategory: 'El nombre y la descripción son requeridos.' });
-            return;
-        }
+    // Función para incrementar la cantidad del producto
+    const incrementQuantity = (productId) => {
+        setQuantities((prevQuantities) => ({
+            ...prevQuantities,
+            [productId]: (prevQuantities[productId] || 1) + 1,
+        }));
+    };
 
-        try {
-            const response = await axios.post(CATEGORIES, {
-                name: newCategory,
-                description: newCategoryDescription,
-            }, {
-                headers: {
-                    Authorization: `Token ${localStorage.getItem('token')}`,
-                },
-            });
+    // Función para decrementar la cantidad del producto
+    const decrementQuantity = (productId) => {
+        setQuantities((prevQuantities) => ({
+            ...prevQuantities,
+            [productId]: Math.max((prevQuantities[productId] || 1) - 1, 1),
+        }));
+    };
 
-            setCategories([...categories, response.data]); // Agregar la nueva categoría a la lista
-            setIsAddingCategory(false);
-            setNewCategory('');
-            setNewCategoryDescription('');
-            setPopupMessage('Categoría agregada exitosamente');
-            setPopupType('success');
-            setShowPopup(true);
-        } catch (error) {
-            console.error('Error al agregar categoría', error);
-            setPopupMessage('Error al agregar categoría');
-            setPopupType('error');
-            setShowPopup(true);
-        }
+    // Función para manejar agregar el producto al carrito
+    const handleAddToCart = (product) => {
+        const quantity = quantities[product.id] || 1;
+        console.log(`Añadido al carrito: ${product.name} - Cantidad: ${quantity}`);
+        // Aquí puedes agregar la lógica para añadir el producto al carrito en el backend o localStorage
     };
 
     return (
@@ -103,18 +89,15 @@ function ProductStore() {
                 onChange={(e) => setSearchTerm(e.target.value)}
             />
 
-            {/* Filtro de categoría usando CategoryForm */}
+            {/* Filtro de categoría */}
             <CategoryForm
                 productCategory={selectedCategory}
                 setProductCategory={setSelectedCategory}
                 categories={categories}
-                isAddingCategory={isAddingCategory}
-                setIsAddingCategory={setIsAddingCategory}
-                newCategory={newCategory}
-                setNewCategory={setNewCategory}
-                newCategoryDescription={newCategoryDescription}
-                setNewCategoryDescription={setNewCategoryDescription}
-                handleAddCategory={handleAddCategory}
+                isAddingCategory={false}
+                newCategory={''}
+                newCategoryDescription={''}
+                handleAddCategory={() => {}}
                 errors={errors}
             />
 
@@ -129,9 +112,11 @@ function ProductStore() {
                         />
                         <h2 className="text-xl font-bold mb-1">{product.name}</h2>
                         <p className="text-gray-500">{product.category}</p>
+                        <p className="text-gray-700 mb-2">{product.description}</p> {/* Descripción del producto */}
+                        <p className="text-gray-600">Stock: {product.stock}</p> {/* Stock del producto */}
                         <p className="text-green-600 font-semibold">
-                            {typeof product.price === 'number' ? (
-                                `€${product.price.toFixed(2).replace('.', ',')}`
+                            {typeof product.price === 'string' ? (
+                                `€${parseFloat(product.price).toFixed(2).replace('.', ',')}`
                             ) : (
                                 'Precio no disponible'
                             )}

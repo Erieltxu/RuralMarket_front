@@ -27,6 +27,7 @@ const ProductDetails = ({
                 {errors.productName && <p className="text-red-500">{errors.productName}</p>}
             </div>
 
+
             <div className="mb-4">
                 <label htmlFor="productPrice" className="block text-gray-700">Precio:</label>
                 <input
@@ -34,7 +35,7 @@ const ProductDetails = ({
                     id="productPrice"
                     value={productPrice}
                     onChange={(e) => setProductPrice(e.target.value)} // No reemplaces nada, muestra lo que el usuario introduce
-                    placeholder="Ej: 2,00"
+                    placeholder="Ej: 2.00"
                     className="w-full p-2 border rounded-md"
                 />
                 {errors.productPrice && <p className="text-red-500">{errors.productPrice}</p>}
