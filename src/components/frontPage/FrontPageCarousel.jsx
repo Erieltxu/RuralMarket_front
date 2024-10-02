@@ -2,10 +2,9 @@ import React from "react";
 
 const FrontPageCarousel = () => {
   const images = [
-    "/img/home4.png",
-    "/img/home2.png",
-    "/img/home3.png",
-    "/img/home4.png"
+    "/img/9.jpg",
+    "/img/8.jpg",
+    "/img/7.jpg",
   ];
 
   const imagesPerPage = 3;

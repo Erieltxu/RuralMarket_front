@@ -3,9 +3,19 @@ const WhoWeAre = () => {
         <>
             <div className="flex flex-col items-center p-1 px-6" >
                 <h2 className="text-3xl font-bold text-center mb-6">Quiénes somos</h2>
-                <p className="text-justify max-w-9xl mx-auto mb-1">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
+                <p className="text-justify max-w-9xl mx-auto mb-1">Bienvenidx a nuestro espacio… un ‘rincón’ en Internet, abierto y accesible, que nos permite visibilizar el trabajo y los productos y servicios que con tanto esmero desarrollamos las mujeres emprendedoras que nos unimos en esta plataforma.
+
+Somos emprendedoras, que desde distintos puntos geográficos y entornos rurales, compartimos un interés común: el de hacerte llegar el resultado de nuestro esfuerzo y dedicación a la puerta de casa, facilitando que productos de calidad y servicios innovadores puedan ser disfrutados por cualquier persona interesada en ellos. 
+
+Un entorno global, cercano y en contacto directo con nosotras, como productoras y gestoras de cada producto ofertado, que te ayudará a conocer más de cerca nuestro trabajo, la forma en la que producimos (que va más allá del uso de unas materias primas u otras) y que desde entornos rurales nos permite compartir nuestra forma de hacer las cosas, resolviendo ‘en directo’ cualquier duda que se te plantee.
+
+Desde RuralMarket estamos consiguiendo también un espacio que nos une y permite crear redes de colaboración con otras emprendedoras… lo que - estamos seguras - también redunda en un mejor servicio para tí. 
+
+Esperamos que en él encuentres lo que buscas.
+¡¡Feliz recorrido por RuralMarket !!  
+</p>
                 <br/>
-                <p className="text-justify max-w-9xl mx-auto mb-4">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.</p>
+               
             </div>
             <br/>
         

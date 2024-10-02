@@ -19,6 +19,10 @@ const EntrepreneursView = () => {
     navigate('/nuestrasemprendedoras');  // Regresar al listado
   };
 
+  const handleViewProducts = (entrepreneurId) => {
+    navigate(`/Store?seller=${entrepreneurId}`);  // Redirige a la tienda con el filtro del ID del vendedor
+  };
+
   // Si está cargando o hay error, mostramos un mensaje
   if (loading) return <p>Cargando detalles...</p>;
   if (error) return <p>Error al cargar emprendedoras: {error.message}</p>;
@@ -42,12 +46,21 @@ const EntrepreneursView = () => {
               </a>
             </div>
           </div>
-          <div className="mt-8 flex justify-center">
+          <div className="mt-8 flex justify-center space-x-4">
+            {/* Botón "Volver al listado" */}
             <button
               className="bg-customGreen text-white py-2 px-4 rounded-xl hover:bg-customGreenL"
               onClick={handleBackToList}
             >
               Volver al listado
+            </button>
+            
+            {/* Nuevo botón "Mis productos" */}
+            <button
+              className="bg-blue-500 text-white py-2 px-4 rounded-xl hover:bg-blue-600"
+              onClick={() => handleViewProducts(selectedEntrepreneur.id)}  // Redirige a la tienda con los productos del vendedor
+            >
+              Mis productos
             </button>
           </div>
         </div>
@@ -71,6 +84,13 @@ const EntrepreneursView = () => {
                   onClick={() => navigate(`/nuestrasemprendedoras/${entrepreneur.id}`)}
                 >
                   Más información
+                </button>
+                {/* Botón "Mis productos" para cada emprendedora */}
+                <button
+                  className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+                  onClick={() => handleViewProducts(entrepreneur.id)}  // Redirige a la tienda del vendedor
+                >
+                  Mis productos
                 </button>
               </div>
             </div>
