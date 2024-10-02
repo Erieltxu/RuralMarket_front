@@ -103,7 +103,6 @@ function CreateProductForm({ addProduct }) {
             const response = await axios.post(CATEGORIES, newCategoryData);
             if (response.status === 201) {
                 setCategories([...categories, response.data]); // Añadir la nueva categoría al estado actual
-                setProductCategory(response.data.id); // Seleccionar la nueva categoría automáticamente
                 setNewCategory('');
                 setNewCategoryDescription('');
                 setIsAddingCategory(false);
@@ -126,7 +125,7 @@ function CreateProductForm({ addProduct }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className='max-w-md mx-auto p-4 mb-6 border rounded-lg shadow'>
+        <form onSubmit={handleSubmit} className='max-w-md mx-auto p-4 mb-6 border rounded-lg shadow mt-10'> {/* Añade un margin-top con mt-10 */}
             {message && <p className="text-red-500">{message}</p>}
             <CategoryForm 
                 productCategory={productCategory} 

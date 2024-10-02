@@ -17,6 +17,7 @@ import PasswordResetConfirm from '../pages/password/PasswordResetConfirm';
 import PasswordResetDone from '../pages/password/PasswordResetDone';
 import EntrepreneursView from '../pages/EntrepreneursView';
 import PrivacyPolicy from '../components/PrivacyPolicy';
+import CreateProductForm from '../components/createProduct/CreateProductForm'
 
 const handleLogout = () => {
  
@@ -58,7 +59,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'product',
-        element: <Product/>,
+        element: <CreateProductForm />,
       },
       {
         path: 'productlist',

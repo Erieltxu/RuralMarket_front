@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import CreateProductForm from './CreateProductForm';
 import { PRODUCT } from '../../config/urls';
-import ProductStore from '../Store/ProductStore'
 
 function ProductList() {
     const [products, setProducts] = useState([]);
@@ -43,9 +41,7 @@ function ProductList() {
 
     return (
         <div className="max-w-4xl mx-auto p-4">
-            <h1 className="text-3xl font-bold mb-4">Catálogo de Productos</h1>
-
-            <CreateProductForm addProduct={addProduct} />
+            <h2 className="text-3xl font-bold mb-4">Catálogo de Productos</h2>
 
             <input
                 type="text"
@@ -82,7 +78,6 @@ function ProductList() {
                         <h2 className="text-xl font-bold mb-1">{product.name}</h2>
                         <p className="text-gray-500">{product.category}</p>
                         <p className="text-green-600 font-semibold">
-                            {/* Mostrar el precio correctamente */}
                             {typeof product.price === 'number' ? (
                                 `€${product.price.toFixed(2).replace('.', ',')}`
                             ) : (
@@ -92,7 +87,6 @@ function ProductList() {
                     </div>
                 ))}
             </div>
-            <ProductStore></ProductStore>
         </div>
     );
 }

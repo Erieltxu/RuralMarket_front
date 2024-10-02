@@ -16,7 +16,7 @@ const FrontPagePhoto = () => {
 
                 <div className=" col-span-2">
                     <img
-                        src="../../../public/img/Home11.jpg"
+                        src="../../../public/img/9.jpg"
                         alt="Productos Frescos y Sanos"
                         className="h-[700px] w-full object-cover rounded-lg rounded-[15px]"
                     />
@@ -45,7 +45,7 @@ const FrontPagePhoto = () => {
                         <ButtonGreen
                             backgroundColor="bg-white"
                             textColor="text-customGreen"
-                            href="/product"
+                            onClick={() => navigate('/product')}
                             className="px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 text-base sm:text-lg md:text-xl -mt-8"
                         >
                             Compra ahora →
@@ -58,12 +58,12 @@ const FrontPagePhoto = () => {
                 <div className="hidden md:grid grid-rows-2 gap-8 w-full md:h-[700px]">
 
                     <img
-                        src="../../../public/img/arbolHongos.jpg"
+                        src="../../../public/img/11.jpg"
                         alt="Frutas y Verduras"
                         className="w-full h-full object-cover rounded-lg hidden md:block rounded-[15px]"
                     />
                     <img
-                        src="/img/home0.png"
+                        src="/img/10.jpg"
                         alt="Cesta de Productos"
                         className="w-full h-full object-cover rounded-lg hidden md:block rounded-[15px]"
                     />
@@ -76,7 +76,7 @@ const FrontPagePhoto = () => {
                 <div className="hidden md:block  ">
 
                     <img
-                        src="../../../public/img/raviolon.png"
+                        src="../../../public/img/6.jpg"
                         alt="Conoce a Rural Market"
                         className=" w-[900px] h-full object-cover -lg rounded-[15px]"
                     />

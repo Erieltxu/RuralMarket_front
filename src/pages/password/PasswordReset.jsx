@@ -1,51 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import UseApi from '../../services/useApi'; // Asumo que tienes el hook UseApi en un archivo aparte
+import UseApi from '../../services/useApi'; // Asegúrate de que la función personalizada UseApi esté correcta
+import axios from 'axios';
+import { getCsrfToken } from '../../utils/getCsrfToken'; // Asegúrate de que esta función esté correctamente implementada
 
 function PasswordReset() {
   const [email, setEmail] = useState('');
-  const [submitRequest, setSubmitRequest] = useState(false); // Estado para controlar cuándo enviar la solicitud
   const [message, setMessage] = useState('');
+  const [csrfToken, setCsrfToken] = useState('');
 
-  // Usa UseApi para hacer la solicitud POST solo cuando submitRequest sea true
-  const { data, loading, error } = UseApi({
-    apiEndpoint: 'http://localhost:8000/api/users/password_reset/', // Asegúrate de que esta URL sea correcta
-    method: 'POST',
-    body: { email: 'tu-email@ejemplo.com' }, // Asegúrate de que el cuerpo sea el correcto
-});
+  useEffect(() => {
+    // Obtén el token CSRF cuando el componente se monta
+    const token = getCsrfToken();
+    setCsrfToken(token);
+  }, []);
 
-  // Manejar el envío del formulario
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitRequest(true); // Esto activará la solicitud en UseApi
+    try {
+      const response = await axios.post(
+        'http://localhost:8000/api/users/password_reset/',
+        { email },
+        {
+          headers: {
+            'X-CSRFToken': csrfToken,  // Asegúrate de que el token CSRF se está enviando correctamente
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true,  // Necesario para enviar las cookies al backend
+        }
+      );
+      setMessage('Correo enviado con éxito.');
+    } catch (error) {
+      setMessage('Error al enviar el correo. Inténtalo nuevamente.');
+      console.error('Error al enviar correo:', error);
+    }
   };
 
-  // Monitorear el resultado de la API para mostrar mensajes de éxito o error
-  useEffect(() => {
-    if (!loading && !error && data) {
-      setMessage('Email enviado con instrucciones para restablecer la contraseña.');
-    } else if (error) {
-      setMessage('Error al enviar el correo. Inténtalo nuevamente.');
-    }
-  }, [data, loading, error]);
-
   return (
-    <div>
-      <h2>Recuperar contraseña</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Email:
-          <input 
-            type="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
-          />
-        </label>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Enviando...' : 'Enviar'}
-        </button>
-      </form>
-      {message && <p>{message}</p>}
+    <div className="flex min-h-screen flex-col justify-center items-center px-6 py-12 bg-gray-100">
+      <div className="w-full max-w-md bg-white p-6 shadow-lg rounded-lg">
+        <h2 className="text-2xl font-bold text-center mb-4">Recuperar Contraseña</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="block w-full rounded-md border-gray-300 py-2 px-3 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
+          >
+            Enviar
+          </button>
+        </form>
+        {message && <p className="mt-4 text-center text-red-600">{message}</p>}
+      </div>
     </div>
   );
 }
