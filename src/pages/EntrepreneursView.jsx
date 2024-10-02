@@ -28,11 +28,11 @@ const EntrepreneursView = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-12 px-4">
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-4xl w-full mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-6">{selectedEntrepreneur.username}</h2>
+          <h2 className="text-4xl font-bold text-center mb-6">{selectedEntrepreneur.first_name}</h2>
           <div className="flex flex-col lg:flex-row items-center lg:items-start">
             <img
               src={selectedEntrepreneur.photo}
-              alt={selectedEntrepreneur.username}
+              alt={selectedEntrepreneur.first_name}
               className="w-64 h-64 object-cover rounded-lg mb-6 lg:mb-0 lg:mr-8"
             />
             <div className="text-lg text-gray-700 leading-relaxed max-w-2xl">
@@ -64,7 +64,7 @@ const EntrepreneursView = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 px-4">
           {entrepreneurs.map(entrepreneur => (
             <div key={entrepreneur.id} className="flex flex-col">
-              <EntrepreneurCard name={entrepreneur.username} image={entrepreneur.photo} />
+              <EntrepreneurCard name={entrepreneur.first_name} image={entrepreneur.photo} />
               <div className="mt-2 space-y-2">
                 <button
                   className="w-full bg-customGreen text-white py-2 rounded-lg hover:bg-customGreenL"
