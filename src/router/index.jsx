@@ -17,6 +17,7 @@ import PasswordResetConfirm from '../pages/password/PasswordResetConfirm';
 import PasswordResetDone from '../pages/password/PasswordResetDone';
 import EntrepreneursView from '../pages/EntrepreneursView';
 import PrivacyPolicy from '../components/PrivacyPolicy';
+import Store from "../pages/Store";
 
 const handleLogout = () => {
  
@@ -99,6 +100,10 @@ const router = createBrowserRouter([
       {
         path: '/politica_privacidad',
         element: <PrivacyPolicy />
+      },
+      {
+        path: '/Store',
+        element: <Store />
       },
     ],
   },

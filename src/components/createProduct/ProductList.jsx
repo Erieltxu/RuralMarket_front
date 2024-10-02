@@ -1,98 +1,74 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import CreateProductForm from './CreateProductForm';
 import { PRODUCT } from '../../config/urls';
-import ProductStore from '../Store/ProductStore'
+import CreateProductForm from './CreateProductForm';
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 
 function ProductList() {
-    const [products, setProducts] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('Todos');
-    const [error, setError] = useState(null);
+    const [products, setProducts] = useState([]); // Estado para almacenar todos los productos creados
+    const [searchTerm, setSearchTerm] = useState(''); // Estado para el término de búsqueda
+    const [error, setError] = useState(null); // Estado para manejar errores
+    const navigate = useNavigate(); // Usa el hook useNavigate
 
-    const categories = ['Todos', 'Frutas', 'Verduras'];
-
-    const fetchProducts = async () => {
-        try {
-            const response = await axios.get(PRODUCT, {
-                headers: {
-                    Authorization: `Token ${localStorage.getItem('token')}`,
-                },
-            });
-            console.log(response.data); // Verifica la estructura de la respuesta
-            setProducts(response.data);
-        } catch (err) {
-            setError('Error al cargar los productos.');
-            console.error(err);
-        }
+    // Función para agregar un nuevo producto
+    const addProduct = (product) => {
+        setProducts((prevProducts) => [...prevProducts, product]); // Agrega el nuevo producto a la lista
     };
 
-    useEffect(() => {
-        fetchProducts(); // Cargar productos cuando el componente se monte
-    }, []);
-
-    const filteredProducts = products.filter((product) => {
-        const matchesCategory = selectedCategory === 'Todos' || product.category === selectedCategory;
-        const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-        return matchesCategory && matchesSearch;
-    });
-
-    const addProduct = (newProduct) => {
-        setProducts((prevProducts) => [...prevProducts, newProduct]);
+    // Función para navegar a la página de ProductStore
+    const handleUploadProducts = () => {
+        // Aquí podrías agregar lógica para verificar antes de navegar si es necesario
+        navigate('/store'); // Navega a la página ProductStore
     };
 
     return (
         <div className="max-w-4xl mx-auto p-4">
-            <h1 className="text-3xl font-bold mb-4">Catálogo de Productos</h1>
+            <h1 className="text-3xl font-bold mb-4">Crear Producto</h1>
 
+            {/* Formulario para crear un nuevo producto */}
             <CreateProductForm addProduct={addProduct} />
 
+            {/* Campo de búsqueda */}
             <input
                 type="text"
                 placeholder="Buscar productos..."
                 className="w-full p-2 mb-4 border rounded-md"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => setSearchTerm(e.target.value)} // Actualiza el término de búsqueda
             />
 
-            <div className="flex justify-end mb-4">
-                <select
-                    className="p-2 border rounded-md"
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                >
-                    {categories.map((category) => (
-                        <option key={category} value={category}>
-                            {category}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
+            {/* Mostrar error si hay algún problema */}
             {error && <div className="text-red-500 mb-4">{error}</div>}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {filteredProducts.map((product) => (
-                    <div key={product.id} className="border rounded-lg p-4 shadow">
-                        <img
-                            src={product.photo}
-                            alt={product.name}
-                            className="w-full h-40 object-cover mb-2 rounded-md"
-                        />
-                        <h2 className="text-xl font-bold mb-1">{product.name}</h2>
-                        <p className="text-gray-500">{product.category}</p>
-                        <p className="text-green-600 font-semibold">
-                            {/* Mostrar el precio correctamente */}
-                            {typeof product.price === 'number' ? (
-                                `€${product.price.toFixed(2).replace('.', ',')}`
-                            ) : (
-                                'Precio no disponible'
-                            )}
-                        </p>
-                    </div>
-                ))}
-            </div>
-            <ProductStore></ProductStore>
+            {/* Botón para subir productos */}
+            <button 
+                onClick={handleUploadProducts}
+                className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+            >
+                Subir Productos
+            </button>
+
+            {/* Mostrar todos los productos creados */}
+            {products.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
+                    {products.map((product, index) => (
+                        <div key={index} className="border rounded-lg p-4 shadow">
+                            <img
+                                src={product.photo} // Asegúrate de que esta propiedad sea correcta
+                                alt={product.name}
+                                className="w-full h-40 object-cover mb-2 rounded-md"
+                            />
+                            <h2 className="text-xl font-bold mb-1">{product.name}</h2>
+                            <p className="text-gray-500">{product.category}</p>
+                            <p className="text-gray-700 mb-2">{product.description}</p> {/* Descripción del producto */}
+                            <p className="text-gray-600">Stock: {product.stock}</p> {/* Stock del producto */}
+                            <p className="text-green-600 font-semibold">
+                                {`€${parseFloat(product.price).toFixed(2).replace('.', ',')}`}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }
