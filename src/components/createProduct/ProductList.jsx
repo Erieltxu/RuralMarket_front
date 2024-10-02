@@ -1,22 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import CreateProductForm from './CreateProductForm';
-
-const initialProducts = [
-    { id: 1, name: 'Tomate', category: 'Frutas', price: 2.99, imageUrl: '/img/tomato.png' },
-    { id: 2, name: 'Lechuga', category: 'Verduras', price: 1.5, imageUrl: '/img/lettuce.png' },
-    { id: 3, name: 'Zanahoria', category: 'Verduras', price: 1.0, imageUrl: '/img/carrots.png' },
-    { id: 4, name: 'Manzana', category: 'Frutas', price: 3.2, imageUrl: '/img/apple.png' },
-    { id: 5, name: 'Pepino', category: 'Verduras', price: 1.75, imageUrl: '/img/cucumbers.png' },
-];
+import { PRODUCT } from '../../config/urls';
+import ProductStore from '../Store/ProductStore'
 
 function ProductList() {
-    const [products, setProducts] = useState(initialProducts);
+    const [products, setProducts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('Todos');
+    const [error, setError] = useState(null);
 
     const categories = ['Todos', 'Frutas', 'Verduras'];
 
-    // Función para filtrar productos por categoría y nombre
+    const fetchProducts = async () => {
+        try {
+            const response = await axios.get(PRODUCT, {
+                headers: {
+                    Authorization: `Token ${localStorage.getItem('token')}`,
+                },
+            });
+            console.log(response.data); // Verifica la estructura de la respuesta
+            setProducts(response.data);
+        } catch (err) {
+            setError('Error al cargar los productos.');
+            console.error(err);
+        }
+    };
+
+    useEffect(() => {
+        fetchProducts(); // Cargar productos cuando el componente se monte
+    }, []);
+
     const filteredProducts = products.filter((product) => {
         const matchesCategory = selectedCategory === 'Todos' || product.category === selectedCategory;
         const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -24,7 +38,7 @@ function ProductList() {
     });
 
     const addProduct = (newProduct) => {
-        setProducts([...products, newProduct]);
+        setProducts((prevProducts) => [...prevProducts, newProduct]);
     };
 
     return (
@@ -55,20 +69,30 @@ function ProductList() {
                 </select>
             </div>
 
+            {error && <div className="text-red-500 mb-4">{error}</div>}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {filteredProducts.map((product) => (
                     <div key={product.id} className="border rounded-lg p-4 shadow">
                         <img
-                            src={product.imageUrl}
+                            src={product.photo}
                             alt={product.name}
                             className="w-full h-40 object-cover mb-2 rounded-md"
                         />
                         <h2 className="text-xl font-bold mb-1">{product.name}</h2>
                         <p className="text-gray-500">{product.category}</p>
-                        <p className="text-green-600 font-semibold">€{product.price.toFixed(2)}</p>
+                        <p className="text-green-600 font-semibold">
+                            {/* Mostrar el precio correctamente */}
+                            {typeof product.price === 'number' ? (
+                                `€${product.price.toFixed(2).replace('.', ',')}`
+                            ) : (
+                                'Precio no disponible'
+                            )}
+                        </p>
                     </div>
                 ))}
             </div>
+            <ProductStore></ProductStore>
         </div>
     );
 }

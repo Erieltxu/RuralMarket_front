@@ -28,16 +28,18 @@ const ProductDetails = ({
             </div>
 
             <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Precio</label>
+                <label htmlFor="productPrice" className="block text-gray-700">Precio:</label>
                 <input
-                    type="number"
-                    className={`w-full p-2 border rounded ${errors.productPrice ? 'border-red-500' : ''}`}
+                    type="text"
+                    id="productPrice"
                     value={productPrice}
-                    onChange={(e) => setProductPrice(e.target.value)}
-                    required
+                    onChange={(e) => setProductPrice(e.target.value)} // No reemplaces nada, muestra lo que el usuario introduce
+                    placeholder="Ej: 2,00"
+                    className="w-full p-2 border rounded-md"
                 />
                 {errors.productPrice && <p className="text-red-500">{errors.productPrice}</p>}
             </div>
+
 
             <div className="mb-4">
                 <label className="block text-sm font-bold mb-2">Stock</label>
