@@ -21,8 +21,8 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-12 px-6">
-      <div className="w-full max-w-lg bg-white shadow-md rounded-lg p-8">
+    <div className="max-w-md mx-auto mb-16 rounded-lg shadow mt-16"> {/* Aumentado margen superior e inferior */}
+      <div className="bg-white shadow-md rounded-lg p-8">
         <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Contacto</h2>
         {!submitted ? (
           <form onSubmit={handleSubmit} className="space-y-6">

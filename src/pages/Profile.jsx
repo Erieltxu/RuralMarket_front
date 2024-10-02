@@ -8,6 +8,7 @@ import eyeOffIcon from '/icons/eye-off.svg';
 
 function Profile({ onLogout }) {
     const [user, setUser] = useState({
+        first_name: '',
         username: '',
         email: '',
         password: '',
@@ -36,6 +37,7 @@ function Profile({ onLogout }) {
     useEffect(() => {
         if (userData) {
             setUser({
+                first_name: userData.first_name || '',
                 username: userData.username || '',
                 email: userData.email || '',
                 password: '',
@@ -80,9 +82,15 @@ function Profile({ onLogout }) {
     
         try {
             const formData = new FormData();
+            formData.append('first_name', user.first_name);
             formData.append('username', user.username);
             formData.append('email', user.email);
             formData.append('current_password', user.current_password);
+            formData.append('phone', user.phone);
+            formData.append('address', user.address);
+            formData.append('province', user.province);
+            formData.append('zip_code', user.postalCode);
+            formData.append('user_description', user.description);
     
             // Si se está cambiando la contraseña, la incluimos
             if (user.password) {
@@ -166,12 +174,30 @@ function Profile({ onLogout }) {
                     Perfil de {user.username}
                 </h2>
 
+                {previewPhoto && (
+                    <div className="flex justify-center mb-4">
+                        <img src={previewPhoto} alt="Foto de perfil" className="w-24 h-24 rounded-full object-cover" />
+                    </div>
+                )}
+                
                 {userLoading ? (
                     <p className="text-gray-600">Cargando detalles del perfil...</p>
                 ) : userError ? (
                     <p className="text-red-600">Error al cargar el perfil</p>
                 ) : (
                     <form onSubmit={handleUpdateProfile} className="space-y-6">
+                        {/* Campo para el nombre */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-900">Nombre</label>
+                            <input
+                                type="text"
+                                name="first_name"
+                                value={user.first_name}
+                                onChange={handleChange}
+                                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                            />
+                        </div>
+
                         <div>
                             <label className="block text-sm font-medium text-gray-900">Nombre de usuario</label>
                             <input
@@ -196,6 +222,7 @@ function Profile({ onLogout }) {
                             />
                         </div>
 
+                        {/* Contraseña actual */}
                         <div>
                             <label className="block text-sm font-medium text-gray-900">Contraseña actual</label>
                             <div className="relative">
@@ -216,6 +243,7 @@ function Profile({ onLogout }) {
                             </div>
                         </div>
 
+                        {/* Nueva contraseña */}
                         <div>
                             <label className="block text-sm font-medium text-gray-900">Nueva contraseña</label>
                             <div className="relative">
@@ -235,6 +263,7 @@ function Profile({ onLogout }) {
                             </div>
                         </div>
 
+                        {/* Confirmar nueva contraseña */}
                         <div>
                             <label className="block text-sm font-medium text-gray-900">Confirmar nueva contraseña</label>
                             <div className="relative">
@@ -254,74 +283,70 @@ function Profile({ onLogout }) {
                             </div>
                         </div>
 
-                        {user.user_type === 'seller' && (
-                            <>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-900">Teléfono</label>
-                                    <input
-                                        type="text"
-                                        name="phone"
-                                        value={user.phone}
-                                        onChange={handleChange}
-                                        className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                                    />
-                                </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-900">Teléfono</label>
+                            <input
+                                type="text"
+                                name="phone"
+                                value={user.phone}
+                                onChange={handleChange}
+                                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                            />
+                        </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-900">Dirección</label>
-                                    <input
-                                        type="text"
-                                        name="address"
-                                        value={user.address}
-                                        onChange={handleChange}
-                                        className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                                    />
-                                </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-900">Dirección</label>
+                            <input
+                                type="text"
+                                name="address"
+                                value={user.address}
+                                onChange={handleChange}
+                                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                            />
+                        </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-900">Provincia</label>
-                                    <input
-                                        type="text"
-                                        name="province"
-                                        value={user.province}
-                                        onChange={handleChange}
-                                        className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                                    />
-                                </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-900">Provincia</label>
+                            <input
+                                type="text"
+                                name="province"
+                                value={user.province}
+                                onChange={handleChange}
+                                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                            />
+                        </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-900">Código Postal</label>
-                                    <input
-                                        type="text"
-                                        name="postalCode"
-                                        value={user.postalCode}
-                                        onChange={handleChange}
-                                        className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                                    />
-                                </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-900">Código Postal</label>
+                            <input
+                                type="text"
+                                name="postalCode"
+                                value={user.postalCode}
+                                onChange={handleChange}
+                                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                            />
+                        </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-900">Descripción</label>
-                                    <textarea
-                                        name="description"
-                                        value={user.description}
-                                        onChange={handleChange}
-                                        maxLength={250}
-                                        className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                                    />
-                                </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-900">Descripción</label>
+                            <textarea
+                                name="description"
+                                value={user.description}
+                                onChange={handleChange}
+                                maxLength={250}
+                                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm resize-y"  // Aquí añadí 'resize-y' para permitir redimensionar verticalmente.
+                            />
+                        </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-900">Foto de perfil</label>
-                                    <input
-                                        type="file"
-                                        name="photo"
-                                        onChange={handlePhotoChange}
-                                        className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                                    />
-                                </div>
-                            </>
-                        )}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-900">Foto de perfil</label>
+                            <input
+                                type="file"
+                                name="photo"
+                                onChange={handlePhotoChange}
+                                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                            />
+                        </div>
 
                         {updateError && <p className="text-red-600">{updateError}</p>}
 

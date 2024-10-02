@@ -1,18 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import UseApi from '../../services/useApi'; // Asegúrate de que la función personalizada UseApi esté correcta
+import React, { useState } from 'react';
 import axios from 'axios';
-import { getCsrfToken } from '../../utils/getCsrfToken'; // Asegúrate de que esta función esté correctamente implementada
 
-function PasswordReset() {
+const PasswordReset = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [csrfToken, setCsrfToken] = useState('');
-
-  useEffect(() => {
-    // Obtén el token CSRF cuando el componente se monta
-    const token = getCsrfToken();
-    setCsrfToken(token);
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,16 +13,13 @@ function PasswordReset() {
         { email },
         {
           headers: {
-            'X-CSRFToken': csrfToken,  // Asegúrate de que el token CSRF se está enviando correctamente
             'Content-Type': 'application/json',
           },
-          withCredentials: true,  // Necesario para enviar las cookies al backend
         }
       );
       setMessage('Correo enviado con éxito.');
     } catch (error) {
       setMessage('Error al enviar el correo. Inténtalo nuevamente.');
-      console.error('Error al enviar correo:', error);
     }
   };
 
@@ -61,6 +49,6 @@ function PasswordReset() {
       </div>
     </div>
   );
-}
+};
 
 export default PasswordReset;
