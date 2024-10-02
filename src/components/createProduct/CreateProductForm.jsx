@@ -12,7 +12,6 @@ function CreateProductForm({ addProduct }) {
     const [productPrice, setProductPrice] = useState('');
     const [productStock, setProductStock] = useState('');
     const [productImage, setProductImage] = useState(null);
-    const [seller, setSeller] = useState('');
     const [message, setMessage] = useState('');
     const [errors, setErrors] = useState({});
     const [categories, setCategories] = useState([]);
@@ -35,20 +34,19 @@ function CreateProductForm({ addProduct }) {
     }, []);
 
     const handleImageChange = (e) => {
-        setProductImage(e.target.files[0]);
+        setProductImage(e.target.files[0]); // Manejar la selección de la imagen
     };
 
     const validateForm = () => {
         let formErrors = {};
         if (!productName) formErrors.productName = 'El nombre del producto es obligatorio.';
         if (!productCategory) formErrors.productCategory = 'Selecciona o agrega una categoría.';
-        if (!productPrice || isNaN(productPrice) || productPrice <= 0) {
+        if (!productPrice || isNaN(productPrice.replace(',', '.')) || parseFloat(productPrice.replace(',', '.')) <= 0) {
             formErrors.productPrice = 'Introduce un precio válido.';
         }
         if (!productStock || isNaN(productStock) || productStock < 0) {
             formErrors.productStock = 'El stock debe ser un número positivo.';
         }
-        if (!seller) formErrors.seller = 'El vendedor es obligatorio.';
         if (!productImage) formErrors.productImage = 'Debes subir una imagen del producto.';
         return formErrors;
     };
@@ -63,12 +61,11 @@ function CreateProductForm({ addProduct }) {
 
         const formData = new FormData();
         formData.append('name', productName);
-        formData.append('category', productCategory || newCategory); // Usar newCategory si está definido
+        formData.append('category', productCategory); // ID de la categoría
         formData.append('description', productDescription);
-        formData.append('price', parseFloat(productPrice));
-        formData.append('stock', parseInt(productStock, 10));
-        formData.append('seller', seller);
-        formData.append('photo', productImage);
+        formData.append('price', parseFloat(productPrice.replace(',', '.'))); // Asegúrate de que sea un número
+        formData.append('stock', parseInt(productStock, 10)); // Asegúrate de que sea un número
+        formData.append('photo', productImage); // Envía la imagen
 
         try {
             setMessage('Creando producto...');
@@ -79,8 +76,8 @@ function CreateProductForm({ addProduct }) {
                 },
             });
             if (response && response.status === 201) {
-                addProduct(response.data);
-                resetForm();
+                addProduct(response.data); // Añadir el producto creado a la lista
+                resetForm(); // Reiniciar el formulario
                 setMessage('Producto creado exitosamente.');
             } else {
                 setMessage('Error al crear el producto. Inténtalo nuevamente.');
@@ -105,9 +102,8 @@ function CreateProductForm({ addProduct }) {
             };
             const response = await axios.post(CATEGORIES, newCategoryData);
             if (response.status === 201) {
-                // Añadir la nueva categoría al estado actual de categorías
-                setCategories([...categories, response.data]);
-                setProductCategory(response.data.name); // Seleccionar la nueva categoría automáticamente
+                setCategories([...categories, response.data]); // Añadir la nueva categoría al estado actual
+                setProductCategory(response.data.id); // Seleccionar la nueva categoría automáticamente
                 setNewCategory('');
                 setNewCategoryDescription('');
                 setIsAddingCategory(false);
@@ -125,7 +121,6 @@ function CreateProductForm({ addProduct }) {
         setProductPrice('');
         setProductStock('');
         setProductImage(null);
-        setSeller('');
         setMessage('');
         setErrors({});
     };
@@ -153,12 +148,11 @@ function CreateProductForm({ addProduct }) {
                 setProductPrice={setProductPrice} 
                 productStock={productStock} 
                 setProductStock={setProductStock} 
-                seller={seller} 
-                setSeller={setSeller} 
                 productImage={productImage} 
                 handleImageChange={handleImageChange} 
                 errors={errors} 
             />
+           
             <ButtonGreen
                 backgroundColor="bg-green-500"
                 textColor="text-white"
