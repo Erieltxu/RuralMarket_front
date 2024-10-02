@@ -10,14 +10,53 @@ function ProductList() {
     const [error, setError] = useState(null); // Estado para manejar errores
     const navigate = useNavigate(); // Usa el hook useNavigate
 
+    // Cargar productos desde localStorage al iniciar el componente
+    useEffect(() => {
+        const storedProducts = localStorage.getItem('products');
+        if (storedProducts) {
+            setProducts(JSON.parse(storedProducts));
+        }
+    }, []);
+
     // Función para agregar un nuevo producto
     const addProduct = (product) => {
-        setProducts((prevProducts) => [...prevProducts, product]); // Agrega el nuevo producto a la lista
+        setProducts((prevProducts) => {
+            const updatedProducts = [...prevProducts, product];
+            // Almacenar productos en localStorage
+            localStorage.setItem('products', JSON.stringify(updatedProducts));
+            return updatedProducts;
+        });
     };
 
-    // Función para navegar a la página de ProductStore
+    // Función para eliminar un producto de la base de datos
+    const deleteProductFromDatabase = async (productId) => {
+        try {
+            await axios.delete(`${PRODUCT}${productId}/`, {
+                headers: {
+                    Authorization: `Token ${localStorage.getItem('token')}`,
+                },
+            });
+            console.log(`Producto ${productId} eliminado de la base de datos.`);
+        } catch (error) {
+            console.error('Error al eliminar el producto de la base de datos:', error);
+        }
+    };
+
+    // Función para eliminar un producto
+    const removeProduct = async (productToRemove) => {
+        await deleteProductFromDatabase(productToRemove.id); // Elimina el producto de la base de datos
+        setProducts((prevProducts) => {
+            const updatedProducts = prevProducts.filter(product => product !== productToRemove);
+            // Actualizar localStorage
+            localStorage.setItem('products', JSON.stringify(updatedProducts));
+            return updatedProducts;
+        });
+    };
+
+    // Función para navegar a la página de ProductStore y limpiar productos
     const handleUploadProducts = () => {
-        // Aquí podrías agregar lógica para verificar antes de navegar si es necesario
+        setProducts([]); // Limpiar productos del estado
+        localStorage.removeItem('products'); // Limpiar productos de localStorage
         navigate('/store'); // Navega a la página ProductStore
     };
 
@@ -63,8 +102,16 @@ function ProductList() {
                             <p className="text-gray-700 mb-2">{product.description}</p> {/* Descripción del producto */}
                             <p className="text-gray-600">Stock: {product.stock}</p> {/* Stock del producto */}
                             <p className="text-green-600 font-semibold">
-                                {`€${parseFloat(product.price).toFixed(2).replace('.', ',')}`}
+                                {`${parseFloat(product.price).toFixed(2).replace('.', ',')} €`}
                             </p>
+
+                            {/* Botón para eliminar el producto */}
+                            <button 
+                                className="bg-red-500 text-white px-2 py-1 rounded mt-2"
+                                onClick={() => removeProduct(product)}
+                            >
+                                Eliminar
+                            </button>
                         </div>
                     ))}
                 </div>
