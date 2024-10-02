@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import UseApi from '../../services/useApi';
-import { PRODUCT } from '../../config/urls';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { PRODUCT, CATEGORIES } from '../../config/urls';
+import ButtonGreen from '../ButtonGreen';
+import ProductDetails from '../createProduct/ProductDetails';
+import CategoryForm from '../createProduct/CategoryForm';
 
-function CreateProductForm({ addProduct, sellerId }) {  // Agregamos sellerId como prop
+function CreateProductForm({ addProduct }) {
     const [productName, setProductName] = useState('');
     const [productCategory, setProductCategory] = useState('');
     const [productDescription, setProductDescription] = useState('');
@@ -11,39 +14,45 @@ function CreateProductForm({ addProduct, sellerId }) {  // Agregamos sellerId co
     const [productImage, setProductImage] = useState(null);
     const [message, setMessage] = useState('');
     const [errors, setErrors] = useState({});
+    const [categories, setCategories] = useState([]);
+    const [newCategory, setNewCategory] = useState('');
+    const [newCategoryDescription, setNewCategoryDescription] = useState('');
+    const [isAddingCategory, setIsAddingCategory] = useState(false);
 
-    const { data, loading, error, callApi } = UseApi({
-        apiEndpoint: PRODUCT,
-        method: 'POST',
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    });
-
-    const handleImageChange = (e) => {
-        setProductImage(e.target.files[0]);
+    // Función para cargar categorías
+    const fetchCategories = async () => {
+        try {
+            const response = await axios.get(CATEGORIES);
+            setCategories(response.data);
+        } catch (error) {
+            console.error('Error al cargar las categorías:', error);
+        }
     };
 
-    // Validación del formulario
+    useEffect(() => {
+        fetchCategories(); // Cargar categorías al inicio
+    }, []);
+
+    const handleImageChange = (e) => {
+        setProductImage(e.target.files[0]); // Manejar la selección de la imagen
+    };
+
     const validateForm = () => {
         let formErrors = {};
         if (!productName) formErrors.productName = 'El nombre del producto es obligatorio.';
-        if (!productCategory) formErrors.productCategory = 'Selecciona una categoría.';
-        if (!productPrice || isNaN(productPrice) || productPrice <= 0) {
+        if (!productCategory) formErrors.productCategory = 'Selecciona o agrega una categoría.';
+        if (!productPrice || isNaN(productPrice.replace(',', '.')) || parseFloat(productPrice.replace(',', '.')) <= 0) {
             formErrors.productPrice = 'Introduce un precio válido.';
         }
         if (!productStock || isNaN(productStock) || productStock < 0) {
             formErrors.productStock = 'El stock debe ser un número positivo.';
         }
-        if (!productImage) formErrors.productImage = 'La imagen del producto es obligatoria.';
-
+        if (!productImage) formErrors.productImage = 'Debes subir una imagen del producto.';
         return formErrors;
     };
 
-    // Manejo del envío del formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         const formErrors = validateForm();
         if (Object.keys(formErrors).length > 0) {
             setErrors(formErrors);
@@ -52,29 +61,56 @@ function CreateProductForm({ addProduct, sellerId }) {  // Agregamos sellerId co
 
         const formData = new FormData();
         formData.append('name', productName);
-        formData.append('category', productCategory);
+        formData.append('category', productCategory); // ID de la categoría
         formData.append('description', productDescription);
-        formData.append('price', parseFloat(productPrice));
-        formData.append('stock', parseInt(productStock, 10));
-        formData.append('photo', productImage);
-        formData.append('seller', sellerId);  // Agregamos el seller ID
+        formData.append('price', parseFloat(productPrice.replace(',', '.'))); // Asegúrate de que sea un número
+        formData.append('stock', parseInt(productStock, 10)); // Asegúrate de que sea un número
+        formData.append('photo', productImage); // Envía la imagen
 
         try {
-            const response = await callApi({ body: formData });
-            
-            if (loading) {
-                setMessage('Creando producto...');
-            }
-
-            if (response && !error) {
-                addProduct(response); // Actualiza la lista de productos con el nuevo producto
-                resetForm();
+            setMessage('Creando producto...');
+            const response = await axios.post(PRODUCT, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Token ${localStorage.getItem('token')}`,
+                },
+            });
+            if (response && response.status === 201) {
+                addProduct(response.data); // Añadir el producto creado a la lista
+                resetForm(); // Reiniciar el formulario
                 setMessage('Producto creado exitosamente.');
+            } else {
+                setMessage('Error al crear el producto. Inténtalo nuevamente.');
+                setErrors({ api: response.data });
             }
-        } catch (apiError) {
-            // Si hay errores desde el backend (API), muestra esos errores
+        } catch (error) {
+            console.error('Error al crear el producto:', error);
             setMessage('Error al crear el producto. Inténtalo nuevamente.');
-            setErrors({ api: apiError.message });
+            setErrors({ api: 'Error al crear el producto. Inténtalo nuevamente.' });
+        }
+    };
+
+    const handleAddCategory = async () => {
+        if (!newCategory || !newCategoryDescription) {
+            setMessage('Por favor, completa el nombre y la descripción de la categoría.');
+            return;
+        }
+        try {
+            const newCategoryData = {
+                name: newCategory,
+                description: newCategoryDescription,
+            };
+            const response = await axios.post(CATEGORIES, newCategoryData);
+            if (response.status === 201) {
+                setCategories([...categories, response.data]); // Añadir la nueva categoría al estado actual
+                setProductCategory(response.data.id); // Seleccionar la nueva categoría automáticamente
+                setNewCategory('');
+                setNewCategoryDescription('');
+                setIsAddingCategory(false);
+                setMessage('Categoría agregada exitosamente.');
+            }
+        } catch (error) {
+            console.error('Error al agregar la categoría:', error);
         }
     };
 
@@ -85,97 +121,54 @@ function CreateProductForm({ addProduct, sellerId }) {  // Agregamos sellerId co
         setProductPrice('');
         setProductStock('');
         setProductImage(null);
+        setMessage('');
         setErrors({});
     };
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 mb-6 border rounded-lg shadow">
-            <h2 className="text-2xl font-bold mb-4">Añadir Producto</h2>
-            
-            {/* Mostrar mensajes de error generales */}
-            {message && <p className="text-green-500">{message}</p>}
-            {errors.general && <p className="text-red-500">{errors.general}</p>}
-
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Nombre del producto</label>
-                <input
-                    type="text"
-                    className={`w-full p-2 border rounded ${errors.productName ? 'border-red-500' : ''}`}
-                    value={productName}
-                    onChange={(e) => setProductName(e.target.value)}
-                    required
-                />
-                {errors.productName && <p className="text-red-500">{errors.productName}</p>}
-            </div>
-
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Categoría</label>
-                <select
-                    className={`w-full p-2 border rounded ${errors.productCategory ? 'border-red-500' : ''}`}
-                    value={productCategory}
-                    onChange={(e) => setProductCategory(e.target.value)}
-                    required
-                >
-                    <option value="">Selecciona una categoría</option>
-                    <option value="Frutas">Frutas</option>
-                    <option value="Verduras">Verduras</option>
-                </select>
-                {errors.productCategory && <p className="text-red-500">{errors.productCategory}</p>}
-            </div>
-
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Precio</label>
-                <input
-                    type="number"
-                    className={`w-full p-2 border rounded ${errors.productPrice ? 'border-red-500' : ''}`}
-                    value={productPrice}
-                    onChange={(e) => setProductPrice(e.target.value)}
-                    required
-                />
-                {errors.productPrice && <p className="text-red-500">{errors.productPrice}</p>}
-            </div>
-
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Stock</label>
-                <input
-                    type="number"
-                    className={`w-full p-2 border rounded ${errors.productStock ? 'border-red-500' : ''}`}
-                    value={productStock}
-                    onChange={(e) => setProductStock(e.target.value)}
-                    required
-                />
-                {errors.productStock && <p className="text-red-500">{errors.productStock}</p>}
-            </div>
-
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Descripción</label>
-                <textarea
-                    className="w-full p-2 border rounded"
-                    value={productDescription}
-                    onChange={(e) => setProductDescription(e.target.value)}
-                />
-            </div>
-
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Imagen del producto</label>
-                <input
-                    type="file"
-                    accept="image/*"
-                    className={`w-full p-2 border rounded ${errors.productImage ? 'border-red-500' : ''}`}
-                    onChange={handleImageChange}
-                />
-                {errors.productImage && <p className="text-red-500">{errors.productImage}</p>}
-            </div>
-
-            <button
+        <form onSubmit={handleSubmit} className='max-w-md mx-auto p-4 mb-6 border rounded-lg shadow'>
+            {message && <p className="text-red-500">{message}</p>}
+            <CategoryForm 
+                productCategory={productCategory} 
+                setProductCategory={setProductCategory} 
+                categories={categories} 
+                isAddingCategory={isAddingCategory} 
+                setIsAddingCategory={setIsAddingCategory} 
+                newCategory={newCategory} 
+                setNewCategory={setNewCategory} 
+                newCategoryDescription={newCategoryDescription} 
+                setNewCategoryDescription={setNewCategoryDescription} 
+                handleAddCategory={handleAddCategory} 
+                errors={errors} 
+            />
+            <ProductDetails 
+                productName={productName} 
+                setProductName={setProductName} 
+                productPrice={productPrice} 
+                setProductPrice={setProductPrice} 
+                productStock={productStock} 
+                setProductStock={setProductStock} 
+                productImage={productImage} 
+                handleImageChange={handleImageChange} 
+                errors={errors} 
+            />
+           
+            <ButtonGreen
+                backgroundColor="bg-green-500"
+                textColor="text-white"
                 type="submit"
-                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
             >
                 Crear Producto
-            </button>
-            {message && <p>{message}</p>}
-            {errors.api && <p style={{ color: 'red' }}>{errors.api}</p>}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            </ButtonGreen>
+            {Object.keys(errors).length > 0 && (
+                <button 
+                    type="button" 
+                    onClick={resetForm} 
+                    className="mt-2 bg-red-500 text-white p-2 rounded"
+                >
+                    Limpiar Formulario
+                </button>
+            )}
         </form>
     );
 }
