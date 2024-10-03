@@ -17,6 +17,8 @@ export default {
 				'customGreen': "#00b207",
 				'customGreenL': "hsl(123, 100%, 20%)",
 				"customBlackTrans":"#00000040",
+				"customPink":"#9F4064",
+
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
