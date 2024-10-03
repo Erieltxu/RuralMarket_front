@@ -10,6 +10,7 @@ function ProductStore() {
     const [searchTerm, setSearchTerm] = useState(''); // Estado para el término de búsqueda
     const [selectedCategory, setSelectedCategory] = useState(''); // Estado para la categoría seleccionada
     const [selectedSeller, setSelectedSeller] = useState(sellerIdFromUrl || ''); // Estado para la vendedora seleccionada, inicializado con sellerId de la URL
+    const [selectedProvince, setSelectedProvince] = useState(''); // Estado para la provincia seleccionada
 
     // Usar el hook personalizado UseApi para obtener los productos, categorías y vendedoras
     const { data: products, loading: loadingProducts, error: errorProducts } = UseApi({ apiEndpoint: PRODUCT });
@@ -22,12 +23,17 @@ function ProductStore() {
         }
     }, [sellerIdFromUrl]);
 
-    // Filtrar productos por nombre, categoría y vendedor (si hay un ID de vendedor en la URL o en el dropdown)
+    // Filtrar productos por nombre, categoría, vendedora y provincia
     const filteredProducts = products?.filter((product) => {
-        const matchesSearchTerm = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesSearchTerm = product.name
+            .toLowerCase()
+            .trim()
+            .includes(searchTerm.toLowerCase().trim());
         const matchesCategory = selectedCategory === '' || product.category_name === selectedCategory;
         const matchesSeller = selectedSeller === '' || product.seller === parseInt(selectedSeller); // Filtrar por vendedora seleccionada o por sellerId de la URL
-        return matchesSearchTerm && matchesCategory && matchesSeller;
+        const matchesProvince = selectedProvince === '' || sellers.find(seller => seller.id === product.seller)?.province === selectedProvince; // Filtrar por provincia
+
+        return matchesSearchTerm && matchesCategory && matchesSeller && matchesProvince;
     }) || [];
 
     // Función para manejar agregar el producto al carrito
@@ -40,16 +46,30 @@ function ProductStore() {
     if (loadingProducts || loadingCategories || loadingSellers) return <p>Cargando productos, categorías y vendedoras...</p>;
     if (errorProducts || errorCategories || errorSellers) return <p>Error al cargar datos: {errorProducts || errorCategories || errorSellers}</p>;
 
+    // Obtener la lista de provincias de las vendedoras
+    const provinces = Array.from(new Set(sellers?.map(seller => seller.province))); // Eliminar duplicados
+
     return (
         <div className="max-w-7xl mx-auto p-4">
             {/* Título centrado */}
             <div className="text-center mb-8">
-                <h1 className="text-3xl font-bold">Catálogo de Productos</h1>
+                <h1 className="text-3xl font-bold">Catálogo de Productos y Servicios</h1>
+            </div>
+
+            {/* Buscador de productos, centrado y más pequeño */}
+            <div className="mb-8 flex justify-center">
+                <input
+                    type="text"
+                    placeholder="Buscar productos por nombre..."
+                    className="w-1/4 p-2 border rounded-md mx-auto"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)} // Actualiza el término de búsqueda
+                />
             </div>
 
             {/* Contenedor para los filtros y las tarjetas */}
             <div className="flex">
-                {/* Filtros de categorías y vendedoras */}
+                {/* Filtros de categorías, vendedoras y provincias */}
                 <div className="w-1/6 pr-4 ml-4">
                     <label htmlFor="category" className="block font-bold mb-2">Filtrar por categoría</label>
                     <select
@@ -70,7 +90,7 @@ function ProductStore() {
                     <label htmlFor="seller" className="block font-bold mb-2">Filtrar por vendedora</label>
                     <select
                         id="seller"
-                        className="w-full p-1 border rounded-md"
+                        className="w-full p-1 border rounded-md mb-4"
                         value={selectedSeller}
                         onChange={(e) => setSelectedSeller(e.target.value)}
                     >
@@ -82,6 +102,22 @@ function ProductStore() {
                                     {seller.first_name}
                                 </option>
                             ))}
+                    </select>
+
+                    {/* Filtro por provincia */}
+                    <label htmlFor="province" className="block font-bold mb-2">Filtrar por provincia</label>
+                    <select
+                        id="province"
+                        className="w-full p-1 border rounded-md"
+                        value={selectedProvince}
+                        onChange={(e) => setSelectedProvince(e.target.value)}
+                    >
+                        <option value="">Todas las provincias</option>
+                        {provinces && provinces.map((province, index) => (
+                            <option key={index} value={province}>
+                                {province}
+                            </option>
+                        ))}
                     </select>
                 </div>
 

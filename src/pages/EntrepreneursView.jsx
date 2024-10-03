@@ -87,7 +87,7 @@ const EntrepreneursView = () => {
                 </button>
                 {/* Botón "Mis productos" para cada emprendedora */}
                 <button
-                  className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+                  className="w-full bg-customPink text-white py-2 rounded-lg "
                   onClick={() => handleViewProducts(entrepreneur.id)}  // Redirige a la tienda del vendedor
                 >
                   Mis productos

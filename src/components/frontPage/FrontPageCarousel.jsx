@@ -10,7 +10,7 @@ const FrontPageCarousel = () => {
   const imagesPerPage = 3;
 
   return (
-    <div className="relative max-w-4xl mx-auto overflow-hidden w-full">
+    <div className="relative max-w-4xl mx-auto overflow-hidden w-full mt-8"> {/* Agregué 'mt-8' para bajar las imágenes */}
       {/* Contenedor del carrusel */}
       <div className="flex justify-center space-x-4">
         {images.slice(0, imagesPerPage).map((image, index) => (

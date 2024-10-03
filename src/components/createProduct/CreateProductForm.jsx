@@ -165,68 +165,68 @@ function CreateProductForm({ addProduct }) {
 
     return (
         <form onSubmit={handleSubmit} className='max-w-md mx-auto p-4 mb-6 border rounded-lg shadow mt-10'>
-            {message && <p className="text-red-500">{message}</p>}
+    {message && <p className="text-red-500">{message}</p>}
 
-            {/* Campo oculto para el ID del vendedor */}
-            <input type="hidden" value={seller} name="seller" />
+    {/* Campo oculto para el ID del vendedor */}
+    <input type="hidden" value={seller} name="seller" />
 
-            <CategoryForm
-                productCategory={productCategory}
-                setProductCategory={setProductCategory}
-                categories={categories}
-                isAddingCategory={isAddingCategory}
-                setIsAddingCategory={setIsAddingCategory}
-                newCategory={newCategory}
-                setNewCategory={setNewCategory}
-                newCategoryDescription={newCategoryDescription}
-                setNewCategoryDescription={setNewCategoryDescription}
-                handleAddCategory={handleAddCategory}
-                errors={errors}
-            />
+    <CategoryForm
+        productCategory={productCategory}
+        setProductCategory={setProductCategory}
+        categories={categories}
+        isAddingCategory={isAddingCategory}
+        setIsAddingCategory={setIsAddingCategory}
+        newCategory={newCategory}
+        setNewCategory={setNewCategory}
+        newCategoryDescription={newCategoryDescription}
+        setNewCategoryDescription={setNewCategoryDescription}
+        handleAddCategory={handleAddCategory}
+        errors={errors}
+    />
 
-        <ProductDetails
-            productName={productName}
-            setProductName={setProductName}
-            productPrice={productPrice}
-            setProductPrice={setProductPrice}
-            productStock={productStock}
-            setProductStock={setProductStock}
-            seller={seller}
-            setSeller={setSeller}
-            productImage={productImage}
-            handleImageChange={handleImageChange}
-            errors={errors}
+    <ProductDetails
+        productName={productName}
+        setProductName={setProductName}
+        productPrice={productPrice}
+        setProductPrice={setProductPrice}
+        productStock={productStock}
+        setProductStock={setProductStock}
+        productImage={productImage}
+        handleImageChange={handleImageChange}
+        errors={errors}
+        productCategory={productCategory} // Pasa la categoría para manejar la lógica
+    />
+
+    <div className="mb-4">
+        <label className="block text-sm font-bold mb-2">Descripción del Producto</label>
+        <textarea
+            className={`w-full p-2 border rounded ${errors.productDescription ? 'border-red-500' : ''}`}
+            value={productDescription}
+            onChange={(e) => setProductDescription(e.target.value)}
+            placeholder="Escribe una breve descripción del producto"
+            required
         />
+        {errors.productDescription && <p className="text-red-500">{errors.productDescription}</p>}
+    </div>
 
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Descripción del Producto</label>
-                <textarea
-                    className={`w-full p-2 border rounded ${errors.productDescription ? 'border-red-500' : ''}`}
-                    value={productDescription}
-                    onChange={(e) => setProductDescription(e.target.value)}
-                    placeholder="Escribe una breve descripción del producto"
-                    required
-                />
-                {errors.productDescription && <p className="text-red-500">{errors.productDescription}</p>}
-            </div>
+    <ButtonGreen
+        backgroundColor="bg-customGreen"
+        textColor="text-white"
+        type="submit"
+    >
+        Crear Producto
+    </ButtonGreen>
 
-            <ButtonGreen
-                backgroundColor="bg-customGreen"
-                textColor="text-white"
-                type="submit"
-            >
-                Crear Producto
-            </ButtonGreen>
-            {Object.keys(errors).length > 0 && (
-                <button
-                    type="button"
-                    onClick={resetForm}
-                    className="mt-2 bg-red-500 text-white p-2 rounded"
-                >
-                    Limpiar Formulario
-                </button>
-            )}
-        </form>
+    {Object.keys(errors).length > 0 && (
+        <button
+            type="button"
+            onClick={resetForm}
+            className="mt-2 bg-red-500 text-white p-2 rounded"
+        >
+            Limpiar Formulario
+        </button>
+    )}
+</form>
     );
 }
 

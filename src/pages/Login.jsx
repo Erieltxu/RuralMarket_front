@@ -135,7 +135,7 @@ function Login() {
               ¿No tienes una cuenta?{' '}
               <span
                 onClick={handleRegisterRedirect}
-                className="font-bold cursor-pointer text-indigo-600 hover:underline"
+                className="font-bold cursor-pointer text-customPink"
               >
                 Regístrate
               </span>
@@ -147,9 +147,9 @@ function Login() {
               ¿Ha olvidado su contraseña?{' '}
               <span
                 onClick={handleForgotPassword}
-                className="font-bold cursor-pointer text-indigo-600 hover:underline"
+                className="font-bold cursor-pointer text-customPink"
               >
-                Pinche aquí
+                Haz click aquí
               </span>
             </p>
           </div>

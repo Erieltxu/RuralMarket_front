@@ -31,7 +31,7 @@ const NavigationLinks = () => {
 
       <Link to="/nuestrasemprendedoras" className="text-white">Nuestras emprendedoras</Link>
       {loggedIn && userType === 'seller' && (
-        <Link to="/product" className="text-white">Dar de alta un producto</Link>
+        <Link to="/product" className="text-white">Dar de alta un producto o servicio</Link>
       )}
 
       <Link to="/quienessomos" className="text-white">Quiénes somos</Link>

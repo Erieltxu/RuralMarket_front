@@ -214,7 +214,7 @@ function Register() {
               Ya tienes una cuenta?{' '}
               <span
                 onClick={handleLoginRedirect}
-                className="font-bold cursor-pointer text-indigo-600 hover:underline"
+                className="font-bold cursor-pointer text-customPurple"
               >
                 Inicia sesión
               </span>
