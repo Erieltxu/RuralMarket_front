@@ -228,6 +228,6 @@ function CreateProductForm({ addProduct }) {
     )}
 </form>
     );
-}
+};
 
 export default CreateProductForm;
