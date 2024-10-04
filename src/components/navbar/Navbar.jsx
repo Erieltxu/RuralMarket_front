@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from "./logo";
-import SearchBar from "./SearchBar";
+
 import UserIcon from "./UserIcon";
 import ShoppingCart from "./ShoppingCart";
 import HamburgerMenu from "./HamburguerMenu";
 import NavigationLinks from "./NavigationsLinks";
+import SearchComponent from './SearchComponent';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,7 +44,7 @@ const Navbar = () => {
                 </Link>
                 <HamburgerMenu toggleMenu={toggleMenu} />
                 <div className="hidden md:flex flex-grow justify-center rounded-[5px]">
-                    <SearchBar />
+                    <SearchComponent />
                 </div>
                 <div className="hidden md:flex items-center">
                     <UserIcon />
@@ -53,7 +54,8 @@ const Navbar = () => {
                 </div>
             </div>
             <div className="md:hidden mx-7 mt-1 ">
-                <SearchBar />
+                
+                <SearchComponent />
             </div>
 
             <div className="bg-customPurple p-3 mt-5">
