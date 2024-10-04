@@ -33,14 +33,21 @@ function RegisterSeller() {
   });
 
   useEffect(() => {
-    if (data) {
-      navigate('/iniciosesion');
-    }
-  }, [data, navigate]);
-
-  useEffect(() => {
-    if (apiError) {
-      setError('Error en el registro: ' + (apiError.message || 'Inténtalo de nuevo.'));
+    if (apiError && apiError.response?.data) {
+      const responseErrors = apiError.response.data;
+      if (responseErrors.username) {
+        setError(`Error en el registro: ${responseErrors.username[0]}`);
+      } else if (responseErrors.first_name) {
+        setError(`Error en el registro: ${responseErrors.first_name[0]}`);
+      } else if (responseErrors.email) {
+        setError(`Error en el registro: ${responseErrors.email[0]}`);
+      } else if (responseErrors.phone) {
+        setError(`Error en el registro: ${responseErrors.phone[0]}`);
+      } else {
+        setError('Error en el registro: Inténtalo de nuevo.');
+      }
+    } else if (apiError) {
+      setError('Error en el registro: Inténtalo de nuevo.');
     }
   }, [apiError]);
 
@@ -67,8 +74,8 @@ function RegisterSeller() {
       return;
     }
 
-    if (description.length > 700) {
-      setError('La descripción no debe superar los 700 caracteres.');
+    if (description.length > 1000) {
+      setError('La descripción no debe superar los 1000 caracteres.');
       return;
     }
 
@@ -311,10 +318,10 @@ function RegisterSeller() {
     <textarea
       id="description"
       name="description"
-      placeholder="Descripción (máximo 700 caracteres)"
+      placeholder="Descripción (máximo 1000 caracteres)"
       value={description}
       onChange={(e) => setDescription(e.target.value)}
-      maxLength={700}
+      maxLength={1000}
       required
       className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
     />
@@ -358,7 +365,7 @@ function RegisterSeller() {
     ¿Ya tienes una cuenta?{' '}
     <span
       onClick={handleLoginRedirect}
-      className="font-bold cursor-pointer text-indigo-600 hover:underline"
+      className="font-bold cursor-pointer text-customPurple"
     >
       Inicia sesión
     </span>

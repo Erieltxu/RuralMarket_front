@@ -8,8 +8,7 @@ import Profile from "../pages/Profile";
 import ContactPage from "../pages/ContactPage";
 import RegisterSeller from "../pages/RegisterSeller";
 import UploadProduct from "../components/Store/ProductStore"
-import Product from "../components/createProduct/ProductList"
-import Entrepreneurs from "../pages/Entrepreneurs";
+import WhoWeAre from "../pages/WhoWeAre";
 import ProductList from "../components/createProduct/ProductList";
 import PasswordReset from '../pages/password/PasswordReset';
 import PasswordResetComplete from '../pages/password/PasswordResetComplete';
@@ -18,6 +17,9 @@ import PasswordResetDone from '../pages/password/PasswordResetDone';
 import EntrepreneursView from '../pages/EntrepreneursView';
 import PrivacyPolicy from '../components/PrivacyPolicy';
 import CartPage from "../pages/CartPage";
+import Store from "../pages/Store";
+import CreateProductForm  from '../components/createProduct/CreateProductForm'
+
 
 const handleLogout = () => {
 
@@ -59,7 +61,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'product',
-        element: <Product />,
+        element: <CreateProductForm />,
       },
       {
         path: 'productlist',
@@ -71,7 +73,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'quienessomos',
-        element: <Entrepreneurs />
+        element: <WhoWeAre />
       },
       {
         path: 'password_reset',
@@ -104,6 +106,10 @@ const router = createBrowserRouter([
       {
         path: 'carrito',
         element: <CartPage />
+      },
+      {
+        path: '/Store',
+        element: <Store />
       },
     ],
   },

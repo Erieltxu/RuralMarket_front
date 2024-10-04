@@ -2,12 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 
 const Carousel = () => {
   const images = [
-    "/img/vallicuerra1.png",
-    "/img/vallicuerra2.png",
-    "/img/Shiit2.png",
-    "/img/Shiit1.png",
-    "/img/ringo2.png",
-    "/img/acougo1.png"
+    "/img/1.jpg",
+    "/img/2.jpg",
+    "/img/3.jpg",
+    "/img/4.jpg",
+    "/img/5.jpg",
+
+    
   ];
 
   // Creamos un estado que maneja el índice actual de la imagen
