@@ -36,31 +36,42 @@ function ProductStore() {
                 return;
             }
     
+            // Primero, obtener el carrito existente si no está en localStorage
             let cartId = localStorage.getItem('cartId');
-    
-            // Asegúrate de que el `cartId` esté disponible y sea válido
+            
+            // Si no hay carrito en localStorage, buscamos el carrito existente en el backend
             if (!cartId) {
-                console.error('No se encontró el ID del carrito');
-                return;
+                try {
+                    const cartResponse = await axios.get(CART, {
+                        headers: {
+                            Authorization: `Token ${token}`,
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    
+                    // Si se encuentra un carrito, usamos ese
+                    if (cartResponse.data && cartResponse.data.length > 0) {
+                        cartId = cartResponse.data[0].id;
+                        localStorage.setItem('cartId', cartId);  // Guardar el carrito en localStorage
+                        console.log('Carrito existente encontrado con ID:', cartId);
+                    } else {
+                        console.error('No se encontró un carrito existente.');
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error al obtener el carrito existente:', error.response?.data || error);
+                    return;
+                }
             }
     
-            // Asegúrate de que el `product.id` sea válido
-            if (!product || !product.id) {
-                console.error('Producto no válido');
-                return;
-            }
-    
-            // Verifica que el producto tenga un ID válido
-            console.log('Producto ID:', product.id);
-    
-            // Estructura de los datos para la solicitud
+            // Agregamos el producto al carrito
             const cartItem = {
-                product_id: product.id,  // ID del producto que se va a agregar
-                quantity,                // Cantidad del producto
-                cart_id: cartId,         // ID del carrito
+                product_id: product.id,  // ID del producto
+                quantity,                // Cantidad seleccionada
+                cart_id: cartId,         // ID del carrito existente
             };
     
-            // Realizar la solicitud `POST` para agregar el producto al carrito
+            // Realizamos la solicitud para agregar el producto al carrito
             const response = await axios.post(CARTITEM, cartItem, {
                 headers: {
                     Authorization: `Token ${token}`,
@@ -160,9 +171,9 @@ function ProductStore() {
                         {filteredProducts.length > 0 ? (
                             filteredProducts.map((product) => (
                                 <ProductCard
-                                    key={product.id}  // Aquí se asegura que cada producto tenga un key basado en su ID
-                                    product={product}  // Pasando el producto completo como prop
-                                    handleAddToCart={handleAddToCart} // Pasamos la lógica de agregar al carrito como prop
+                                    key={product.id}
+                                    product={product}
+                                    handleAddToCart={handleAddToCart}
                                 />
                             ))
                         ) : (
