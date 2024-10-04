@@ -1,38 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import UseApi from '../../services/useApi';
+import axios from 'axios';
 
-function PasswordResetConfirm() {
-  const { uid, token } = useParams();
+const PasswordResetConfirm = () => {
+  const { uid, token } = useParams(); // Obtén uid y token de la URL
   const [newPassword, setNewPassword] = useState('');
   const [submitRequest, setSubmitRequest] = useState(false);
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const { data, loading, error } = UseApi({
-    apiEndpoint: submitRequest ? `/reset/${uid}/${token}/` : null,
-    method: 'POST',
-    body: { password: newPassword },
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitRequest(true);
-  };
+    setLoading(true);
 
-  useEffect(() => {
-    if (!loading && !error && data) {
-      setMessage('Contraseña restablecida correctamente.');
-    } else if (error) {
-      setMessage('Error al restablecer la contraseña.');
+    // Validación de la nueva contraseña
+    if (newPassword.length < 6) {
+      setMessage('La contraseña debe tener al menos 6 caracteres.');
+      setLoading(false);
+      return;
     }
-  }, [data, loading, error]);
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/api/users/password_reset_confirm/`, // Asegúrate de tener esta URL en tu backend
+        {
+          uid,
+          token,
+          new_password: newPassword // El nombre del campo debe coincidir con lo que espera tu backend
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            withCredentials: true,
+          }
+        }
+      );
+      setMessage('Contraseña restablecida correctamente.');
+    } catch (error) {
+      console.error('Error al restablecer la contraseña:', error);
+      setMessage('Error al restablecer la contraseña. Inténtalo nuevamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div>
-      <h2>Restablecer contraseña</h2>
+      <h2>Restablecer Contraseña</h2>
       <form onSubmit={handleSubmit}>
         <label>
           Nueva Contraseña:
@@ -50,6 +64,6 @@ function PasswordResetConfirm() {
       {message && <p>{message}</p>}
     </div>
   );
-}
+};
 
 export default PasswordResetConfirm;

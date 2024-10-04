@@ -1,75 +1,111 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom'; // Para obtener los parámetros de búsqueda de la URL
-import { PRODUCT, CATEGORIES, USERS } from '../../config/urls'; // Asegúrate de tener el endpoint de productos, categorías y usuarios
-import UseApi from '../../services/useApi'; // Importa el hook personalizado
-import ProductCard from './ProductCard'; // Importa el componente de la tarjeta de producto
+import { useSearchParams } from 'react-router-dom';
+import { PRODUCT, CATEGORIES, USERS, CART, CARTITEM } from '../../config/urls'; 
+import UseApi from '../../services/useApi';
+import ProductCard from './ProductCard';
+import axios from 'axios';
 
 function ProductStore() {
-    const [searchParams] = useSearchParams(); // Obtener los parámetros de la URL
-    const sellerIdFromUrl = searchParams.get('seller'); // Obtener el parámetro 'seller' de la URL
-    const [searchTerm, setSearchTerm] = useState(''); // Estado para el término de búsqueda
-    const [selectedCategory, setSelectedCategory] = useState(''); // Estado para la categoría seleccionada
-    const [selectedSeller, setSelectedSeller] = useState(sellerIdFromUrl || ''); // Estado para la vendedora seleccionada, inicializado con sellerId de la URL
-    const [selectedProvince, setSelectedProvince] = useState(''); // Estado para la provincia seleccionada
+    const [searchParams] = useSearchParams();
+    const sellerIdFromUrl = searchParams.get('seller');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedSeller, setSelectedSeller] = useState(sellerIdFromUrl || '');
+    const [selectedProvince, setSelectedProvince] = useState('');
 
-    // Usar el hook personalizado UseApi para obtener los productos, categorías y vendedoras
     const { data: products, loading: loadingProducts, error: errorProducts } = UseApi({ apiEndpoint: PRODUCT });
+    console.log('Productos:', products);
+    
     const { data: categories, loading: loadingCategories, error: errorCategories } = UseApi({ apiEndpoint: CATEGORIES });
     const { data: sellers, loading: loadingSellers, error: errorSellers } = UseApi({ apiEndpoint: USERS });
 
+    const authenticated = !!localStorage.getItem('token');
+
     useEffect(() => {
         if (sellerIdFromUrl) {
-            setSelectedSeller(sellerIdFromUrl); // Si hay un sellerId en la URL, úsalo
+            setSelectedSeller(sellerIdFromUrl);
         }
     }, [sellerIdFromUrl]);
 
-    // Filtrar productos por nombre, categoría, vendedora y provincia
+    // Lógica para manejar agregar productos al carrito
+    const handleAddToCart = async (product, quantity) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('Usuario no autenticado');
+                return;
+            }
+    
+            let cartId = localStorage.getItem('cartId');
+    
+            // Asegúrate de que el `cartId` esté disponible y sea válido
+            if (!cartId) {
+                console.error('No se encontró el ID del carrito');
+                return;
+            }
+    
+            // Asegúrate de que el `product.id` sea válido
+            if (!product || !product.id) {
+                console.error('Producto no válido');
+                return;
+            }
+    
+            // Verifica que el producto tenga un ID válido
+            console.log('Producto ID:', product.id);
+    
+            // Estructura de los datos para la solicitud
+            const cartItem = {
+                product_id: product.id,  // ID del producto que se va a agregar
+                quantity,                // Cantidad del producto
+                cart_id: cartId,         // ID del carrito
+            };
+    
+            // Realizar la solicitud `POST` para agregar el producto al carrito
+            const response = await axios.post(CARTITEM, cartItem, {
+                headers: {
+                    Authorization: `Token ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            console.log('Producto añadido al carrito:', response.data);
+        } catch (error) {
+            console.error('Error al añadir producto al carrito:', error.response?.data || error);
+        }
+    };
+    
+
+    if (loadingProducts || loadingCategories || loadingSellers) return <p>Cargando productos, categorías y vendedoras...</p>;
+    if (errorProducts || errorCategories || errorSellers) return <p>Error al cargar datos: {errorProducts || errorCategories || errorSellers}</p>;
+
     const filteredProducts = products?.filter((product) => {
-        const matchesSearchTerm = product.name
-            .toLowerCase()
-            .trim()
-            .includes(searchTerm.toLowerCase().trim());
+        const matchesSearchTerm = product.name.toLowerCase().trim().includes(searchTerm.toLowerCase().trim());
         const matchesCategory = selectedCategory === '' || product.category_name === selectedCategory;
-        const matchesSeller = selectedSeller === '' || product.seller === parseInt(selectedSeller); // Filtrar por vendedora seleccionada o por sellerId de la URL
-        const matchesProvince = selectedProvince === '' || sellers.find(seller => seller.id === product.seller)?.province === selectedProvince; // Filtrar por provincia
+        const matchesSeller = selectedSeller === '' || product.seller === parseInt(selectedSeller);
+        const matchesProvince = selectedProvince === '' || sellers.find(seller => seller.id === product.seller)?.province === selectedProvince;
 
         return matchesSearchTerm && matchesCategory && matchesSeller && matchesProvince;
     }) || [];
 
-    // Función para manejar agregar el producto al carrito
-    const handleAddToCart = (product, quantity) => {
-        console.log(`Añadido al carrito: ${product.name} - Cantidad: ${quantity}`);
-        // Aquí puedes agregar la lógica para añadir el producto al carrito en el backend o localStorage
-    };
-
-    // Manejo de carga y errores
-    if (loadingProducts || loadingCategories || loadingSellers) return <p>Cargando productos, categorías y vendedoras...</p>;
-    if (errorProducts || errorCategories || errorSellers) return <p>Error al cargar datos: {errorProducts || errorCategories || errorSellers}</p>;
-
-    // Obtener la lista de provincias de las vendedoras
-    const provinces = Array.from(new Set(sellers?.map(seller => seller.province))); // Eliminar duplicados
+    const provinces = Array.from(new Set(sellers?.map(seller => seller.province)));
 
     return (
         <div className="max-w-7xl mx-auto p-4">
-            {/* Título centrado */}
             <div className="text-center mb-8">
                 <h1 className="text-3xl font-bold">Catálogo de Productos y Servicios</h1>
             </div>
 
-            {/* Buscador de productos, centrado y más pequeño */}
             <div className="mb-8 flex justify-center">
                 <input
                     type="text"
                     placeholder="Buscar productos por nombre..."
                     className="w-1/4 p-2 border rounded-md mx-auto"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)} // Actualiza el término de búsqueda
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
 
-            {/* Contenedor para los filtros y las tarjetas */}
             <div className="flex">
-                {/* Filtros de categorías, vendedoras y provincias */}
                 <div className="w-1/6 pr-4 ml-4">
                     <label htmlFor="category" className="block font-bold mb-2">Filtrar por categoría</label>
                     <select
@@ -86,7 +122,6 @@ function ProductStore() {
                         ))}
                     </select>
 
-                    {/* Filtro por vendedora */}
                     <label htmlFor="seller" className="block font-bold mb-2">Filtrar por vendedora</label>
                     <select
                         id="seller"
@@ -96,7 +131,7 @@ function ProductStore() {
                     >
                         <option value="">Todas las vendedoras</option>
                         {sellers && sellers
-                            .filter(seller => seller.user_type === 'seller') // Filtrar solo las vendedoras
+                            .filter(seller => seller.user_type === 'seller')
                             .map((seller) => (
                                 <option key={seller.id} value={seller.id}>
                                     {seller.first_name}
@@ -104,7 +139,6 @@ function ProductStore() {
                             ))}
                     </select>
 
-                    {/* Filtro por provincia */}
                     <label htmlFor="province" className="block font-bold mb-2">Filtrar por provincia</label>
                     <select
                         id="province"
@@ -121,15 +155,14 @@ function ProductStore() {
                     </select>
                 </div>
 
-                {/* Tarjetas de productos */}
                 <div className="w-5/6 pl-6">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         {filteredProducts.length > 0 ? (
                             filteredProducts.map((product) => (
                                 <ProductCard
-                                    key={product.id}
-                                    product={product}
-                                    handleAddToCart={handleAddToCart}
+                                    key={product.id}  // Aquí se asegura que cada producto tenga un key basado en su ID
+                                    product={product}  // Pasando el producto completo como prop
+                                    handleAddToCart={handleAddToCart} // Pasamos la lógica de agregar al carrito como prop
                                 />
                             ))
                         ) : (
