@@ -8,6 +8,7 @@ import eyeOffIcon from '/icons/eye-off.svg';
 
 function Profile({ onLogout }) {
     const [user, setUser] = useState({
+        first_name: '',
         username: '',
         email: '',
         password: '',
@@ -19,7 +20,7 @@ function Profile({ onLogout }) {
         postalCode: '',
         description: '',
         photo: null,
-        user_type: '',
+        user_type: '', // Para determinar si es comprador, vendedor o admin
     });
     const [previewPhoto, setPreviewPhoto] = useState(null);
     const [isConfirmed, setIsConfirmed] = useState(false);
@@ -30,12 +31,13 @@ function Profile({ onLogout }) {
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const { data: userData, loading: userLoading, error: userError } = UseApi({ apiEndpoint: USER_DETAIL });
-    
+
     const navigate = useNavigate();
 
     useEffect(() => {
         if (userData) {
             setUser({
+                first_name: userData.first_name || '',
                 username: userData.username || '',
                 email: userData.email || '',
                 password: '',
@@ -47,7 +49,7 @@ function Profile({ onLogout }) {
                 postalCode: userData.zip_code || '',
                 description: userData.user_description || '',
                 photo: userData.photo || null,
-                user_type: userData.user_type || '',
+                user_type: userData.user_type || '', // Aquí obtenemos el tipo de usuario
             });
             if (userData.photo) {
                 setPreviewPhoto(userData.photo);
@@ -56,7 +58,7 @@ function Profile({ onLogout }) {
     }, [userData]);
 
     const handleBackToHome = () => {
-        navigate('/HomeLogin');
+        navigate('/');
     };
 
     const handleChange = (e) => {
@@ -77,24 +79,24 @@ function Profile({ onLogout }) {
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-    
+
         try {
             const formData = new FormData();
             formData.append('username', user.username);
             formData.append('email', user.email);
             formData.append('current_password', user.current_password);
-    
+
             // Si se está cambiando la contraseña, la incluimos
             if (user.password) {
                 formData.append('password', user.password);
                 formData.append('confirm_password', user.confirm_password);
             }
-    
+
             // Solo agregamos la foto si se ha seleccionado una
             if (user.photo instanceof File) {
                 formData.append('photo', user.photo);
             }
-    
+
             // Realizamos la solicitud PATCH
             await axios.patch(UPDATE_USER, formData, {
                 headers: {
@@ -102,7 +104,7 @@ function Profile({ onLogout }) {
                     Authorization: `Token ${localStorage.getItem('token')}`,
                 },
             });
-    
+
             console.log('Perfil actualizado correctamente');
         } catch (error) {
             if (error.response) {
@@ -166,6 +168,12 @@ function Profile({ onLogout }) {
                     Perfil de {user.username}
                 </h2>
 
+                {previewPhoto && (
+                    <div className="flex justify-center mb-4">
+                        <img src={previewPhoto} alt="Foto de perfil" className="w-24 h-24 rounded-full object-cover" />
+                    </div>
+                )}
+
                 {userLoading ? (
                     <p className="text-gray-600">Cargando detalles del perfil...</p>
                 ) : userError ? (
@@ -196,6 +204,7 @@ function Profile({ onLogout }) {
                             />
                         </div>
 
+                        {/* Contraseña actual */}
                         <div>
                             <label className="block text-sm font-medium text-gray-900">Contraseña actual</label>
                             <div className="relative">
@@ -216,6 +225,7 @@ function Profile({ onLogout }) {
                             </div>
                         </div>
 
+                        {/* Nueva contraseña */}
                         <div>
                             <label className="block text-sm font-medium text-gray-900">Nueva contraseña</label>
                             <div className="relative">
@@ -235,6 +245,7 @@ function Profile({ onLogout }) {
                             </div>
                         </div>
 
+                        {/* Confirmar nueva contraseña */}
                         <div>
                             <label className="block text-sm font-medium text-gray-900">Confirmar nueva contraseña</label>
                             <div className="relative">
@@ -254,7 +265,8 @@ function Profile({ onLogout }) {
                             </div>
                         </div>
 
-                        {user.user_type === 'seller' && (
+                        {/* Mostrar solo campos básicos si es comprador */}
+                        {user.user_type !== 'buyer' && (
                             <>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-900">Teléfono</label>
@@ -307,7 +319,7 @@ function Profile({ onLogout }) {
                                         value={user.description}
                                         onChange={handleChange}
                                         maxLength={250}
-                                        className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                                        className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm resize-y"
                                     />
                                 </div>
 

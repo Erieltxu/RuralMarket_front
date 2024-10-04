@@ -6,8 +6,8 @@ import eyeIcon from '/icons/eye.svg';
 import eyeOffIcon from '/icons/eye-off.svg';
 
 function Login() {
-  const [username, setUsername] = useState(''); 
-  const [password, setPassword] = useState(''); 
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [userType, setUserType] = useState(null);
@@ -17,7 +17,7 @@ function Login() {
   const { data, loading, error: apiError } = useApi({
     apiEndpoint: submitted ? USER_LOGIN : null,
     method: 'POST',
-    body: { username, password }, 
+    body: { username, password },
     headers: { 'Content-Type': 'application/json' },
   });
 
@@ -34,9 +34,9 @@ function Login() {
           },
         });
         const userDetails = await response.json();
-        localStorage.setItem('user_type', userDetails.user_type);  
+        localStorage.setItem('user_type', userDetails.user_type);
 
-        window.location.href = '/'; 
+        window.location.href = '/';
       };
 
       fetchUserDetails();
@@ -46,13 +46,13 @@ function Login() {
   useEffect(() => {
     if (apiError) {
       setError('Error en el login: ' + (apiError.message || 'Inténtalo de nuevo.'));
-      setSubmitted(false); 
+      setSubmitted(false);
     }
   }, [apiError]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true); 
+    setSubmitted(true);
   };
 
   const handleRegisterRedirect = () => {
@@ -68,8 +68,8 @@ function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-6 py-12 bg-gray-100">
-      <div className="w-full max-w-md bg-white p-6 shadow-lg rounded-lg">
+    <div className="max-w-md mx-auto mb-16 mt-16">
+      <div className="bg-white shadow-md rounded-lg p-8">
         <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-900 text-center mb-4">
           Iniciar sesión
         </h2>
@@ -124,7 +124,7 @@ function Login() {
             <button
               type="submit"
               className="flex w-full justify-center rounded-xl bg-customGreen px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-customGreenL focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              disabled={loading}  
+              disabled={loading}
             >
               Iniciar sesión
             </button>
@@ -135,22 +135,21 @@ function Login() {
               ¿No tienes una cuenta?{' '}
               <span
                 onClick={handleRegisterRedirect}
-                className="font-bold cursor-pointer text-indigo-600 hover:underline"
+                className="font-bold cursor-pointer text-customPink"
               >
                 Regístrate
               </span>
             </p>
           </div>
 
-          {/* Frase de "¿Ha olvidado su contraseña?" */}
           <div className="mt-2 text-center">
             <p className="text-sm text-gray-600">
               ¿Ha olvidado su contraseña?{' '}
               <span
                 onClick={handleForgotPassword}
-                className="font-bold cursor-pointer text-indigo-600 hover:underline"
+                className="font-bold cursor-pointer text-customPink"
               >
-                Pinche aquí
+                Haz click aquí
               </span>
             </p>
           </div>

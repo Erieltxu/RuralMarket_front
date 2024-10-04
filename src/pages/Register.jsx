@@ -5,17 +5,21 @@ import { USERS_REGISTER } from '../config/urls';
 import arrowIcon from '/icons/arrow.svg';
 import eyeIcon from '/icons/eye.svg';
 import eyeOffIcon from '/icons/eye-off.svg';
+import PopUp from '.././components/PopUp';
 
 function Register() {
-  const [username, setUsername] = useState(''); 
-  const [email, setEmail] = useState(''); 
-  const [password, setPassword] = useState(''); 
-  const [confirmPassword, setConfirmPassword] = useState(''); 
-  const [userType] = useState('buyer'); 
-  const [showPassword, setShowPassword] = useState(false); 
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [userType] = useState('buyer');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
+  const [popupType, setPopupType] = useState('');
   const navigate = useNavigate();
 
   const { data, loading, error: apiError } = useApi({
@@ -27,13 +31,22 @@ function Register() {
 
   useEffect(() => {
     if (data) {
-      navigate('/iniciosesion');
+      setPopupMessage('¡Cuenta creada con éxito!');
+      setPopupType('success');
+      setShowPopup(true);
+
+
+      setTimeout(() => {
+        navigate('/iniciosesion');
+      }, 2000);
     }
   }, [data, navigate]);
 
   useEffect(() => {
     if (apiError) {
-      setError('Error en el registro: ' + (apiError.message || 'Inténtalo de nuevo.'));
+      setPopupMessage('Error en el registro: ' + (apiError.message || 'Inténtalo de nuevo.'));
+      setPopupType('error');
+      setShowPopup(true);
     }
   }, [apiError]);
 
@@ -175,12 +188,11 @@ function Register() {
             </div>
           </div>
 
-          {/* Campo oculto para el tipo de usuario (comprador) */}
           <input
             id="userType"
             name="userType"
             type="hidden"
-            value={userType} 
+            value={userType}
           />
 
           {error && <p className="text-sm text-red-600">{error}</p>}
@@ -202,13 +214,20 @@ function Register() {
               Ya tienes una cuenta?{' '}
               <span
                 onClick={handleLoginRedirect}
-                className="font-bold cursor-pointer text-indigo-600 hover:underline"
+                className="font-bold cursor-pointer text-customPurple"
               >
                 Inicia sesión
               </span>
             </p>
           </div>
         </form>
+        {showPopup && (
+          <PopUp
+            message={popupMessage}
+            type={popupType}
+            onClose={() => setShowPopup(false)}
+          />
+        )}
       </div>
     </div>
   );

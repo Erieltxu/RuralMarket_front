@@ -8,7 +8,6 @@ const ContactPage = () => {
   });
   const [submitted, setSubmitted] = useState(false);
 
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -16,15 +15,14 @@ const ContactPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
- 
+
     console.log("Formulario enviado:", formData);
     setSubmitted(true);
-  
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-12 px-6">
-      <div className="w-full max-w-lg bg-white shadow-md rounded-lg p-8">
+    <div className="max-w-md mx-auto mb-16 rounded-lg shadow mt-16"> {/* Aumentado margen superior e inferior */}
+      <div className="bg-white shadow-md rounded-lg p-8">
         <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Contacto</h2>
         {!submitted ? (
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -39,7 +37,7 @@ const ContactPage = () => {
                 value={formData.name}
                 onChange={handleInputChange}
                 required
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
 
@@ -54,7 +52,7 @@ const ContactPage = () => {
                 value={formData.email}
                 onChange={handleInputChange}
                 required
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
 
@@ -69,7 +67,7 @@ const ContactPage = () => {
                 onChange={handleInputChange}
                 required
                 rows="5"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
 
