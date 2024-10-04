@@ -48,7 +48,9 @@ const Navbar = () => {
                 </div>
                 <div className="hidden md:flex items-center">
                     <UserIcon />
-                    <ShoppingCart />
+                    <Link to="/carrito" onClick={closeMenu}>
+                        <ShoppingCart />
+                    </Link>
                 </div>
             </div>
             <div className="md:hidden mx-7 mt-1 ">
@@ -83,7 +85,9 @@ const Navbar = () => {
                         <Link to="/quienessomos" className="text-#1a1a1a" onClick={closeMenu}>Quiénes somos</Link>
                         <Link to="/contacto" className="text-#1a1a1a" onClick={closeMenu}>Contacto</Link>
                         <UserIcon />
-                        <ShoppingCart />
+                        <Link to="/carrito" onClick={closeMenu}>
+                            <ShoppingCart />
+                        </Link>
                     </nav>
                 </div>
 
