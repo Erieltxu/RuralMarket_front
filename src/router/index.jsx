@@ -18,6 +18,8 @@ import EntrepreneursView from '../pages/EntrepreneursView';
 import PrivacyPolicy from '../components/PrivacyPolicy';
 import Store from "../pages/Store";
 import CreateProductForm  from '../components/createProduct/CreateProductForm'
+import SearchComponent from "../components/navbar/SearchComponent";
+import ProductDetails  from '../components/createProduct/ProductDetails'
 
 
 const handleLogout = () => {
@@ -105,6 +107,14 @@ const router = createBrowserRouter([
       {
         path: '/Store',
         element: <Store />
+      },
+      {
+        path: 'buscar',
+        element: <SearchComponent />,
+      },
+      {
+        path: 'product/:id', 
+        element: <ProductDetails />, 
       },
     ],
   },
