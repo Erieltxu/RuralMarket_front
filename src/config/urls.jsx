@@ -7,7 +7,8 @@ export const USER_LOGIN = `${BASE_URL}users/login/`;
 export const USERS = `${BASE_URL}users/profile/sellerlist/`;  
 export const CATEGORIES = `${BASE_URL}category/`;
 export const PRODUCT = `${BASE_URL}product/`;
-export const CART = `${BASE_URL}cart/`;
+export const CART = `${BASE_URL}cart/cart/`;
+export const CARTITEM = `${BASE_URL}cart/cartitem/`;
 
 
 

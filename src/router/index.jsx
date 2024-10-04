@@ -16,12 +16,13 @@ import PasswordResetConfirm from '../pages/password/PasswordResetConfirm';
 import PasswordResetDone from '../pages/password/PasswordResetDone';
 import EntrepreneursView from '../pages/EntrepreneursView';
 import PrivacyPolicy from '../components/PrivacyPolicy';
+import CartPage from "../pages/CartPage";
 import Store from "../pages/Store";
 import CreateProductForm  from '../components/createProduct/CreateProductForm'
 
 
 const handleLogout = () => {
- 
+
   localStorage.removeItem('token');
 
 
@@ -48,7 +49,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'perfil',
-        element: <Profile onLogout={handleLogout} />, 
+        element: <Profile onLogout={handleLogout} />,
       },
       {
         path: 'contacto',
@@ -64,7 +65,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'productlist',
-        element: <ProductList/>,
+        element: <ProductList />,
       },
       {
         path: 'uploadProduct',
@@ -101,6 +102,10 @@ const router = createBrowserRouter([
       {
         path: '/politica_privacidad',
         element: <PrivacyPolicy />
+      },
+      {
+        path: 'carrito',
+        element: <CartPage />
       },
       {
         path: '/Store',

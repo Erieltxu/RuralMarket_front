@@ -6,13 +6,13 @@ import EntrepreneurCarousel from "../components/frontPage/EntrepreneurCarousel"
 const Home = () => {
   return (
     <>
-    <div>
-     <EntrepreneurCarousel />
-      <FrontPagePhoto></FrontPagePhoto>
+      <div>
+        <EntrepreneurCarousel />
+        <FrontPagePhoto></FrontPagePhoto>
       </div>
-    <div className="home-page">
-    <Carousel />
-    </div>
+      <div className="home-page">
+        <Carousel />
+      </div>
     </>
   );
 };
