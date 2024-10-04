@@ -19,6 +19,9 @@ import PrivacyPolicy from '../components/PrivacyPolicy';
 import CartPage from "../pages/CartPage";
 import Store from "../pages/Store";
 import CreateProductForm  from '../components/createProduct/CreateProductForm'
+import SearchComponent from "../components/navbar/SearchComponent";
+import ProductDetails  from '../components/createProduct/ProductDetails'
+import Order from '../components/cart/Order';
 
 
 const handleLogout = () => {
@@ -111,6 +114,19 @@ const router = createBrowserRouter([
         path: '/Store',
         element: <Store />
       },
+      {
+        path: 'buscar',
+        element: <SearchComponent />,
+      },
+      {
+        path: 'product/:id', 
+        element: <ProductDetails />, 
+      },
+      {
+        path: '/Recibo',
+        element: <Order />
+      },
+    
     ],
   },
 ]);

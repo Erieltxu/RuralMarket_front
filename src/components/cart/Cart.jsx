@@ -1,93 +1,132 @@
-/*import React, { useState, useEffect } from 'react';
-import CartItem from './CartItem';
-import EmptyCart from './EmptyCart';
-import Receipt from './Receipt';
-import useApi from '../../services/useApi'; // Usamos tu hook
-import { CART } from '../../config/urls'; // Ajusta la ruta si es necesario
+import React, { useEffect } from 'react';
+import UseApi from '../../services/useApi';
+import { CART, CARTITEM } from "../../config/urls";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
-    const [cart, setCart] = useState([]);  // Estado inicial vacío para el carrito
-    const [total, setTotal] = useState(0); // Estado inicial del total
-    const { data, loading, error } = useApi({ apiEndpoint: CART, method: 'GET' }); // Obtenemos los datos de la API
+    const navigate = useNavigate();
+    const { data: cartData, loading, error } = UseApi({ apiEndpoint: CART });
 
-    // Actualiza el carrito y el total cuando los datos están disponibles
     useEffect(() => {
-        if (data && data.cartItems) {
-            setCart(data.cartItems || []);  // Asegura que siempre sea un array
-            setTotal(data.total || 0);  // Asegura que total sea un número
-        }
-    }, [data]);
+        console.log('Datos del carrito:', cartData);
+    }, [cartData]);
 
-    // Función para vaciar el carrito
-    const clearCart = () => {
-        setCart([]); // Vacia el carrito
-        setTotal(0); // Resetea el total
+    const handleProceedToPayment = () => {
+        navigate('/Recibo'); // Asegúrate de que esta ruta esté definida en tu router
     };
 
-    if (loading) return <p>Cargando...</p>; // Indicador de carga
-    if (error) return <p>Error al cargar el carrito</p>; // Manejo de error
+    if (loading) return <p>Cargando...</p>;
+    if (error) return <p>Error al cargar el carrito</p>;
 
     return (
-        <div className="p-8 max-w-3xl mx-auto bg-white shadow-lg rounded-lg">
-            <h2 className="text-2xl font-bold text-gray-800">Carrito de Compras</h2>
-            
-            {cart.length === 0 ? ( // Si el carrito está vacío
-                <EmptyCart />       // Muestra el componente EmptyCart
-            ) : (
+        <div className="bg-gray-100 p-6">
+            {cartData && cartData.length > 0 && cartData[0].items ? (
                 <>
-                    <ul>
-                        {cart.map(product => (
-                            <CartItem
-                                key={product.id}
-                                product={product}
-                                changeQuantity={() => {}} // Función para cambiar cantidad, aún no implementada
-                                removeItem={() => {}} // Función para eliminar producto, aún no implementada
-                            />
+                    <ul className="divide-y divide-gray-200">
+                        {cartData[0].items.map((item) => (
+                            <CartItem key={item.id} item={item} />
                         ))}
                     </ul>
-                    <div className="mt-4">
-                        <h3 className="text-xl font-bold text-gray-800">Total: €{total.toFixed(2)}</h3>
-                        <button
-                            className="w-full mt-6 p-2 bg-red-600 text-white rounded-xl shadow-md hover:bg-red-700 transition"
-                            onClick={clearCart}
+                    <div className="mt-6 flex justify-center">
+                        <button 
+                            onClick={handleProceedToPayment} 
+                            className="bg-green-500 text-white px-4 py-2 rounded"
                         >
-                            Vaciar Carrito
+                            Proceder al pago
                         </button>
                     </div>
-                    
-                 
-                    <Receipt cart={cart} total={total} />
                 </>
+            ) : (
+                <p className="text-gray-600">El carrito está vacío.</p>
             )}
         </div>
     );
 };
 
-export default Cart;*/
+const CartItem = ({ item }) => {
+    const token = localStorage.getItem('token'); // Obtener el token
 
-import React from 'react';
-import UseApi from '../../services/useApi';
-import CartItems from '../../components/cart/CartItem';
-import {CART} from "../../config/urls";
+    const handleIncrease = async () => {
+        try {
+            const newQuantity = item.quantity + 1;
+            await axios.put(`${CARTITEM}${item.id}/`, { quantity: newQuantity }, {
+                headers: {
+                    Authorization: `Token ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            window.location.reload(); // Refrescar el estado del carrito
+        } catch (error) {
+            console.error('Error al aumentar la cantidad:', error);
+        }
+    };
 
-const Cart = () => {
-    const { data: cartData, loading, error } = UseApi({ apiEndpoint: CART , method: 'GET' });
+    const handleDecrease = async () => {
+        try {
+            const newQuantity = item.quantity - 1;
+            if (newQuantity < 1) {
+                await handleRemove(); // Eliminar el producto si la cantidad es menor que 1
+            } else {
+                await axios.put(`${CARTITEM}${item.id}/`, { quantity: newQuantity }, {
+                    headers: {
+                        Authorization: `Token ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                window.location.reload(); // Refrescar el estado del carrito
+            }
+        } catch (error) {
+            console.error('Error al disminuir la cantidad:', error);
+        }
+    };
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
-
-    // Extrae los detalles del carrito (user_id y date) y cart_id para pasarlo a CartItems
-    const { user, date, id: cart_id } = cartData;
+    const handleRemove = async () => {
+        try {
+            await axios.delete(`${CARTITEM}${item.id}/`, {
+                headers: {
+                    Authorization: `Token ${token}`,
+                },
+            }); // Eliminar el producto
+            window.location.reload(); // Refrescar el estado del carrito
+        } catch (error) {
+            console.error('Error al eliminar el producto:', error);
+        }
+    };
 
     return (
-        <div>
-            <h2>Cart</h2>
-            <p>User ID: {user}</p>
-            <p>Date: {date}</p>
-
-            {/* Pasa el cart_id a CartItems para cargar los productos */}
-            <CartItems cartId={cart_id} />
-        </div>
+        <li className="py-4 flex justify-between items-start">
+            <div className="flex-1">
+                <h3 className="text-lg font-semibold text-gray-700 flex justify-between items-center">
+                    {item.product.name}
+                    <button 
+                        onClick={handleRemove} 
+                        className="bg-red-600 text-white px-2 py-1 rounded"
+                    >
+                        Eliminar
+                    </button>
+                </h3>
+                <p className="text-sm text-gray-500">Precio: {parseFloat(item.product.price).toFixed(2)} €</p>
+                <div className="flex items-center mt-2">
+                    <button 
+                        onClick={handleDecrease}
+                        className="bg-red-500 text-white px-2 py-1 rounded"
+                    >
+                        -
+                    </button>
+                    <span className="mx-2">{item.quantity}</span>
+                    <button 
+                        onClick={handleIncrease}
+                        className="bg-green-500 text-white px-2 py-1 rounded"
+                    >
+                        +
+                    </button>
+                </div>
+                <p className="text-gray-800 font-semibold mt-2">
+                    Subtotal: {(item.quantity * parseFloat(item.product.price)).toFixed(2)} €
+                </p>
+            </div>
+        </li>
     );
 };
 
