@@ -128,31 +128,31 @@ function CreateProductForm({ addProduct }) {
     return (
         <form onSubmit={handleSubmit} className='max-w-md mx-auto p-4 mb-6 border rounded-lg shadow'>
             {message && <p className="text-red-500">{message}</p>}
-            <CategoryForm 
-                productCategory={productCategory} 
-                setProductCategory={setProductCategory} 
-                categories={categories} 
-                isAddingCategory={isAddingCategory} 
-                setIsAddingCategory={setIsAddingCategory} 
-                newCategory={newCategory} 
-                setNewCategory={setNewCategory} 
-                newCategoryDescription={newCategoryDescription} 
-                setNewCategoryDescription={setNewCategoryDescription} 
-                handleAddCategory={handleAddCategory} 
-                errors={errors} 
+            <CategoryForm
+                productCategory={productCategory}
+                setProductCategory={setProductCategory}
+                categories={categories}
+                isAddingCategory={isAddingCategory}
+                setIsAddingCategory={setIsAddingCategory}
+                newCategory={newCategory}
+                setNewCategory={setNewCategory}
+                newCategoryDescription={newCategoryDescription}
+                setNewCategoryDescription={setNewCategoryDescription}
+                handleAddCategory={handleAddCategory}
+                errors={errors}
             />
-            <ProductDetails 
-                productName={productName} 
-                setProductName={setProductName} 
-                productPrice={productPrice} 
-                setProductPrice={setProductPrice} 
-                productStock={productStock} 
-                setProductStock={setProductStock} 
-                productImage={productImage} 
-                handleImageChange={handleImageChange} 
-                errors={errors} 
+            <ProductDetails
+                productName={productName}
+                setProductName={setProductName}
+                productPrice={productPrice}
+                setProductPrice={setProductPrice}
+                productStock={productStock}
+                setProductStock={setProductStock}
+                productImage={productImage}
+                handleImageChange={handleImageChange}
+                errors={errors}
             />
-           
+
             <ButtonGreen
                 backgroundColor="bg-green-500"
                 textColor="text-white"
@@ -161,9 +161,9 @@ function CreateProductForm({ addProduct }) {
                 Crear Producto
             </ButtonGreen>
             {Object.keys(errors).length > 0 && (
-                <button 
-                    type="button" 
-                    onClick={resetForm} 
+                <button
+                    type="button"
+                    onClick={resetForm}
                     className="mt-2 bg-red-500 text-white p-2 rounded"
                 >
                     Limpiar Formulario
@@ -171,6 +171,6 @@ function CreateProductForm({ addProduct }) {
             )}
         </form>
     );
-}
+};
 
 export default CreateProductForm;
