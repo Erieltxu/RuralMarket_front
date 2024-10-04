@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Modal from 'react-modal';
+import Modal from 'react-modal'; // Asegúrate de haber instalado react-modal
 import ButtonGreen from '../ButtonGreen';
 
-Modal.setAppElement('#root');
+Modal.setAppElement('#root'); // Esto es importante para accesibilidad
 
 function ProductCard({ product, handleAddToCart }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,20 +21,22 @@ function ProductCard({ product, handleAddToCart }) {
     };
 
     const decrementQuantity = () => {
-        setQuantity(Math.max(quantity - 1, 1)); // No permitir cantidad menor a 1
+        setQuantity(Math.max(quantity - 1, 1));
     };
 
-    if (!product || !product.id) {
-        return null; // Evitar renderizado si no hay producto o no tiene id
+    // Verificar que `product` existe antes de intentar acceder a sus propiedades
+    if (!product) {
+        return null; // O renderizar un mensaje de carga
     }
 
     return (
         <div className="border rounded-lg p-4 shadow bg-gray-50 flex flex-col justify-between">
+            {/* Imagen pequeña en la tarjeta */}
             {product.photo ? (
                 <img
                     src={product.photo}
                     alt={product.name || 'Imagen del producto'}
-                    className="w-full h-40 object-cover mb-2 rounded-md cursor-pointer"
+                    className="w-full h-40 object-cover mb-2 rounded-md cursor-pointer" // Imagen más pequeña
                     onClick={openModal} // Abre el modal al hacer clic en la imagen
                 />
             ) : (
@@ -43,6 +45,10 @@ function ProductCard({ product, handleAddToCart }) {
                 </div>
             )}
             <h2 className="text-xl font-bold mb-1">{product.name}</h2>
+
+            {/* Mostrar categoría y nombre del vendedor */}
+            <p className="text-gray-600">Categoría: {product.category_name}</p>
+            <p className="text-gray-600">Vendedor: {product.seller_first_name}</p>
 
             {/* Stock y precio debajo de la imagen */}
             <div className="mt-auto">
@@ -71,10 +77,7 @@ function ProductCard({ product, handleAddToCart }) {
                     backgroundColor="bg-customGreen"
                     textColor="text-white px-6 py-3"
                     style={{ width: '100%', padding: '12px 24px', fontSize: '1.25rem' }}
-                    onClick={() => {
-                        console.log('Agregando producto al carrito:', product.id, 'Cantidad:', quantity);
-                        handleAddToCart(product, quantity);
-                    }}
+                    onClick={() => handleAddToCart(product, quantity)}
                 >
                     Agregar al carrito
                 </ButtonGreen>
@@ -89,6 +92,7 @@ function ProductCard({ product, handleAddToCart }) {
                 overlayClassName="modal-overlay"
             >
                 <div className="p-4 flex items-start">
+                    {/* Imagen más grande dentro del modal */}
                     {product.photo && (
                         <img
                             src={product.photo}
@@ -102,6 +106,7 @@ function ProductCard({ product, handleAddToCart }) {
                     </div>
                 </div>
 
+                {/* Botón de Cerrar centrado */}
                 <div className="flex justify-center mt-4">
                     <button onClick={closeModal} className="bg-red-500 text-white px-4 py-2 rounded">
                         Cerrar
