@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 const UserIcon = () => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [userType, setUserType] = useState(null);
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
-
 
     useEffect(() => {
         checkAuthentication();
@@ -26,11 +26,9 @@ const UserIcon = () => {
 
     const checkAuthentication = () => {
         const token = localStorage.getItem('token');
-        if (token) {
-            setIsAuthenticated(true);
-        } else {
-            setIsAuthenticated(false);
-        }
+        const type = localStorage.getItem('user_type');
+        setIsAuthenticated(!!token);
+        setUserType(type);
     };
 
     const toggleDropdown = () => {
@@ -48,12 +46,12 @@ const UserIcon = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('token'); 
-        localStorage.removeItem('user_type'); 
-        window.dispatchEvent(new Event('storage')); 
+        localStorage.removeItem('token');
+        localStorage.removeItem('user_type');
+        window.dispatchEvent(new Event('storage'));
         setShowDropdown(false);
-        navigate('/'); 
-        window.location.reload(); 
+        navigate('/');
+        window.location.reload();
     };
 
     const handleSettings = () => {
@@ -61,6 +59,15 @@ const UserIcon = () => {
         setShowDropdown(false);
     };
 
+    const handleOrders = () => {
+        navigate('/pedidos'); // Ruta para ver los pedidos del comprador
+        setShowDropdown(false);
+    };
+
+    const handleSales = () => {
+        navigate('/ventas'); // Ruta para ver las ventas del vendedor
+        setShowDropdown(false);
+    };
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -93,7 +100,6 @@ const UserIcon = () => {
                                     className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
                                     onClick={handleSettings}
                                 >
-
                                     <img
                                         src="/icons/settings.svg"
                                         alt="Settings Icon"
@@ -103,9 +109,32 @@ const UserIcon = () => {
                                 </li>
                                 <li
                                     className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                    onClick={handleOrders}
+                                >
+                                    <img
+                                        src="/icons/orders.svg"
+                                        alt="Orders Icon"
+                                        className="h-5 w-5 mr-2"
+                                    />
+                                    Mis pedidos
+                                </li>
+                                {userType === 'seller' && (
+                                    <li
+                                        className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                        onClick={handleSales}
+                                    >
+                                        <img
+                                            src="/icons/sales.svg" // Asegúrate de tener un ícono para ventas
+                                            alt="Sales Icon"
+                                            className="h-5 w-5 mr-2"
+                                        />
+                                        Mis ventas
+                                    </li>
+                                )}
+                                <li
+                                    className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
                                     onClick={handleLogout}
                                 >
-
                                     <img
                                         src="/icons/logout.svg"
                                         alt="Logout Icon"
