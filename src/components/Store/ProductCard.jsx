@@ -44,6 +44,10 @@ function ProductCard({ product, handleAddToCart }) {
             )}
             <h2 className="text-xl font-bold mb-1">{product.name}</h2>
 
+            {/* Mostrar categoría y nombre del vendedor */}
+            <p className="text-gray-600">Categoría: {product.category_name || 'No disponible'}</p>
+            <p className="text-gray-600">Vendedor: {product.seller_first_name || 'No disponible'}</p>
+
             {/* Stock y precio debajo de la imagen */}
             <div className="mt-auto">
                 <p className="text-gray-600">Stock: {product.stock || 'No disponible'}</p>
@@ -98,6 +102,8 @@ function ProductCard({ product, handleAddToCart }) {
                     )}
                     <div>
                         <h2 className="text-2xl font-bold mb-4">{product.name}</h2>
+                        <p className="text-gray-700">Categoría: {product.category_name || 'No disponible'}</p>
+                        <p className="text-gray-700">Vendedor: {product.seller_first_name || 'No disponible'}</p>
                         <p className="text-gray-700">{product.description}</p>
                     </div>
                 </div>
