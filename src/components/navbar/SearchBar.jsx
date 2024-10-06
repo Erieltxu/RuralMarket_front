@@ -27,7 +27,7 @@ const SearchBar = ({ onSearch, suggestions, errorMessage, searchTerm, onInputCha
                     style={{ color: errorMessage ? 'gray' : 'inherit' }} 
                 />
                 <button
-                    className="bg-customGreen text-white px-4 py-1 rounded-r-[5px]"
+                    className="bg-customGreen text-white px-4 py-1 rounded-r-[5px] hover:bg-customGreenL"
                     onClick={handleSearch}
                 >
                     Búsqueda
