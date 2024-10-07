@@ -13,12 +13,16 @@ const Cart = () => {
     useEffect(() => {
         if (cartData && cartData.length > 0 && cartData[0].items) {
             setCartItems(cartData[0].items);
-            const totalAmount = cartData[0].items.reduce((sum, item) => {
-                return sum + item.quantity * parseFloat(item.product.price);
-            }, 0);
-            setTotal(totalAmount);
         }
     }, [cartData]);
+
+    // Este useEffect se asegura de que el total se recalcula cada vez que cambia cartItems
+    useEffect(() => {
+        const totalAmount = cartItems.reduce((sum, item) => {
+            return sum + item.quantity * parseFloat(item.product.price);
+        }, 0);
+        setTotal(totalAmount);
+    }, [cartItems]); // Recalcula el total cuando cambian los items del carrito
 
     const updateQuantity = async (itemId, newQuantity) => {
         try {
@@ -40,12 +44,6 @@ const Cart = () => {
             );
             setCartItems(updatedItems);
 
-            // Recalcular el total
-            const newTotal = updatedItems.reduce((sum, item) => {
-                return sum + item.quantity * parseFloat(item.product.price);
-            }, 0);
-            setTotal(newTotal);
-
         } catch (error) {
             console.error('Error al actualizar la cantidad:', error.response?.data || error);
         }
@@ -59,12 +57,9 @@ const Cart = () => {
                 },
             });
 
-            setCartItems(prevItems => prevItems.filter(item => item.id !== itemId));
+            const updatedItems = cartItems.filter(item => item.id !== itemId);
+            setCartItems(updatedItems);
 
-            const newTotal = cartItems.reduce((sum, item) => {
-                return sum + item.quantity * parseFloat(item.product.price);
-            }, 0);
-            setTotal(newTotal);
             console.log('Producto eliminado:', response.data);
         } catch (error) {
             console.error('Error al eliminar el producto:', error.response?.data || error);
@@ -93,7 +88,7 @@ const Cart = () => {
                         <div className="mt-4 flex justify-center">
                             <button 
                                 onClick={() => navigate('/recibo')} 
-                                className="bg-green-500 text-white px-4 py-2 rounded"
+                                className="bg-customGreen text-white px-4 py-2 rounded"
                             >
                                 Generar recibo
                             </button>
@@ -135,14 +130,14 @@ const CartItem = ({ item, onRemove, onUpdateQuantity }) => {
                 <div className="flex items-center mt-2">
                     <button 
                         onClick={handleDecrement} 
-                        className="bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center"
+                        className="bg-customRed text-white w-8 h-8 rounded-full flex items-center justify-center"
                     >
                         -
                     </button>
                     <span className="mx-4">{item.quantity}</span>
                     <button 
                         onClick={handleIncrement} 
-                        className="bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center"
+                        className="bg-customGreen text-white w-8 h-8 rounded-full flex items-center justify-center"
                     >
                         +
                     </button>
@@ -154,7 +149,7 @@ const CartItem = ({ item, onRemove, onUpdateQuantity }) => {
                 </p>
                 <button 
                     onClick={handleRemove}
-                    className="bg-red-600 text-white text-sm px-2 py-1 rounded mt-1" 
+                    className="bg-customRed text-white text-sm px-2 py-1 rounded mt-1" 
                 >
                     Eliminar
                 </button>

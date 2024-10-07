@@ -6,7 +6,7 @@ import CategoryForm from '../createProduct/CategoryForm';
 import UseApi from '../../services/UseApi';
 import axios from 'axios';
 
-function CreateProductForm({ addProduct }) {
+const CreateProductForm = ({ addProduct }) => {
     const [productName, setProductName] = useState('');
     const [productCategory, setProductCategory] = useState('');
     const [productDescription, setProductDescription] = useState('');
@@ -46,28 +46,25 @@ function CreateProductForm({ addProduct }) {
     const validateForm = () => {
         let formErrors = {};
         
-        // Validar el nombre del producto
         if (!productName) formErrors.productName = 'El nombre del producto es obligatorio.';
     
-        // Validar la categoría del producto
         if (!productCategory && !newCategory) formErrors.productCategory = 'Selecciona o agrega una categoría.';
     
-        // Validar la descripción del producto
         if (!productDescription) formErrors.productDescription = 'La descripción del producto es obligatoria.';
     
-        // Si la categoría no es "Servicios", validar precio y stock
         const isService = productCategory === 'Servicios' || newCategory === 'Servicios';
     
         if (!isService) {
+            // Validar que el precio no sea negativo ni cero
             if (!productPrice || isNaN(productPrice) || productPrice <= 0) {
-                formErrors.productPrice = 'Introduce un precio válido.';
+                formErrors.productPrice = 'El precio debe ser mayor que 0.';
             }
+            // Validar que el stock no sea negativo
             if (!productStock || isNaN(productStock) || productStock < 0) {
-                formErrors.productStock = 'El stock debe ser un número positivo.';
+                formErrors.productStock = 'El stock debe ser mayor o igual a 0.';
             }
         }
     
-        // Validar la imagen del producto
         if (!productImage) formErrors.productImage = 'Debes subir una imagen del producto.';
     
         return formErrors;
@@ -80,16 +77,26 @@ function CreateProductForm({ addProduct }) {
             setErrors(formErrors);
             return;
         }
-
+    
         const formData = new FormData();
         formData.append('name', productName);
         formData.append('category', productCategory || newCategory);
         formData.append('description', productDescription);
-        formData.append('price', parseFloat(productPrice));
-        formData.append('stock', parseInt(productStock, 10));
+    
+        // Verifica si el producto es un servicio
+        const isService = productCategory === 'Servicios' || newCategory === 'Servicios';
+    
+        if (isService) {
+            formData.append('price', 1);  // Precio de 1 para "Servicios"
+            formData.append('stock', productStock === "1" ? 1 : 0);  // Establece el stock en 1 o 0 para servicios
+        } else {
+            formData.append('price', parseFloat(productPrice));  // Enviar precio normal
+            formData.append('stock', parseInt(productStock, 10));  // Stock numérico para productos normales
+        }
+    
         formData.append('seller', seller); 
         formData.append('photo', productImage);
-
+    
         try {
             setMessage('Creando producto...');
             const response = await axios.post(PRODUCT, formData, {
@@ -99,7 +106,7 @@ function CreateProductForm({ addProduct }) {
                 },
             });
             if (response && response.status === 201) {
-                addProduct(response.data);
+                console.log('Producto creado:', response.data);
                 resetForm();
                 setMessage('Producto creado exitosamente.');
             } else {
@@ -112,6 +119,10 @@ function CreateProductForm({ addProduct }) {
             setErrors({ api: 'Error al crear el producto. Inténtalo nuevamente.' });
         }
     };
+    
+    
+    
+    
 
     const handleAddCategory = async () => {
         if (!newCategory || !newCategoryDescription) {
@@ -165,68 +176,124 @@ function CreateProductForm({ addProduct }) {
 
     return (
         <form onSubmit={handleSubmit} className='max-w-md mx-auto p-4 mb-6 border rounded-lg shadow mt-10'>
-    {message && <p className="text-red-500">{message}</p>}
+            {message && <p className="text-red-500">{message}</p>}
 
-    {/* Campo oculto para el ID del vendedor */}
-    <input type="hidden" value={seller} name="seller" />
+            {/* Campo oculto para el ID del vendedor */}
+            <input type="hidden" value={seller} name="seller" />
 
-    <CategoryForm
-        productCategory={productCategory}
-        setProductCategory={setProductCategory}
-        categories={categories}
-        isAddingCategory={isAddingCategory}
-        setIsAddingCategory={setIsAddingCategory}
-        newCategory={newCategory}
-        setNewCategory={setNewCategory}
-        newCategoryDescription={newCategoryDescription}
-        setNewCategoryDescription={setNewCategoryDescription}
-        handleAddCategory={handleAddCategory}
-        errors={errors}
-    />
+            <CategoryForm
+                productCategory={productCategory}
+                setProductCategory={setProductCategory}
+                categories={categories}
+                isAddingCategory={isAddingCategory}
+                setIsAddingCategory={setIsAddingCategory}
+                newCategory={newCategory}
+                setNewCategory={setNewCategory}
+                newCategoryDescription={newCategoryDescription}
+                setNewCategoryDescription={setNewCategoryDescription}
+                handleAddCategory={handleAddCategory}
+                errors={errors}
+            />
 
-    <ProductDetails
-        productName={productName}
-        setProductName={setProductName}
-        productPrice={productPrice}
-        setProductPrice={setProductPrice}
-        productStock={productStock}
-        setProductStock={setProductStock}
-        productImage={productImage}
-        handleImageChange={handleImageChange}
-        errors={errors}
-        productCategory={productCategory} // Pasa la categoría para manejar la lógica
-    />
+            {/* Campo para el nombre del producto */}
+            <div className="mb-4">
+                <label className="block text-sm font-bold mb-2">Nombre del Producto</label>
+                <input
+                    type="text"
+                    className={`w-full p-2 border rounded ${errors.productName ? 'border-red-500' : ''}`}
+                    value={productName}
+                    onChange={(e) => setProductName(e.target.value)}
+                    placeholder="Nombre del producto"
+                    required
+                />
+                {errors.productName && <p className="text-red-500">{errors.productName}</p>}
+            </div>
 
-    <div className="mb-4">
-        <label className="block text-sm font-bold mb-2">Descripción del Producto</label>
-        <textarea
-            className={`w-full p-2 border rounded ${errors.productDescription ? 'border-red-500' : ''}`}
-            value={productDescription}
-            onChange={(e) => setProductDescription(e.target.value)}
-            placeholder="Escribe una breve descripción del producto"
-            required
-        />
-        {errors.productDescription && <p className="text-red-500">{errors.productDescription}</p>}
-    </div>
+            {/* Campo para el precio */}
+            <div className="mb-4">
+                <label className="block text-sm font-bold mb-2">Precio</label>
+                {productCategory === 'Servicios' || newCategory === 'Servicios' ? (
+                    <select
+                        className="w-full p-2 border rounded"
+                        value={productPrice}
+                        onChange={(e) => setProductPrice(e.target.value)}
+                    >
+                        <option value="1">Consultar con la empresa</option>
+                    </select>
+                ) : (
+                    <input
+                        type="number"
+                        className={`w-full p-2 border rounded ${errors.productPrice ? 'border-red-500' : ''}`}
+                        value={productPrice}
+                        onChange={(e) => setProductPrice(e.target.value)}
+                        placeholder="Precio del producto"
+                        required
+                        min="0"  // Restricción para no permitir negativos
+                    />
+                )}
+                {errors.productPrice && <p className="text-red-500">{errors.productPrice}</p>}
+            </div>
 
-    <ButtonGreen
-        backgroundColor="bg-customGreen"
-        textColor="text-white"
-        type="submit"
-    >
-        Crear Producto
-    </ButtonGreen>
+            {/* Campo para el stock */}
+            <div className="mb-4">
+                <label className="block text-sm font-bold mb-2">Stock</label>
+                {productCategory === 'Servicios' || newCategory === 'Servicios' ? (
+                    <select
+                        className="w-full p-2 border rounded"
+                        value={productStock}
+                        onChange={(e) => setProductStock(e.target.value)}
+                    >
+                        <option value="1">Disponible</option>
+                        <option value="0">No disponible</option>
+                    </select>
+                ) : (
+                    <input
+                        type="number"
+                        className={`w-full p-2 border rounded ${errors.productStock ? 'border-red-500' : ''}`}
+                        value={productStock}
+                        onChange={(e) => setProductStock(e.target.value)}
+                        placeholder="Stock del producto"
+                        required
+                        min="0"  // Restricción para no permitir negativos
+                    />
+                )}
+                {errors.productStock && <p className="text-red-500">{errors.productStock}</p>}
+            </div>
 
-    {Object.keys(errors).length > 0 && (
-        <button
-            type="button"
-            onClick={resetForm}
-            className="mt-2 bg-red-500 text-white p-2 rounded"
-        >
-            Limpiar Formulario
-        </button>
-    )}
-</form>
+            {/* Campo para la descripción */}
+            <div className="mb-4">
+                <label className="block text-sm font-bold mb-2">Descripción del Producto</label>
+                <textarea
+                    className={`w-full p-2 border rounded ${errors.productDescription ? 'border-red-500' : ''}`}
+                    value={productDescription}
+                    onChange={(e) => setProductDescription(e.target.value)}
+                    placeholder="Escribe una breve descripción del producto"
+                    required
+                />
+                {errors.productDescription && <p className="text-red-500">{errors.productDescription}</p>}
+            </div>
+
+            {/* Campo para la imagen */}
+            <div className="mb-4">
+                <label className="block text-sm font-bold mb-2">Imagen del Producto</label>
+                <input
+                    type="file"
+                    className="w-full p-2 border rounded"
+                    onChange={handleImageChange}
+                    required
+                />
+                {errors.productImage && <p className="text-red-500">{errors.productImage}</p>}
+            </div>
+
+            {/* Botón para enviar el formulario */}
+            <ButtonGreen
+                backgroundColor="bg-customGreen"
+                textColor="text-white"
+                type="submit"
+            >
+                Crear Producto
+            </ButtonGreen>
+        </form>
     );
 };
 

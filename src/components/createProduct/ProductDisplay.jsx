@@ -5,7 +5,7 @@ const ProductDisplay = ({ product, removeProduct }) => {
     const isService = product.category === 4;
 
     // Lógica para mostrar "Consultar con la empresa" si es un servicio
-    const displayPrice = isService ? 'Consultar con la empresa' : `${parseFloat(product.price).toFixed(2)} €`;
+    const displayPrice = product.price_display;  // Cambiamos a usar price_display
 
     // Lógica para mostrar "Disponible" o "No disponible" para el stock de los servicios
     const displayStock = isService
@@ -23,7 +23,7 @@ const ProductDisplay = ({ product, removeProduct }) => {
             <p className="text-gray-500">Categoría: {product.category_name}</p> {/* Mostrar el nombre de la categoría */}
             <p className="text-gray-500">Vendedor: {product.seller_first_name}</p> {/* Mostrar el nombre del vendedor */}
             <p className="text-gray-600">Stock: {displayStock}</p> {/* Mostrar stock */}
-            <p className="text-green-600 font-semibold">{displayPrice}</p> {/* Mostrar precio */}
+            <p className="text-green-600 font-semibold">{displayPrice}</p> {/* Mostrar el campo price_display */}
 
             {/* Botón para eliminar el producto */}
             <button 
@@ -35,5 +35,6 @@ const ProductDisplay = ({ product, removeProduct }) => {
         </div>
     );
 };
+
 
 export default ProductDisplay;
