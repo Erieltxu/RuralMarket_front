@@ -46,10 +46,6 @@ function ProductCard({ product, handleAddToCart }) {
             )}
             <h2 className="text-xl font-bold mb-1">{product.name}</h2>
 
-            {/* Mostrar categoría y nombre del vendedor */}
-            <p className="text-gray-600">Categoría: {product.category_name}</p>
-            <p className="text-gray-600">Vendedor: {product.seller_first_name}</p>
-
             {/* Stock y precio debajo de la imagen */}
             <div className="mt-auto">
                 <p className="text-gray-600">Stock: {product.stock || 'No disponible'}</p>

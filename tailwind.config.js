@@ -18,6 +18,7 @@ export default {
 				'customGreenL': "hsl(123, 100%, 20%)",
 				"customBlackTrans":"#00000040",
 				"customPink":"#9F4064",
+				"customHoverColorLila":"#d5c1db",
 
 				card: {
 					DEFAULT: 'hsl(var(--card))',

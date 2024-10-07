@@ -35,7 +35,6 @@ function Login() {
         });
         const userDetails = await response.json();
         localStorage.setItem('user_type', userDetails.user_type);
-
         window.location.href = '/';
       };
 
@@ -60,7 +59,7 @@ function Login() {
   };
 
   const handleForgotPassword = () => {
-    navigate('/password_reset'); // Ruta de recuperación de contraseña
+    navigate('/password_reset'); 
   };
 
   const togglePasswordVisibility = () => {
@@ -68,8 +67,8 @@ function Login() {
   };
 
   return (
-    <div className="max-w-md mx-auto mb-16 mt-16">
-      <div className="bg-white shadow-md rounded-lg p-8">
+    <div className="max-w-md mx-auto mb-16 mt-24"> 
+      <div className="bg-white shadow-xl border border-gray-300 rounded-lg p-8"> 
         <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-900 text-center mb-4">
           Iniciar sesión
         </h2>

@@ -22,7 +22,8 @@ import CreateProductForm  from '../components/createProduct/CreateProductForm'
 import SearchComponent from "../components/navbar/SearchComponent";
 import ProductDetails  from '../components/createProduct/ProductDetails'
 import Order from '../components/cart/Order';
-
+import OrderSeller from "../components/OrderSeller";
+import Confirmation from '../components/cart/Confirmation';
 
 const handleLogout = () => {
 
@@ -126,7 +127,14 @@ const router = createBrowserRouter([
         path: '/Recibo',
         element: <Order />
       },
-    
+      {
+        path: 'pedidos', 
+        element: <OrderSeller />
+      },
+      {
+        path: 'confirmation', 
+        element: <Confirmation />,
+      },
     ],
   },
 ]);
