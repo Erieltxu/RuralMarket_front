@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import UseApi from '../../services/useApi';
-import { CART, CARTITEM } from "../../config/urls"; 
-import { useNavigate } from 'react-router-dom'; 
+import { CART, CARTITEM } from "../../config/urls";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
-    const navigate = useNavigate(); 
-    const { data: cartData, loading, error } = UseApi({ apiEndpoint: CART });
-    const [total, setTotal] = useState(0);
     const [cartItems, setCartItems] = useState([]);
+    const [total, setTotal] = useState(0);
+    const navigate = useNavigate();
+    const { data: cartData, loading, error } = UseApi({ apiEndpoint: CART });
 
     useEffect(() => {
         if (cartData && cartData.length > 0 && cartData[0].items) {
@@ -16,13 +16,13 @@ const Cart = () => {
         }
     }, [cartData]);
 
-    // Este useEffect se asegura de que el total se recalcula cada vez que cambia cartItems
+    // Este useEffect se asegura de que el total se recalcula cada vez que cambian los items del carrito
     useEffect(() => {
         const totalAmount = cartItems.reduce((sum, item) => {
             return sum + item.quantity * parseFloat(item.product.price);
         }, 0);
         setTotal(totalAmount);
-    }, [cartItems]); // Recalcula el total cuando cambian los items del carrito
+    }, [cartItems]);
 
     const updateQuantity = async (itemId, newQuantity) => {
         try {
@@ -31,7 +31,7 @@ const Cart = () => {
                 return;
             }
 
-            const response = await axios.put(`${CARTITEM}${itemId}/`, {
+            await axios.put(`${CARTITEM}${itemId}/`, {
                 quantity: newQuantity
             }, {
                 headers: {
@@ -51,7 +51,7 @@ const Cart = () => {
 
     const handleRemove = async (itemId) => {
         try {
-            const response = await axios.delete(`${CARTITEM}${itemId}/`, {
+            await axios.delete(`${CARTITEM}${itemId}/`, {
                 headers: {
                     Authorization: `Token ${localStorage.getItem('token')}`,
                 },
@@ -59,8 +59,6 @@ const Cart = () => {
 
             const updatedItems = cartItems.filter(item => item.id !== itemId);
             setCartItems(updatedItems);
-
-            console.log('Producto eliminado:', response.data);
         } catch (error) {
             console.error('Error al eliminar el producto:', error.response?.data || error);
         }
@@ -103,56 +101,49 @@ const Cart = () => {
 };
 
 const CartItem = ({ item, onRemove, onUpdateQuantity }) => {
+    const token = localStorage.getItem('token'); // Obtener el token
 
-    const handleIncrement = () => {
+    const handleIncrease = () => {
         const newQuantity = item.quantity + 1;
         onUpdateQuantity(item.id, newQuantity);
     };
 
-    const handleDecrement = () => {
-        if (item.quantity > 1) {
-            const newQuantity = item.quantity - 1;
-            onUpdateQuantity(item.id, newQuantity);
-        } else {
-            onRemove(item.id); // Eliminar si la cantidad es 1 y se decrementa
-        }
-    };
-
-    const handleRemove = async () => {
-        await onRemove(item.id); // Llama a la función de eliminar en el componente padre
+    const handleDecrease = () => {
+        const newQuantity = item.quantity - 1;
+        onUpdateQuantity(item.id, newQuantity);
     };
 
     return (
         <li className="py-4 flex justify-between items-start">
             <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-700">{item.product.name}</h3>
+                <h3 className="text-lg font-semibold text-gray-700 flex justify-between items-center">
+                    {item.product.name}
+                    <button 
+                        onClick={() => onRemove(item.id)} 
+                        className="bg-red-600 text-white px-2 py-1 rounded"
+                    >
+                        Eliminar
+                    </button>
+                </h3>
                 <p className="text-sm text-gray-500">Precio: {parseFloat(item.product.price).toFixed(2)} €</p>
                 <div className="flex items-center mt-2">
                     <button 
-                        onClick={handleDecrement} 
+                        onClick={handleDecrease} 
                         className="bg-customRed text-white w-8 h-8 rounded-full flex items-center justify-center"
                     >
                         -
                     </button>
-                    <span className="mx-4">{item.quantity}</span>
+                    <span className="mx-2">{item.quantity}</span>
                     <button 
-                        onClick={handleIncrement} 
+                        onClick={handleIncrease} 
                         className="bg-customGreen text-white w-8 h-8 rounded-full flex items-center justify-center"
                     >
                         +
                     </button>
                 </div>
-            </div>
-            <div className="flex flex-col items-end ml-4"> 
-                <p className="text-gray-800 font-semibold text-lg"> 
+                <p className="text-gray-800 font-semibold mt-2">
                     Subtotal: {(item.quantity * parseFloat(item.product.price)).toFixed(2)} €
                 </p>
-                <button 
-                    onClick={handleRemove}
-                    className="bg-customRed text-white text-sm px-2 py-1 rounded mt-1" 
-                >
-                    Eliminar
-                </button>
             </div>
         </li>
     );
