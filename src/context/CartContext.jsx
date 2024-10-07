@@ -1,33 +1,33 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+// Crear el contexto
 const CartContext = createContext();
 
-export const useCart = () => {
-    return useContext(CartContext);
-};
+// Hook para usar el contexto
+export const useCart = () => useContext(CartContext);
 
+// Proveedor del contexto
 export const CartProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState([]);
 
+    // Función para vaciar el carrito
     const clearCart = () => {
-        console.log('clearCart called, current cartItems:', cartItems); 
-
+        console.log('Carrito antes de vaciarse:', cartItems);  
         setCartItems([]); // Vacía el carrito
-
-        // Usar useEffect para detectar el cambio en el carrito
     };
 
-    // Monitorea si el carrito realmente se vacía
     useEffect(() => {
-        console.log('Cart has been updated:', cartItems);
-    }, [cartItems]);
-
-    const addToCart = (item) => {
-        setCartItems((prevItems) => [...prevItems, item]);
-    };
+    if (cartItems.length === 0) {
+        // Evita volver a cargar los productos del carrito si ya está vacío
+        console.log("Carrito está vacío, evitando recargar datos.");
+        return;
+    }
+    
+    // Fetch de datos normales
+}, [cartItems]); // Se activa cuando cambia cartItems
 
     return (
-        <CartContext.Provider value={{ cartItems, setCartItems, clearCart, addToCart }}>
+        <CartContext.Provider value={{ cartItems, setCartItems, clearCart }}>
             {children}
         </CartContext.Provider>
     );
