@@ -19,6 +19,7 @@ export default {
 				"customBlackTrans":"#00000040",
 				"customPink":"#9F4064",
 				"customHoverColorLila":"#d5c1db",
+				"customRed":"#EF4444",
 
 				card: {
 					DEFAULT: 'hsl(var(--card))',

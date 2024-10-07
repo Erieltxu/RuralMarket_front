@@ -18,62 +18,53 @@ const Order = () => {
             }, 0);
             setTotal(totalAmount);
 
-            // Actualiza el carrito en el contexto con los datos de la API si no están sincronizados
-            if (cartItems.length === 0) {
+            // Verificar que los datos de cartItems no estén vacíos antes de sincronizar
+            if (!cartItems || cartItems.length === 0) {
                 setCartItems(cartData[0].items); // Sincroniza los datos de la API con el contexto
             }
         }
     }, [cartData, cartItems, setCartItems]);
 
     const handleSendOrder = async () => {
-        const cartItemsToSend = cartData[0].items.map(item => ({
-            product_id: item.product.id,
-            quantity: item.quantity,
-        }));
+        if (cartData && cartData[0] && cartData[0].items) {
+            const cartItemsToSend = cartData[0].items.map(item => ({
+                product_id: item.product.id,
+                quantity: item.quantity,
+            }));
     
-        try {
-            // Enviar pedido
-            const response = await axios.post(ORDERS_URL, {
-                cart_items: cartItemsToSend,
-                total: total,
-                cart: cartData[0].id // Incluye la ID del carrito si es necesario
-            }, {
-                headers: {
-                    Authorization: `Token ${localStorage.getItem('token')}`,
-                    'Content-Type': 'application/json',
-                },
-            });
+            try {
+                // Enviar el pedido al backend
+                const response = await axios.post(ORDERS_URL, {
+                    cart_items: cartItemsToSend,
+                    total: total.toFixed(2),
+                    cart: cartData[0].id
+                }, {
+                    headers: {
+                        Authorization: `Token ${localStorage.getItem('token')}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
     
-            console.log('Pedido enviado:', response.data);
+                console.log('Pedido enviado:', response.data);
     
-            // Vaciar carrito en el backend
-            await axios.delete(CART, {
-                headers: {
-                    Authorization: `Token ${localStorage.getItem('token')}`,
-                },
-            });
+                // Vaciar el carrito
+                clearCart();
     
-            console.log('Carrito vaciado en el backend');
-    
-            // Vaciar carrito en el frontend
-            clearCart();
-    
-            navigate('/confirmation');
-        } catch (error) {
-            console.error('Error al enviar el pedido o vaciar el carrito:', error.response?.data || error);
+                // Redirigir después de vaciar el carrito
+                navigate('/confirmation'); // Cambia la ruta según la estructura de tu app
+            } catch (error) {
+                console.error('Error al enviar el pedido:', error.response?.data || error);
+            }
         }
     };
-
-    // Escuchar los cambios en cartItems
-    useEffect(() => {
-        if (cartItems.length === 0) {
-            console.log('Cart items after clearing (from useEffect):', cartItems); // Verifica si el carrito se vacía
-        }
-    }, [cartItems]); // Se activa cuando el carrito cambia
+    
+    
+    
 
     if (loading) return <p>Cargando...</p>;
     if (error) return <p>Error al cargar la orden</p>;
 
+    // Verificar que cartData está disponible antes de usarlo
     const items = cartData?.length > 0 ? cartData[0].items : [];
 
     return (
@@ -81,7 +72,7 @@ const Order = () => {
             <div className="bg-white shadow-md rounded-lg p-8 border-2 border-gray-300">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Recibo de compra</h2>
 
-                {items.length > 0 ? (
+                {items && items.length > 0 ? (
                     <>
                         <ul className="divide-y divide-gray-200">
                             {items.map((item) => (
