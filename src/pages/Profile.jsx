@@ -82,9 +82,12 @@ function Profile({ onLogout }) {
 
         try {
             const formData = new FormData();
+            formData.append('first_name', user.first_name);
             formData.append('username', user.username);
             formData.append('email', user.email);
             formData.append('current_password', user.current_password);
+            formData.append('phone', user.phone); // Añadir el campo teléfono
+            formData.append('address', user.address); // Añadir el campo dirección
 
             // Si se está cambiando la contraseña, la incluimos
             if (user.password) {
@@ -181,6 +184,17 @@ function Profile({ onLogout }) {
                 ) : (
                     <form onSubmit={handleUpdateProfile} className="space-y-6">
                         <div>
+                            <label className="block text-sm font-medium text-gray-900">Nombre</label>
+                            <input
+                                type="text"
+                                name="first_name"
+                                value={user.first_name}
+                                onChange={handleChange}
+                                required
+                                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                            />
+                        </div>
+                        <div>
                             <label className="block text-sm font-medium text-gray-900">Nombre de usuario</label>
                             <input
                                 type="text"
@@ -248,7 +262,8 @@ function Profile({ onLogout }) {
                         {/* Confirmar nueva contraseña */}
                         <div>
                             <label className="block text-sm font-medium text-gray-900">Confirmar nueva contraseña</label>
-                            <div className="relative">
+                            <div className="relative mb-6"> 
+
                                 <input
                                     type={showConfirmPassword ? 'text' : 'password'}
                                     name="confirm_password"
@@ -263,32 +278,34 @@ function Profile({ onLogout }) {
                                     onClick={toggleConfirmPasswordVisibility}
                                 />
                             </div>
+                            <div className="mb-6">
+                                <label className="block text-sm font-medium text-gray-900">Teléfono</label>
+                                <input
+                                    type="text"
+                                    name="phone"
+                                    value={user.phone}
+                                    onChange={handleChange}
+                                    className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                                />
+                            </div>
+                            <div className="mb-6">
+                                <label className="block text-sm font-medium text-gray-900">Dirección</label>
+                                <input
+                                    type="text"
+                                    name="address"
+                                    value={user.address}
+                                    onChange={handleChange}
+                                    className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                                />
+                            </div>
                         </div>
 
                         {/* Mostrar solo campos básicos si es comprador */}
                         {user.user_type !== 'buyer' && (
                             <>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-900">Teléfono</label>
-                                    <input
-                                        type="text"
-                                        name="phone"
-                                        value={user.phone}
-                                        onChange={handleChange}
-                                        className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                                    />
-                                </div>
+                               
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-900">Dirección</label>
-                                    <input
-                                        type="text"
-                                        name="address"
-                                        value={user.address}
-                                        onChange={handleChange}
-                                        className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                                    />
-                                </div>
+                                
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-900">Provincia</label>
