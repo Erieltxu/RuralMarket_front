@@ -1,10 +1,10 @@
-import React from 'react';
+
 
 function ProductDetails({
     productName,
     setProductName,
     productPrice,
-    setProductPrice,
+    setProductPrice,    
     productStock,
     setProductStock,
     productImage,
