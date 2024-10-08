@@ -65,6 +65,8 @@ function ProductCard({ product, handleAddToCart }) {
             <h2 className="text-xl font-bold mb-1">{product.name}</h2>
             <div className="mt-auto">
                 <p className="text-gray-600">Stock: {product.stock || 'No disponible'}</p>
+                <p className="text-gray-600">Categoría: {product.category_name}</p> {/* Mostrar el nombre de la categoría */}
+                <p className="text-gray-600">Vendedor: {product.seller_first_name}</p> {/* Mostrar el nombre del vendedor */}
                 <p className="text-green-600 font-semibold">
                     {typeof product.price === 'string' ? (
                         `${parseFloat(product.price).toFixed(2).replace('.', ',')} €`

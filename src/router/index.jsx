@@ -23,6 +23,7 @@ import ProductDetails  from '../components/createProduct/ProductDetails'
 import Order from '../components/cart/Order';
 import OrderSeller from "../components/OrderSeller";
 import Confirmation from '../components/cart/Confirmation';
+import Suborders from "../components/Suborders";
 
 const handleLogout = () => {
 
@@ -130,6 +131,10 @@ const router = createBrowserRouter([
       {
         path: 'confirmation', 
         element: <Confirmation />,
+      },
+      {
+        path: 'ventas', 
+        element: <Suborders />,
       },
     ],
   },
