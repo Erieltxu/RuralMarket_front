@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import UseApi from '../services/useApi';
 import { ORDER_SELLER_URL } from '../config/urls';
 
