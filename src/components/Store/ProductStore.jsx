@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { PRODUCT, CATEGORIES, USERS, CART, CARTITEM } from '../../config/urls'; 
+import { PRODUCT, CATEGORIES, USERS, CART, CARTITEM } from '../../config/urls';
 import UseApi from '../../services/useApi';
 import ProductCard from './ProductCard';
 import axios from 'axios';
+import PopUp from '../PopUp';
 
 function ProductStore() {
     const [searchParams] = useSearchParams();
@@ -12,14 +13,14 @@ function ProductStore() {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedSeller, setSelectedSeller] = useState(sellerIdFromUrl || '');
     const [selectedProvince, setSelectedProvince] = useState('');
+    const [showPopup, setShowPopup] = useState(false);  // Estado para controlar la visibilidad del PopUp
+    const [popupMessage, setPopupMessage] = useState('');  // Mensaje del PopUp
 
     const { data: products, loading: loadingProducts, error: errorProducts } = UseApi({ apiEndpoint: PRODUCT });
-    console.log('Productos:', products);
-    
     const { data: categories, loading: loadingCategories, error: errorCategories } = UseApi({ apiEndpoint: CATEGORIES });
     const { data: sellers, loading: loadingSellers, error: errorSellers } = UseApi({ apiEndpoint: USERS });
 
-    const authenticated = !!localStorage.getItem('token');
+    const authenticated = !!localStorage.getItem('token');  // Verificar autenticación
 
     useEffect(() => {
         if (sellerIdFromUrl) {
@@ -27,19 +28,23 @@ function ProductStore() {
         }
     }, [sellerIdFromUrl]);
 
+    // Función para cerrar el PopUp
+    const handlePopupClose = () => {
+        setShowPopup(false);
+    };
+
     // Lógica para manejar agregar productos al carrito
     const handleAddToCart = async (product, quantity) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                console.error('Usuario no autenticado');
+                setPopupMessage('Debes estar registrado para usar el carrito de compras');
+                setShowPopup(true);  // Mostrar el PopUp si no está autenticado
                 return;
             }
-    
-            // Primero, obtener el carrito existente si no está en localStorage
+
+            // Obtener o crear carrito
             let cartId = localStorage.getItem('cartId');
-            
-            // Si no hay carrito en localStorage, buscamos el carrito existente en el backend
             if (!cartId) {
                 try {
                     const cartResponse = await axios.get(CART, {
@@ -48,12 +53,10 @@ function ProductStore() {
                             'Content-Type': 'application/json',
                         },
                     });
-                    
-                    // Si se encuentra un carrito, usamos ese
+
                     if (cartResponse.data && cartResponse.data.length > 0) {
                         cartId = cartResponse.data[0].id;
-                        localStorage.setItem('cartId', cartId);  // Guardar el carrito en localStorage
-                        console.log('Carrito existente encontrado con ID:', cartId);
+                        localStorage.setItem('cartId', cartId);
                     } else {
                         console.error('No se encontró un carrito existente.');
                         return;
@@ -63,28 +66,26 @@ function ProductStore() {
                     return;
                 }
             }
-    
-            // Agregamos el producto al carrito
+
+            // Agregar producto al carrito
             const cartItem = {
-                product_id: product.id,  // ID del producto
-                quantity,                // Cantidad seleccionada
-                cart_id: cartId,         // ID del carrito existente
+                product_id: product.id,
+                quantity,
+                cart_id: cartId,
             };
-    
-            // Realizamos la solicitud para agregar el producto al carrito
-            const response = await axios.post(CARTITEM, cartItem, {
+
+            await axios.post(CARTITEM, cartItem, {
                 headers: {
                     Authorization: `Token ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
-    
-            console.log('Producto añadido al carrito:', response.data);
+
+            console.log('Producto añadido al carrito');
         } catch (error) {
             console.error('Error al añadir producto al carrito:', error.response?.data || error);
         }
     };
-    
 
     if (loadingProducts || loadingCategories || loadingSellers) return <p>Cargando productos, categorías y vendedoras...</p>;
     if (errorProducts || errorCategories || errorSellers) return <p>Error al cargar datos: {errorProducts || errorCategories || errorSellers}</p>;
@@ -182,6 +183,15 @@ function ProductStore() {
                     </div>
                 </div>
             </div>
+
+            {/* Mostrar el PopUp si es necesario */}
+            {showPopup && (
+                <PopUp
+                    message={popupMessage}
+                    type="error"
+                    onClose={handlePopupClose}
+                />
+            )}
         </div>
     );
 }

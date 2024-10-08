@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import Modal from 'react-modal'; // Asegúrate de haber instalado react-modal
+import Modal from 'react-modal'; 
 import ButtonGreen from '../ButtonGreen';
+import PopUp from '../PopUp';
 
-Modal.setAppElement('#root'); // Esto es importante para accesibilidad
+Modal.setAppElement('#root');
 
 function ProductCard({ product, handleAddToCart }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [quantity, setQuantity] = useState(1);
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+    const [showErrorPopup, setShowErrorPopup] = useState(false);
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -24,20 +27,35 @@ function ProductCard({ product, handleAddToCart }) {
         setQuantity(Math.max(quantity - 1, 1));
     };
 
-    // Verificar que `product` existe antes de intentar acceder a sus propiedades
+    const handleAddToCartClick = () => {
+        try {
+            handleAddToCart(product, quantity);
+            setShowSuccessPopup(true);
+        } catch (error) {
+            setShowErrorPopup(true);
+        }
+    };
+
+    const closeSuccessPopup = () => {
+        setShowSuccessPopup(false);
+    };
+
+    const closeErrorPopup = () => {
+        setShowErrorPopup(false);
+    };
+
     if (!product) {
-        return null; // O renderizar un mensaje de carga
+        return null; 
     }
 
     return (
         <div className="border rounded-lg p-4 shadow bg-gray-50 flex flex-col justify-between">
-            {/* Imagen pequeña en la tarjeta */}
             {product.photo ? (
                 <img
                     src={product.photo}
                     alt={product.name || 'Imagen del producto'}
-                    className="w-full h-40 object-cover mb-2 rounded-md cursor-pointer" // Imagen más pequeña
-                    onClick={openModal} // Abre el modal al hacer clic en la imagen
+                    className="w-full h-40 object-cover mb-2 rounded-md cursor-pointer" 
+                    onClick={openModal} 
                 />
             ) : (
                 <div className="w-full h-40 bg-gray-200 flex items-center justify-center rounded-md mb-2">
@@ -45,8 +63,6 @@ function ProductCard({ product, handleAddToCart }) {
                 </div>
             )}
             <h2 className="text-xl font-bold mb-1">{product.name}</h2>
-
-            {/* Stock y precio debajo de la imagen */}
             <div className="mt-auto">
                 <p className="text-gray-600">Stock: {product.stock || 'No disponible'}</p>
                 <p className="text-gray-600">Categoría: {product.category_name}</p> {/* Mostrar el nombre de la categoría */}
@@ -75,13 +91,12 @@ function ProductCard({ product, handleAddToCart }) {
                     backgroundColor="bg-customGreen"
                     textColor="text-white px-6 py-3"
                     style={{ width: '100%', padding: '12px 24px', fontSize: '1.25rem' }}
-                    onClick={() => handleAddToCart(product, quantity)}
+                    onClick={handleAddToCartClick}
                 >
                     Agregar al carrito
                 </ButtonGreen>
             </div>
 
-            {/* Modal con la imagen más grande y la descripción del producto */}
             <Modal
                 isOpen={isModalOpen}
                 onRequestClose={closeModal}
@@ -90,7 +105,6 @@ function ProductCard({ product, handleAddToCart }) {
                 overlayClassName="modal-overlay"
             >
                 <div className="p-4 flex items-start">
-                    {/* Imagen más grande dentro del modal */}
                     {product.photo && (
                         <img
                             src={product.photo}
@@ -104,13 +118,27 @@ function ProductCard({ product, handleAddToCart }) {
                     </div>
                 </div>
 
-                {/* Botón de Cerrar centrado */}
                 <div className="flex justify-center mt-4">
                     <button onClick={closeModal} className="bg-red-500 text-white px-4 py-2 rounded">
                         Cerrar
                     </button>
                 </div>
             </Modal>
+            
+            {showSuccessPopup && (
+                <PopUp
+                    message="Producto agregado al carrito con éxito"
+                    type="success"
+                    onClose={closeSuccessPopup}
+                />
+            )}
+            {showErrorPopup && (
+                <PopUp
+                    message="No se pudo agregar el producto al carrito"
+                    type="error"
+                    onClose={closeErrorPopup}
+                />
+            )}
         </div>
     );
 }

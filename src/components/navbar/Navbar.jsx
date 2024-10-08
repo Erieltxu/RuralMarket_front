@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from "./logo";
-
 import UserIcon from "./UserIcon";
 import ShoppingCart from "./ShoppingCart";
 import HamburgerMenu from "./HamburguerMenu";
 import NavigationLinks from "./NavigationsLinks";
-import SearchComponent from './SearchComponent';
+import SearchBar from './SearchBar';
+
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,7 +44,7 @@ const Navbar = () => {
                 </Link>
                 <HamburgerMenu toggleMenu={toggleMenu} />
                 <div className="hidden md:flex flex-grow justify-center rounded-[5px]">
-                    <SearchComponent />
+                    <SearchBar />
                 </div>
                 <div className="hidden md:flex items-center">
                     <UserIcon />
@@ -55,7 +55,7 @@ const Navbar = () => {
             </div>
             <div className="md:hidden mx-7 mt-1 ">
                 
-                <SearchComponent />
+                <SearchBar />
             </div>
 
             <div className="bg-customPurple p-3 mt-5">
@@ -71,8 +71,8 @@ const Navbar = () => {
                     </div>
                     <nav className="font-bold flex flex-col space-y-2 ">
                         <Link to="/" className="text-#1a1a1a" onClick={closeMenu}>Inicio</Link>
-                        <Link to="/nuestrasemprendedoras" className="text-white">Nuestras emprendedoras</Link>
-                        <Link to="/productStore" className="text-#1a1a1a" onClick={closeMenu}>Tienda</Link>
+                        <Link to="/nuestrasemprendedoras" className="text-#1a1a1a">Nuestras emprendedoras</Link>
+                        <Link to="/store" className="text-#1a1a1a" onClick={closeMenu}>Tienda</Link>
 
                         {!loggedIn || userType === 'buyer' ? (
                             <Link to="/altaemprendedora" className="text-#1a1a1a" onClick={closeMenu}>Darse de alta como emprendedora</Link>

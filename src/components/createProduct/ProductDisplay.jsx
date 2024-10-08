@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 const ProductDisplay = ({ product, removeProduct }) => {
     // Verificar si la categoría tiene el ID 4 (Servicios)
