@@ -5,7 +5,7 @@ import UserIcon from "./UserIcon";
 import ShoppingCart from "./ShoppingCart";
 import HamburgerMenu from "./HamburguerMenu";
 import NavigationLinks from "./NavigationsLinks";
-import SearchComponent from './SearchComponent';
+import SearchBar from './SearchBar';
 
 
 const Navbar = () => {
@@ -44,7 +44,7 @@ const Navbar = () => {
                 </Link>
                 <HamburgerMenu toggleMenu={toggleMenu} />
                 <div className="hidden md:flex flex-grow justify-center rounded-[5px]">
-                    <SearchComponent />
+                    <SearchBar />
                 </div>
                 <div className="hidden md:flex items-center">
                     <UserIcon />
@@ -55,7 +55,7 @@ const Navbar = () => {
             </div>
             <div className="md:hidden mx-7 mt-1 ">
                 
-                <SearchComponent />
+                <SearchBar />
             </div>
 
             <div className="bg-customPurple p-3 mt-5">
