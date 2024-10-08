@@ -19,11 +19,11 @@ import PrivacyPolicy from '../components/PrivacyPolicy';
 import CartPage from "../pages/CartPage";
 import Store from "../pages/Store";
 import CreateProductForm  from '../components/createProduct/CreateProductForm'
-import SearchComponent from "../components/navbar/SearchComponent";
 import ProductDetails  from '../components/createProduct/ProductDetails'
 import Order from '../components/cart/Order';
 import OrderSeller from "../components/OrderSeller";
 import Confirmation from '../components/cart/Confirmation';
+import Suborders from "../components/Suborders";
 
 const handleLogout = () => {
 
@@ -115,10 +115,7 @@ const router = createBrowserRouter([
         path: '/Store',
         element: <Store />
       },
-      {
-        path: 'buscar',
-        element: <SearchComponent />,
-      },
+      
       {
         path: 'product/:id', 
         element: <ProductDetails />, 
@@ -134,6 +131,10 @@ const router = createBrowserRouter([
       {
         path: 'confirmation', 
         element: <Confirmation />,
+      },
+      {
+        path: 'ventas', 
+        element: <Suborders />,
       },
     ],
   },
