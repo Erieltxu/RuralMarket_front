@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UseApi from '../../services/useApi';
 import { PRODUCT, CATEGORIES, USERS } from '../../config/urls';
 
 const SearchBar = () => {
-    const [searchTerm, setSearchTerm] = useState(''); 
-    const [suggestions, setSuggestions] = useState([]); 
+    const [searchTerm, setSearchTerm] = useState('');
+    const [suggestions, setSuggestions] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
@@ -34,17 +34,23 @@ const SearchBar = () => {
     };
 
     // Al hacer clic en sugerencia o realizar búsqueda
-    const handleSearchClick = (suggestion) => {
-        navigate(suggestion.path); // Redirigir a la ruta correspondiente
+    const handleSearchClick = () => {
+        if (searchTerm.trim()) {
+            // Redirigir a la tienda con el término de búsqueda
+            navigate(`/Store?search=${encodeURIComponent(searchTerm)}`);
+            setSuggestions([]); // Cerrar sugerencias al realizar la búsqueda
+        }
+    };
+
+    const handleSuggestionClick = (suggestion) => {
+        setSearchTerm(suggestion.keyword); // Establecer el término de búsqueda
+        navigate(suggestion.path); // Redirigir a la sugerencia seleccionada
+        setSuggestions([]); // Cerrar sugerencias al hacer clic
     };
 
     const handleKeyPress = (e) => {
         if (e.key === 'Enter' && searchTerm.trim()) {
-            if (suggestions.length > 0) {
-                handleSearchClick(suggestions[0]); // Redirigir al primer resultado
-            } else {
-                setErrorMessage('No se encontraron resultados');
-            }
+            handleSearchClick();  // Redirigir al presionar Enter
         }
     };
 
@@ -62,7 +68,7 @@ const SearchBar = () => {
                 />
                 <button
                     className="bg-customGreen text-white px-4 py-1 rounded-r-[5px] hover:bg-customGreenL"
-                    onClick={() => handleSearchClick(suggestions[0])}
+                    onClick={handleSearchClick}
                 >
                     Búsqueda
                 </button>
@@ -72,7 +78,7 @@ const SearchBar = () => {
                     {suggestions.map((suggestion, index) => (
                         <li
                             key={index}
-                            onClick={() => handleSearchClick(suggestion)}
+                            onClick={() => handleSuggestionClick(suggestion)} // Cambiar aquí
                             className="p-2 hover:bg-gray-100 cursor-pointer"
                         >
                             {suggestion.keyword}
