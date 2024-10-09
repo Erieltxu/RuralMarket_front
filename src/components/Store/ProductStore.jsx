@@ -13,8 +13,9 @@ function ProductStore() {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedSeller, setSelectedSeller] = useState(sellerIdFromUrl || '');
     const [selectedProvince, setSelectedProvince] = useState('');
-    const [showPopup, setShowPopup] = useState(false);  // Estado para controlar la visibilidad del PopUp
-    const [popupMessage, setPopupMessage] = useState('');  // Mensaje del PopUp
+    const [showPopup, setShowPopup] = useState(false);  
+    const [popupMessage, setPopupMessage] = useState('');  
+    const [popupType, setPopupType] = useState('error');
 
     const { data: products, loading: loadingProducts, error: errorProducts } = UseApi({ apiEndpoint: PRODUCT });
     const { data: categories, loading: loadingCategories, error: errorCategories } = UseApi({ apiEndpoint: CATEGORIES });
@@ -38,7 +39,8 @@ function ProductStore() {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                setPopupMessage('Debes estar registrado para usar el carrito de compras');
+                setPopupMessage('Inicia sesión para usar el carrito de compras');
+                setPopupType('error');
                 setShowPopup(true);  // Mostrar el PopUp si no está autenticado
                 return;
             }
@@ -63,6 +65,9 @@ function ProductStore() {
                     }
                 } catch (error) {
                     console.error('Error al obtener el carrito existente:', error.response?.data || error);
+                    setPopupMessage('Error al obtener el carrito existente');
+                    setPopupType('error');
+                    setShowPopup(true);
                     return;
                 }
             }
@@ -80,6 +85,10 @@ function ProductStore() {
                     'Content-Type': 'application/json',
                 },
             });
+
+            setPopupMessage('Producto agregado al carrito con éxito');
+            setPopupType('success');  // Cambiar el tipo de PopUp a éxito
+            setShowPopup(true);
 
             console.log('Producto añadido al carrito');
         } catch (error) {
@@ -188,8 +197,9 @@ function ProductStore() {
             {showPopup && (
                 <PopUp
                     message={popupMessage}
-                    type="error"
+                    type={authenticated ? 'success' : 'error'} 
                     onClose={handlePopupClose}
+                    showCreateAccountButton={!authenticated}
                 />
             )}
         </div>

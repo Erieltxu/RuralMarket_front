@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal'; 
 import ButtonGreen from '../ButtonGreen';
-import PopUp from '../PopUp';
+//import PopUp from '../PopUp';
 
 Modal.setAppElement('#root');
 
 function ProductCard({ product, handleAddToCart }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [quantity, setQuantity] = useState(1);
-    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-    const [showErrorPopup, setShowErrorPopup] = useState(false);
+    //const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+    //const [showErrorPopup, setShowErrorPopup] = useState(false);
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -28,10 +28,10 @@ function ProductCard({ product, handleAddToCart }) {
     };
 
     const handleAddToCartClick = () => {
-        try {
+        //try {
             handleAddToCart(product, quantity);
-            setShowSuccessPopup(true);
-        } catch (error) {
+            //setShowSuccessPopup(true);
+        /*} catch (error) {
             setShowErrorPopup(true);
         }
     };
@@ -41,7 +41,7 @@ function ProductCard({ product, handleAddToCart }) {
     };
 
     const closeErrorPopup = () => {
-        setShowErrorPopup(false);
+        setShowErrorPopup(false);*/
     };
 
     if (!product) {
@@ -124,21 +124,6 @@ function ProductCard({ product, handleAddToCart }) {
                     </button>
                 </div>
             </Modal>
-            
-            {showSuccessPopup && (
-                <PopUp
-                    message="Producto agregado al carrito con éxito"
-                    type="success"
-                    onClose={closeSuccessPopup}
-                />
-            )}
-            {showErrorPopup && (
-                <PopUp
-                    message="No se pudo agregar el producto al carrito"
-                    type="error"
-                    onClose={closeErrorPopup}
-                />
-            )}
         </div>
     );
 }
