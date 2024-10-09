@@ -16,6 +16,7 @@ function ProductStore() {
     const [selectedProvince, setSelectedProvince] = useState('');
     const [showPopup, setShowPopup] = useState(false);
     const [popupMessage, setPopupMessage] = useState('');
+
     const [popupType, setPopupType] = useState('error');
 
     const { data: products, loading: loadingProducts, error: errorProducts } = UseApi({ apiEndpoint: PRODUCT });
@@ -33,9 +34,11 @@ function ProductStore() {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                setPopupMessage('Debes estar registrado para usar el carrito de compras');
+
+                setPopupMessage('Inicia sesión para usar el carrito de compras');
                 setPopupType('error');
-                setShowPopup(true);
+                setShowPopup(true);  
+
                 return;
             }
     
@@ -88,12 +91,13 @@ function ProductStore() {
                     'Content-Type': 'application/json',
                 },
             });
+
             setPopupMessage('Producto agregado al carrito con éxito');
-            setPopupType('success');  // Cambiar el tipo de PopUp a éxito
+            setPopupType('success');  
             setShowPopup(true);
-    
-            setPopupMessage('Producto añadido al carrito');
-            setShowPopup(true); 
+
+            console.log('Producto añadido al carrito');
+
         } catch (error) {
             console.error('Error al añadir producto al carrito:', error.response?.data || error);
             setPopupMessage('Error al añadir producto al carrito');
@@ -191,7 +195,7 @@ function ProductStore() {
                                 <ProductCard
                                     key={product.id}
                                     product={product}
-                                    handleAddToCart={handleAddToCart} // Ajustado para usar el nombre correcto
+                                    handleAddToCart={handleAddToCart} 
                                 />
                             ))}
                         </div>

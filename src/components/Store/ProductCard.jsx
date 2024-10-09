@@ -8,7 +8,7 @@ Modal.setAppElement('#root');
 function ProductCard({ product, handleAddToCart }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [quantity, setQuantity] = useState(1);
-    
+
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -27,6 +27,7 @@ function ProductCard({ product, handleAddToCart }) {
     };
 
     const handleAddToCartClick = () => {
+
             handleAddToCart(product, quantity);
            
     };
