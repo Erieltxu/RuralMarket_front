@@ -11,9 +11,11 @@ export const CART = `${BASE_URL}cart/cart/`;
 export const CARTITEM = `${BASE_URL}cart/cartitem/`;
 
 export const ORDER_SELLER_URL = `${BASE_URL}order/seller/`; 
-export const ORDERS_URL = `${BASE_URL}order/create/`;  // Cambia esto para usar el nuevo endpoint
+export const ORDERS_URL = `${BASE_URL}order/create/`; 
 
 export const ORDER_SALES_URL = `${BASE_URL}suborder/`;
+export const PRODUCT_SALES_URL = `${BASE_URL}suborder_product/`;
+
 
 export const PROFILE = '/profile';
 export const USER_DETAIL = `${BASE_URL}users/profile/`; 
@@ -21,8 +23,7 @@ export const UPDATE_USER = `${BASE_URL}users/profile/update/`;
 export const DELETE_USER = `${BASE_URL}users/profile/delete/`; 
 
 
-// Agregar las URLs para la recuperación de contraseña
 export const PASSWORD_RESET = `${BASE_URL}users/password_reset/`;
 export const PASSWORD_RESET_DONE = `${BASE_URL}users/password_reset/done/`;
-export const PASSWORD_RESET_CONFIRM = (uid, token) => `${BASE_URL}users/reset/${uid}/${token}/`; // Para el restablecimiento de contraseña
+export const PASSWORD_RESET_CONFIRM = (uid, token) => `${BASE_URL}users/reset/${uid}/${token}/`; 
 export const PASSWORD_RESET_COMPLETE = `${BASE_URL}users/reset/done/`;

@@ -9,6 +9,9 @@ import PopUp from '.././components/PopUp';
 
 function Register() {
   const [username, setUsername] = useState('');
+  const [firstName, setFirstName] = useState(''); // Nuevo campo
+  const [phone, setPhone] = useState(''); // Nuevo campo
+  const [address, setAddress] = useState(''); // Nuevo campo
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -25,7 +28,7 @@ function Register() {
   const { data, loading, error: apiError } = useApi({
     apiEndpoint: submitted ? USERS_REGISTER : null,
     method: 'POST',
-    body: { username, email, password, user_type: userType },
+    body: { username, first_name: firstName, phone, address, email, password, user_type: userType },
     headers: { 'Content-Type': 'application/json' },
   });
 
@@ -34,7 +37,6 @@ function Register() {
       setPopupMessage('¡Cuenta creada con éxito!');
       setPopupType('success');
       setShowPopup(true);
-
 
       setTimeout(() => {
         navigate('/iniciosesion');
@@ -122,6 +124,64 @@ function Register() {
             </div>
           </div>
 
+          {/* Nuevo campo: Nombre */}
+          <div>
+            <label htmlFor="firstName" className="block text-sm font-medium leading-6 text-gray-900">
+              Nombre
+            </label>
+            <div className="mt-2">
+              <input
+                id="firstName"
+                name="firstName"
+                type="text"
+                placeholder="Nombre"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+              />
+            </div>
+          </div>
+
+          {/* Nuevo campo: Teléfono */}
+          <div>
+            <label htmlFor="phone" className="block text-sm font-medium leading-6 text-gray-900">
+              Teléfono
+            </label>
+            <div className="mt-2">
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                placeholder="Teléfono"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+              />
+            </div>
+          </div>
+
+          {/* Nuevo campo: Dirección */}
+          <div>
+            <label htmlFor="address" className="block text-sm font-medium leading-6 text-gray-900">
+              Dirección
+            </label>
+            <div className="mt-2">
+              <input
+                id="address"
+                name="address"
+                type="text"
+                placeholder="Dirección"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                required
+                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+              />
+            </div>
+          </div>
+
+          {/* Campo de email */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
               Correo electrónico
@@ -140,6 +200,7 @@ function Register() {
             </div>
           </div>
 
+          {/* Campo de contraseña */}
           <div>
             <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
               Contraseña
@@ -164,6 +225,7 @@ function Register() {
             </div>
           </div>
 
+          {/* Campo de repetir contraseña */}
           <div>
             <label htmlFor="confirm-password" className="block text-sm font-medium leading-6 text-gray-900">
               Repetir contraseña
@@ -188,13 +250,6 @@ function Register() {
             </div>
           </div>
 
-          <input
-            id="userType"
-            name="userType"
-            type="hidden"
-            value={userType}
-          />
-
           {error && <p className="text-sm text-red-600">{error}</p>}
           {loading && <p className="text-sm text-gray-600">Registrando...</p>}
           {data && <p className="text-sm text-green-600">Registro exitoso</p>}
@@ -211,7 +266,7 @@ function Register() {
 
           <div className="mt-4 text-center">
             <p className="text-sm text-gray-600">
-              Ya tienes una cuenta?{' '}
+              ¿Ya tienes una cuenta?{' '}
               <span
                 onClick={handleLoginRedirect}
                 className="font-bold cursor-pointer text-customPurple"
