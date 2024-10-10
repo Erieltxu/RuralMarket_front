@@ -16,7 +16,6 @@ function ProductStore() {
     const [selectedProvince, setSelectedProvince] = useState('');
     const [showPopup, setShowPopup] = useState(false);
     const [popupMessage, setPopupMessage] = useState('');
-
     const [popupType, setPopupType] = useState('error');
 
     const { data: products, loading: loadingProducts, error: errorProducts } = UseApi({ apiEndpoint: PRODUCT });
@@ -34,11 +33,9 @@ function ProductStore() {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-
                 setPopupMessage('Inicia sesión para usar el carrito de compras');
                 setPopupType('error');
                 setShowPopup(true);  
-
                 return;
             }
     
@@ -60,8 +57,7 @@ function ProductStore() {
                         localStorage.setItem('cartId', cartId);
                     } else {
                         console.error('No se encontró un carrito existente. Creando uno nuevo...');
-                      
-                        const newCartResponse = await axios.post(CART, {}, {
+                       const newCartResponse = await axios.post(CART, {}, {
                             headers: {
                                 Authorization: `Token ${token}`,
                                 'Content-Type': 'application/json',
@@ -95,9 +91,7 @@ function ProductStore() {
             setPopupMessage('Producto agregado al carrito con éxito');
             setPopupType('success');  
             setShowPopup(true);
-
             console.log('Producto añadido al carrito');
-
         } catch (error) {
             console.error('Error al añadir producto al carrito:', error.response?.data || error);
             setPopupMessage('Error al añadir producto al carrito');
@@ -111,12 +105,10 @@ function ProductStore() {
     const filteredProducts = products?.filter((product) => {
         const productName = product.name ? product.name.toLowerCase().trim() : '';
         const searchQuery = searchTerm ? searchTerm.toLowerCase().trim() : '';
-
         const matchesSearchTerm = productName.includes(searchQuery);
         const matchesCategory = selectedCategory === '' || product.category_name === selectedCategory;
         const matchesSeller = selectedSeller === '' || product.seller === parseInt(selectedSeller);
         const matchesProvince = selectedProvince === '' || sellers.find(seller => seller.id === product.seller)?.province === selectedProvince;
-
         return matchesSearchTerm && matchesCategory && matchesSeller && matchesProvince;
     }) || [];
 
@@ -124,22 +116,22 @@ function ProductStore() {
 
     return (
         <div className="max-w-7xl mx-auto p-4 mt-12">
-            <div className="text-center mb-8" >
+            <div className="text-center mb-8">
                 <h1 className="text-3xl font-bold">Catálogo de Productos y Servicios</h1>
             </div>
 
             <div className="mb-8 flex justify-center">
                 <input
                     type="text"
-                    placeholder="Buscar productos por nombre..."
+                    placeholder="Buscar productos..."
                     className="w-1/4 p-2 border rounded-md mx-auto"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
 
-            <div className="flex">
-                <div className="w-1/6 pr-4 ml-4">
+            <div className="flex flex-col md:flex-row">
+                <div className="w-full md:w-1/6 pr-4 mb-4 md:mb-0 ml-4">
                     <label htmlFor="category" className="block font-bold mb-2">Filtrar por categoría</label>
                     <select
                         id="category"
@@ -188,7 +180,7 @@ function ProductStore() {
                     </select>
                 </div>
 
-                <div className="w-5/6">
+                <div className="w-full md:w-5/6">
                     {filteredProducts.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                             {filteredProducts.map(product => (

@@ -1,22 +1,21 @@
 import React, { useEffect } from 'react';
 import UseApi from '../../services/useApi';
 import { CARTITEM } from "../../config/urls";
-import { useCart } from '../../context/CartContext'; // Importamos el contexto
 
 const CartItems = ({ cartId }) => {
-    const { cartItems, setCartItems } = useCart(); // Obtenemos los items del contexto
+    const { cartItems, setCartItems } = useCart(); 
     const { data: fetchedCartItems, loading, error } = UseApi({ apiEndpoint: `${CARTITEM}?cart_id=${cartId}`, method: 'GET' });
 
     useEffect(() => {
         if (fetchedCartItems && Array.isArray(fetchedCartItems)) {
-            setCartItems(fetchedCartItems); // Actualizamos los items del carrito en el contexto
+            setCartItems(fetchedCartItems); 
         }
     }, [fetchedCartItems, setCartItems]);
 
     if (loading) return <p>Cargando artículos del carrito...</p>;
     if (error) return <p>Error: {error.message || error}</p>;
 
-    // Aseguramos que cartItems sea un array antes de mapear
+ 
     const items = Array.isArray(cartItems) ? cartItems : [];
 
     return (

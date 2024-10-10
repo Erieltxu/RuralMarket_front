@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
-const UserIcon = () => {
+const UserIcon = ({ closeMenu }) => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userType, setUserType] = useState(null);
-    const navigate = useNavigate();
     const dropdownRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         checkAuthentication();
@@ -23,38 +23,32 @@ const UserIcon = () => {
         setShowDropdown(!showDropdown);
     };
 
-    const handleLogin = () => {
-        navigate('/iniciosesion');
-        setShowDropdown(false);
-    };
-
-    const handleRegister = () => {
-        navigate('/registro');
-        setShowDropdown(false);
-    };
-
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user_type');
         setIsAuthenticated(false);
         setShowDropdown(false);
-        navigate('/');
-        window.location.reload(); // Recargar para asegurarnos de que el estado se restablezca correctamente
-    };
-
-    const handleSettings = () => {
-        navigate('/perfil');
-        setShowDropdown(false);
-    };
-
-    const handleOrders = () => {
-        navigate('/pedidos');
-        setShowDropdown(false);
+        closeMenu(); // Cerrar el menú hamburguesa
+        navigate('/'); // Redirigir a la página de inicio
+        window.location.reload();
     };
 
     const handleSales = () => {
         navigate('/ventas');
         setShowDropdown(false);
+        closeMenu(); // Cerrar el menú hamburguesa
+    };
+
+    const handleSettings = () => {
+        navigate('/perfil');
+        setShowDropdown(false);
+        closeMenu(); // Cerrar el menú hamburguesa
+    };
+
+    const handleOrders = () => {
+        navigate('/pedidos');
+        setShowDropdown(false);
+        closeMenu(); // Cerrar el menú hamburguesa
     };
 
     useEffect(() => {
@@ -80,70 +74,76 @@ const UserIcon = () => {
             />
 
             {showDropdown && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                <div className="absolute left mt-2 w-40 bg-white rounded-md shadow-lg z-20">
                     <ul className="py-1 text-gray-700">
                         {isAuthenticated ? (
                             <>
                                 <li
-                                    className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                                    onClick={handleSettings}
+                                    className="flex items-center px-4 py-2 cursor-pointer hover:text-customHoverColorLila"
                                 >
-                                    <img
-                                        src="/icons/settings.svg"
-                                        alt="Settings Icon"
-                                        className="h-5 w-5 mr-2"
-                                    />
-                                    Configuración
+                                    <Link to="/perfil" onClick={closeMenu} className="flex items-center">
+                                        <img
+                                            src="/icons/settings.svg"
+                                            alt="Settings Icon"
+                                            className="h-5 w-5 mr-2"
+                                        />
+                                        Configuración
+                                    </Link>
                                 </li>
                                 <li
-                                    className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                                    onClick={handleOrders}
+                                    className="flex items-center px-4 py-2 cursor-pointer hover:text-customHoverColorLila"
                                 >
-                                    <img
-                                        src="/icons/orders.svg"
-                                        alt="Orders Icon"
-                                        className="h-5 w-5 mr-2"
-                                    />
-                                    Mis pedidos
+                                    <Link to="/pedidos" onClick={closeMenu} className="flex items-center">
+                                        <img
+                                            src="/icons/orders.svg"
+                                            alt="Orders Icon"
+                                            className="h-5 w-5 mr-2"
+                                        />
+                                        Mis pedidos
+                                    </Link>
                                 </li>
                                 {userType === 'seller' && (
                                     <li
-                                        className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                                        onClick={handleSales}
+                                        className="flex items-center px-4 py-2 cursor-pointer hover:text-customHoverColorLila"
                                     >
-                                        <img
-                                            src="/icons/sales.svg"
-                                            alt="Sales Icon"
-                                            className="h-5 w-5 mr-2"
-                                        />
-                                        Mis ventas
+                                        <Link to="/ventas" onClick={closeMenu} className="flex items-center">
+                                            <img
+                                                src="/icons/sales.svg"
+                                                alt="Sales Icon"
+                                                className="h-5 w-5 mr-2"
+                                            />
+                                            Mis ventas
+                                        </Link>
                                     </li>
                                 )}
                                 <li
-                                    className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                                    onClick={handleLogout}
+                                    className="flex items-center px-4 py-2 cursor-pointer hover:text-customHoverColorLila"
                                 >
-                                    <img
-                                        src="/icons/logout.svg"
-                                        alt="Logout Icon"
-                                        className="h-5 w-5 mr-2"
-                                    />
-                                    Cerrar sesión
+                                    <Link to="/" onClick={handleLogout} className="flex items-center">
+                                        <img
+                                            src="/icons/logout.svg"
+                                            alt="Logout Icon"
+                                            className="h-5 w-5 mr-2"
+                                        />
+                                        Cerrar sesión
+                                    </Link>
                                 </li>
                             </>
                         ) : (
                             <>
                                 <li
-                                    className="block px-4 py-2 cursor-pointer hover:bg-gray-100"
-                                    onClick={handleLogin}
+                                    className="block px-4 py-2 cursor-pointer hover:text-customHoverColorLila"
                                 >
-                                    Inicia sesión
+                                    <Link to="/iniciosesion" onClick={() => { closeMenu(); setShowDropdown(false); }}>
+                                        Inicia sesión
+                                    </Link>
                                 </li>
                                 <li
-                                    className="block px-4 py-2 cursor-pointer hover:bg-gray-100"
-                                    onClick={handleRegister}
+                                    className="block px-4 py-2 cursor-pointer hover:text-customHoverColorLila"
                                 >
-                                    Regístrate
+                                    <Link to="/registro" onClick={() => { closeMenu(); setShowDropdown(false); }}>
+                                        Regístrate
+                                    </Link>
                                 </li>
                             </>
                         )}
