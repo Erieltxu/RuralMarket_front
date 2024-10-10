@@ -102,8 +102,8 @@ function ProductStore() {
     const provinces = Array.from(new Set(sellers?.map(seller => seller.province)));
 
     return (
-        <div className="max-w-7xl mx-auto p-4">
-            <div className="text-center mb-8">
+        <div className="max-w-7xl mx-auto p-4 mt-12">
+            <div className="text-center mb-8" >
                 <h1 className="text-3xl font-bold">Catálogo de Productos y Servicios</h1>
             </div>
 

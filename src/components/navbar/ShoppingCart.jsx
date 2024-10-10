@@ -6,7 +6,6 @@ const ShoppingCart = () => {
     const { data: cartData, error, loading } = UseApi({ apiEndpoint: CART });
     const [totalItems, setTotalItems] = useState(0); 
 
-    
     const calculateCartItems = (items) => {
         return items.reduce((total, item) => total + item.quantity, 0);
     };
@@ -17,9 +16,8 @@ const ShoppingCart = () => {
             return;
         }
 
-       
+        // Verifica si hay datos en el carrito y calcula el total de artículos
         if (cartData && cartData.length > 0 && cartData[0].items) {
-            // Actualiza el total de artículos
             const totalItemsCount = calculateCartItems(cartData[0].items);
             setTotalItems(totalItemsCount);
         } else {
@@ -32,13 +30,14 @@ const ShoppingCart = () => {
     }
 
     return (
-        <div className="max-w-3xl mx-auto mt-2 flex items-center">
+        <div className="relative flex items-center">
             {/* Icono del carrito con número de artículos */}
             <div className="relative">
                 <img
                     src="../../../public/img/cart.svg"
                     alt="Cart Icon"
-                    className="h-6 w-6 mr-4"
+                    className="h-6 w-6 mr-4 text-black" 
+                    style={{ color: '#000000' }} // Color negro
                 />
                 {/* Mostrar el número de artículos en el ícono */}
                 {totalItems > 0 && (
@@ -52,6 +51,5 @@ const ShoppingCart = () => {
 };
 
 export default ShoppingCart;
-
 
 
