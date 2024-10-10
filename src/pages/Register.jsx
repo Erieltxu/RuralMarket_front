@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useApi from '../services/useApi';
 import { USERS_REGISTER } from '../config/urls';
+import { checkUsernameExists, checkEmailExists, checkFirstNameExists } from '../services/userService';
 import arrowIcon from '/icons/arrow.svg';
 import eyeIcon from '/icons/eye.svg';
 import eyeOffIcon from '/icons/eye-off.svg';
-import PopUp from '.././components/PopUp';
+import PopUp from '../components/PopUp';
 
 function Register() {
   const [username, setUsername] = useState('');
-  const [firstName, setFirstName] = useState(''); // Nuevo campo
-  const [phone, setPhone] = useState(''); // Nuevo campo
-  const [address, setAddress] = useState(''); // Nuevo campo
+  const [firstName, setFirstName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -46,7 +47,7 @@ function Register() {
 
   useEffect(() => {
     if (apiError) {
-      setPopupMessage('Error en el registro: ' + (apiError.message || 'Inténtalo de nuevo.'));
+      setPopupMessage(apiError.message || 'Error en el registro. Inténtalo de nuevo.');
       setPopupType('error');
       setShowPopup(true);
     }
@@ -57,20 +58,39 @@ function Register() {
     return passwordRegex.test(password);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden');
+      setPopupMessage('Las contraseñas no coinciden');
+      setPopupType('error');
+      setShowPopup(true);
       return;
     }
 
     if (!validatePassword()) {
       setError('La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula y un número.');
+      setPopupMessage('La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula y un número.');
+      setPopupType('error');
+      setShowPopup(true);
       return;
     }
 
-    setSubmitted(true);
+    try {
+    
+      await checkUsernameExists(username);
+      await checkEmailExists(email);
+      await checkFirstNameExists(firstName);
+
+    
+      setSubmitted(true);
+    } catch (error) {
+      setError(error.message);
+      setPopupMessage(error.message);
+      setPopupType('error');
+      setShowPopup(true);
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -115,16 +135,15 @@ function Register() {
                 id="username"
                 name="username"
                 type="text"
-                placeholder="Nombre de usuario"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                className="block w-full rounded-xl border-2 border-gray-300 py-2 px-4 text-gray-900"
               />
             </div>
           </div>
 
-          {/* Nuevo campo: Nombre */}
+  
           <div>
             <label htmlFor="firstName" className="block text-sm font-medium leading-6 text-gray-900">
               Nombre
@@ -134,16 +153,15 @@ function Register() {
                 id="firstName"
                 name="firstName"
                 type="text"
-                placeholder="Nombre"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                className="block w-full rounded-xl border-2 border-gray-300 py-2 px-4 text-gray-900"
               />
             </div>
           </div>
 
-          {/* Nuevo campo: Teléfono */}
+       
           <div>
             <label htmlFor="phone" className="block text-sm font-medium leading-6 text-gray-900">
               Teléfono
@@ -153,16 +171,14 @@ function Register() {
                 id="phone"
                 name="phone"
                 type="tel"
-                placeholder="Teléfono"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 required
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                className="block w-full rounded-xl border-2 border-gray-300 py-2 px-4 text-gray-900"
               />
             </div>
           </div>
 
-          {/* Nuevo campo: Dirección */}
           <div>
             <label htmlFor="address" className="block text-sm font-medium leading-6 text-gray-900">
               Dirección
@@ -172,16 +188,14 @@ function Register() {
                 id="address"
                 name="address"
                 type="text"
-                placeholder="Dirección"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 required
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                className="block w-full rounded-xl border-2 border-gray-300 py-2 px-4 text-gray-900"
               />
             </div>
           </div>
 
-          {/* Campo de email */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
               Correo electrónico
@@ -191,30 +205,28 @@ function Register() {
                 id="email"
                 name="email"
                 type="email"
-                placeholder="Correo electrónico"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                className="block w-full rounded-xl border-2 border-gray-300 py-2 px-4 text-gray-900"
               />
             </div>
           </div>
 
-          {/* Campo de contraseña */}
+          
           <div>
             <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
               Contraseña
             </label>
-            <div className="mt-2 relative">
+            <div className="relative mt-2">
               <input
                 id="password"
                 name="password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                className="block w-full rounded-xl border-2 border-gray-300 py-2 px-4 text-gray-900"
               />
               <img
                 src={showPassword ? eyeIcon : eyeOffIcon}
@@ -225,21 +237,19 @@ function Register() {
             </div>
           </div>
 
-          {/* Campo de repetir contraseña */}
           <div>
             <label htmlFor="confirm-password" className="block text-sm font-medium leading-6 text-gray-900">
               Repetir contraseña
             </label>
-            <div className="mt-2 relative">
+            <div className="relative mt-2">
               <input
                 id="confirm-password"
                 name="confirm-password"
                 type={showConfirmPassword ? 'text' : 'password'}
-                placeholder="Repetir contraseña"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                className="block w-full rounded-xl border-2 border-gray-300 py-2 px-4 text-gray-900"
               />
               <img
                 src={showConfirmPassword ? eyeIcon : eyeOffIcon}
@@ -251,8 +261,6 @@ function Register() {
           </div>
 
           {error && <p className="text-sm text-red-600">{error}</p>}
-          {loading && <p className="text-sm text-gray-600">Registrando...</p>}
-          {data && <p className="text-sm text-green-600">Registro exitoso</p>}
 
           <div>
             <button
@@ -276,12 +284,9 @@ function Register() {
             </p>
           </div>
         </form>
+
         {showPopup && (
-          <PopUp
-            message={popupMessage}
-            type={popupType}
-            onClose={() => setShowPopup(false)}
-          />
+          <PopUp message={popupMessage} type={popupType} onClose={() => setShowPopup(false)} />
         )}
       </div>
     </div>
