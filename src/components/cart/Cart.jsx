@@ -65,7 +65,7 @@ const Cart = () => {
     };
 
     return (
-        <div className="max-w-3xl mx-auto mt-10">
+        <div className="max-w-3xl mx-auto mt-16 mb-16">
             <div className="bg-white shadow-lg rounded-lg p-8 border border-gray-300">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Carrito de compras</h2>
                 {cartItems.length > 0 ? (
@@ -114,38 +114,38 @@ const CartItem = ({ item, onRemove, onUpdateQuantity }) => {
     };
 
     return (
-        <li className="py-4 flex justify-between items-start">
-            <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-700 flex justify-between items-center">
-                    {item.product.name}
-                    <button 
-                        onClick={() => onRemove(item.id)} 
-                        className="bg-red-600 text-white px-2 py-1 rounded"
-                    >
-                        Eliminar
-                    </button>
-                </h3>
-                <p className="text-sm text-gray-500">Precio: {parseFloat(item.product.price).toFixed(2)} €</p>
-                <div className="flex items-center mt-2">
-                    <button 
-                        onClick={handleDecrease} 
-                        className="bg-customRed text-white w-8 h-8 rounded-full flex items-center justify-center"
-                    >
-                        -
-                    </button>
-                    <span className="mx-2">{item.quantity}</span>
-                    <button 
-                        onClick={handleIncrease} 
-                        className="bg-customGreen text-white w-8 h-8 rounded-full flex items-center justify-center"
-                    >
-                        +
-                    </button>
-                </div>
-                <p className="text-gray-800 font-semibold mt-2">
-                    Subtotal: {(item.quantity * parseFloat(item.product.price)).toFixed(2)} €
-                </p>
-            </div>
-        </li>
+        <li className="py-4 flex justify-between items-start ">
+    <div className="flex-1">
+        <h3 className="text-lg font-semibold text-gray-700 flex justify-between items-center">
+            {item.product.name}
+            <button 
+                onClick={() => onRemove(item.id)} 
+                className="bg-red-600 text-white px-2 py-1 rounded"
+            >
+                Eliminar
+            </button>
+        </h3>
+        <p className="text-sm text-gray-500">Precio: {parseFloat(item.product.price).toFixed(2)} €</p>
+        <div className="flex items-center mt-2">
+            <button 
+                onClick={handleDecrease} 
+                className="bg-customRed text-white w-8 h-8 rounded-full flex items-center justify-center"
+            >
+                -
+            </button>
+            <span className="mx-2">{item.quantity}</span>
+            <button 
+                onClick={handleIncrease} 
+                className="bg-customGreen text-white w-8 h-8 rounded-full flex items-center justify-center"
+            >
+                +
+            </button>
+        </div>
+        <p className="text-gray-800 font-semibold mt-2">
+            Subtotal: {(item.quantity * parseFloat(item.product.price)).toFixed(2)} €
+        </p>
+    </div>
+</li>
     );
 };
 
