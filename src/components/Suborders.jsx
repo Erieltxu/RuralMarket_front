@@ -5,49 +5,41 @@ import { ORDER_SALES_URL, PRODUCT_SALES_URL } from '../config/urls';
 
 const Suborders = () => {
     const [subOrders, setSubOrders] = useState([]);
-    const [productDetails, setProductDetails] = useState({});
+    const [productDetails, setProductDetails] = useState({}); 
     const { data, loading, error } = UseApi({ apiEndpoint: ORDER_SALES_URL });
 
     useEffect(() => {
         const fetchData = async () => {
             if (data) {
                 setSubOrders(data);
-                
-                const token = localStorage.getItem('token');
+
+                const token = localStorage.getItem('token'); 
                 if (!token) return;
 
                 try {
-                    const productResponses = await Promise.all(
-                        data.map(async suborder => {
-                            const response = await axios.get(`${PRODUCT_SALES_URL}?suborder=${suborder.id}`, {
-                                headers: { Authorization: `Token ${token}` }
-                            });
-                            return response.data;
-                        })
-                    );
+                    
+                    const response = await axios.get(PRODUCT_SALES_URL, {
+                        headers: { Authorization: `Token ${token}` },
+                    });
 
-                    const productsMapped = {};
-                    productResponses.flat().forEach(item => {
-                        const suborderId = item.suborder;
-                        const productId = item.product;
-                        const productName = item.product_name;
-                        const quantity = item.quantity;
-                        const soldPrice = item.sold_price;
+                    const products = response.data;
 
-                        if (!productsMapped[suborderId]) {
-                            productsMapped[suborderId] = [];
+                  
+                    const mappedProducts = {};
+                    products.forEach(product => {
+                        const { suborder, product_name, quantity, sold_price } = product;
+                        if (!mappedProducts[suborder]) {
+                            mappedProducts[suborder] = [];
                         }
-
-                        productsMapped[suborderId].push({
-                            id: productId,
-                            name: productName,
-                            quantity: quantity,
-                            soldPrice: parseFloat(soldPrice).toFixed(2)
+                        mappedProducts[suborder].push({
+                            product_name,
+                            quantity,
+                            sold_price,
                         });
                     });
 
-                    setProductDetails(productsMapped);
-
+                  
+                    setProductDetails(mappedProducts);
                 } catch (error) {
                     console.error("Error fetching products:", error.response?.data || error.message);
                 }
@@ -67,7 +59,7 @@ const Suborders = () => {
                 <p className="text-center text-gray-600 text-lg">No tienes ventas registradas.</p>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {subOrders.map(sale => (
+                    {subOrders.map((sale) => (
                         <div key={sale.id} className="border border-gray-300 rounded-lg shadow-lg p-6 bg-white">
                             <h2 className="font-bold text-xl mb-2">ID de la venta: {sale.id}</h2>
                             <p className="text-gray-700 text-md mb-1">Subtotal: <span className="font-semibold">{parseFloat(sale.subtotal).toFixed(2)} €</span></p>
@@ -75,17 +67,17 @@ const Suborders = () => {
                             <p className="text-gray-700 text-md mb-1">Comprado por: <span className="font-semibold">{sale.order_username} ({sale.order_email})</span></p>
 
                             {productDetails[sale.id] && productDetails[sale.id].length > 0 ? (
-                                  <ul>
-                                  {productDetails[sale.id].map(product => (
-                                      <li key={product.id} className="text-gray-700 text-md mb-1">
-                                          <span className="text-gray-700 text-md mb-1">Producto:</span> <span className="font-semibold">{product.name}</span>
-                                          <br />
-                                          <span className="text-gray-700 text-md mb-1">Cantidad:</span> <span className="font-semibold">{product.quantity}</span>
-                                          <br />
-                                          <span className="text-gray-700 text-md mb-1">Precio vendido:</span> <span className="font-semibold">{product.soldPrice} €</span>
-                                      </li>
-                                  ))}
-                              </ul>
+                                <ul>
+                                    {productDetails[sale.id].map((product, index) => (
+                                        <li key={`${product.product_name}-${index}`} className="text-gray-700 text-md mb-1">
+                                            <span className="text-gray-700 text-md mb-1">Producto:</span> <span className="font-semibold">{product.product_name}</span>
+                                            <br />
+                                            <span className="text-gray-700 text-md mb-1">Cantidad:</span> <span className="font-semibold">{product.quantity}</span>
+                                            <br />
+                                            <span className="text-gray-700 text-md mb-1">Precio vendido:</span> <span className="font-semibold">{product.sold_price} €</span>
+                                        </li>
+                                    ))}
+                                </ul>
                             ) : (
                                 <p className="text-gray-600 text-md">No hay productos asociados.</p>
                             )}
