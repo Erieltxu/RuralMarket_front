@@ -25,6 +25,7 @@ import OrderSeller from "../components/OrderSeller";
 import Confirmation from '../components/cart/Confirmation';
 import Suborders from "../components/Suborders";
 import MyProduct from "../components/navbar/MyProduct";
+import EditProduct from "../components/navbar/EditProduct";
 
 const handleLogout = () => {
 
@@ -140,6 +141,10 @@ const router = createBrowserRouter([
       {
         path: 'mis-productos', 
         element: <MyProduct/>,
+      },
+      {
+        path: 'editar-producto/:id', 
+        element: <EditProduct/>,
       },
     ],
   },
