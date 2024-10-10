@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const Carousel = () => {
   const images = [
@@ -7,21 +7,14 @@ const Carousel = () => {
     "/img/3.jpg",
     "/img/4.jpg",
     "/img/5.jpg",
-
-    
   ];
 
-  // Creamos un estado que maneja el índice actual de la imagen
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const totalImages = images.length;
   const intervalRef = useRef(null);
-  const transitionDuration = 500; // Duración de la transición (500ms)
-
-  // Para manejo de imágenes visibles por tamaño de ventana
+  const transitionDuration = 500;
   const [visibleImages, setVisibleImages] = useState(3);
-
-  // Clonamos las imágenes al final del array para que sea un ciclo continuo
   const extendedImages = [...images, ...images];
 
   useEffect(() => {
@@ -36,7 +29,7 @@ const Carousel = () => {
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize(); // Ajuste inicial
+    handleResize();
 
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -48,15 +41,13 @@ const Carousel = () => {
     return () => stopAutoSlide();
   }, []);
 
-  // Función para iniciar el slide automático
   const startAutoSlide = () => {
     stopAutoSlide();
     intervalRef.current = setInterval(() => {
       nextSlide();
-    }, 3000);  // Avanza cada 3 segundos
+    }, 3000);
   };
 
-  // Detiene el auto-slide
   const stopAutoSlide = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -71,39 +62,45 @@ const Carousel = () => {
     setCurrentIndex((prevIndex) => prevIndex - 1);
   };
 
-  // Este efecto maneja el ciclo continuo cuando llegamos al final de las imágenes duplicadas
   useEffect(() => {
     if (currentIndex === totalImages) {
-      // Desactivamos la transición antes de mover al inicio para evitar el efecto de desplazamiento
       setIsTransitioning(false);
       setTimeout(() => {
-        setCurrentIndex(0);  // Reiniciamos el índice
-      }, 0);  // Ajustamos el índice instantáneamente
+        setCurrentIndex(0);
+      }, 0);
     }
 
-    // Reactivamos la transición después de ajustar el índice
     if (currentIndex === 0 || currentIndex !== totalImages) {
       setTimeout(() => {
         setIsTransitioning(true);
-      }, 50);  // Reactivamos la transición tras un pequeño retraso
+      }, 50);
     }
-
   }, [currentIndex, totalImages]);
 
   return (
     <div className="bg-[#00B207] bg-opacity-20 p-4 rounded-lg w-full">
-      <h2 className="text-3xl font-bold text-center mb-4">Productos y Servicios</h2>
+      <h2 className="text-3xl font-bold text-center mb-4">
+        Productos y Servicios
+      </h2>
       <div className="relative w-full overflow-hidden">
         <div
-          className={`flex transition-transform ease-in-out ${isTransitioning ? `duration-${transitionDuration}ms` : 'duration-0'}`}
+          className={`flex transition-transform ease-in-out ${
+            isTransitioning ? `duration-${transitionDuration}ms` : "duration-0"
+          }`}
           style={{
-            transform: `translateX(-${(currentIndex * (100 / visibleImages))}%)`
+            transform: `translateX(-${currentIndex * (100 / visibleImages)}%)`,
           }}
         >
           {extendedImages.map((image, index) => (
             <div
               key={index}
-              className={`w-full ${visibleImages === 2 ? "md:w-1/2" : visibleImages === 3 ? "lg:w-1/3" : "w-full"} h-80 flex-shrink-0 px-2`}
+              className={`w-full ${
+                visibleImages === 2
+                  ? "md:w-1/2"
+                  : visibleImages === 3
+                  ? "lg:w-1/3"
+                  : "w-full"
+              } h-80 flex-shrink-0 px-2`}
             >
               <img
                 src={image}

@@ -1,14 +1,11 @@
-
-import ProductStore from '../components/Store/ProductStore'
-import React from 'react'
+import ProductStore from "../components/Store/ProductStore";
 
 const Store = () => {
   return (
     <>
-    <ProductStore />
-    
+      <ProductStore />
     </>
-  )
-}
+  );
+};
 
-export default Store
+export default Store;

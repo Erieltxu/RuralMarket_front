@@ -1,10 +1,7 @@
-import ProductList from '../components/createProduct/ProductList'
-import React from 'react'
+import ProductList from "../components/createProduct/ProductList";
 
 const Product = () => {
-  return (
-    <ProductList></ProductList>
-  )
-}
+  return <ProductList></ProductList>;
+};
 
-export default Product
+export default Product;
