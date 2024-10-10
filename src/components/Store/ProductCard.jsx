@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+/* eslint-disable react/prop-types */
+import { useState } from 'react';
 import Modal from 'react-modal'; 
 import ButtonGreen from '../ButtonGreen';
-import PopUp from '../PopUp';
+
 
 Modal.setAppElement('#root');
 
 function ProductCard({ product, handleAddToCart }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [quantity, setQuantity] = useState(1);
-    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-    const [showErrorPopup, setShowErrorPopup] = useState(false);
+
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -28,20 +28,9 @@ function ProductCard({ product, handleAddToCart }) {
     };
 
     const handleAddToCartClick = () => {
-        try {
+
             handleAddToCart(product, quantity);
-            setShowSuccessPopup(true);
-        } catch (error) {
-            setShowErrorPopup(true);
-        }
-    };
-
-    const closeSuccessPopup = () => {
-        setShowSuccessPopup(false);
-    };
-
-    const closeErrorPopup = () => {
-        setShowErrorPopup(false);
+           
     };
 
     if (!product) {
@@ -65,8 +54,8 @@ function ProductCard({ product, handleAddToCart }) {
             <h2 className="text-xl font-bold mb-1">{product.name}</h2>
             <div className="mt-auto">
                 <p className="text-gray-600">Stock: {product.stock || 'No disponible'}</p>
-                <p className="text-gray-600">Categoría: {product.category_name}</p> {/* Mostrar el nombre de la categoría */}
-                <p className="text-gray-600">Vendedor: {product.seller_first_name}</p> {/* Mostrar el nombre del vendedor */}
+                <p className="text-gray-600">Categoría: {product.category_name}</p> 
+                <p className="text-gray-600">Vendedor: {product.seller_first_name}</p> 
                 <p className="text-green-600 font-semibold">
                     {typeof product.price === 'string' ? (
                         `${parseFloat(product.price).toFixed(2).replace('.', ',')} €`
@@ -124,21 +113,6 @@ function ProductCard({ product, handleAddToCart }) {
                     </button>
                 </div>
             </Modal>
-            
-            {showSuccessPopup && (
-                <PopUp
-                    message="Producto agregado al carrito con éxito"
-                    type="success"
-                    onClose={closeSuccessPopup}
-                />
-            )}
-            {showErrorPopup && (
-                <PopUp
-                    message="No se pudo agregar el producto al carrito"
-                    type="error"
-                    onClose={closeErrorPopup}
-                />
-            )}
         </div>
     );
 }

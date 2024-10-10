@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PRODUCT, CATEGORIES, USERS, CART, CARTITEM } from '../../config/urls';
 import UseApi from '../../services/useApi';
@@ -9,42 +9,42 @@ import PopUp from '../PopUp';
 function ProductStore() {
     const [searchParams] = useSearchParams();
     const sellerIdFromUrl = searchParams.get('seller');
-    const [searchTerm, setSearchTerm] = useState('');
+    const searchQueryFromUrl = searchParams.get('search'); 
+    const [searchTerm, setSearchTerm] = useState(searchQueryFromUrl || ''); 
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedSeller, setSelectedSeller] = useState(sellerIdFromUrl || '');
     const [selectedProvince, setSelectedProvince] = useState('');
-    const [showPopup, setShowPopup] = useState(false);  // Estado para controlar la visibilidad del PopUp
-    const [popupMessage, setPopupMessage] = useState('');  // Mensaje del PopUp
+    const [showPopup, setShowPopup] = useState(false);
+    const [popupMessage, setPopupMessage] = useState('');
+
+    const [popupType, setPopupType] = useState('error');
 
     const { data: products, loading: loadingProducts, error: errorProducts } = UseApi({ apiEndpoint: PRODUCT });
     const { data: categories, loading: loadingCategories, error: errorCategories } = UseApi({ apiEndpoint: CATEGORIES });
     const { data: sellers, loading: loadingSellers, error: errorSellers } = UseApi({ apiEndpoint: USERS });
 
-    const authenticated = !!localStorage.getItem('token');  // Verificar autenticación
+    const authenticated = !!localStorage.getItem('token');
 
-    useEffect(() => {
-        if (sellerIdFromUrl) {
-            setSelectedSeller(sellerIdFromUrl);
-        }
-    }, [sellerIdFromUrl]);
-
-    // Función para cerrar el PopUp
     const handlePopupClose = () => {
         setShowPopup(false);
     };
 
-    // Lógica para manejar agregar productos al carrito
     const handleAddToCart = async (product, quantity) => {
+        console.log('Intentando añadir producto:', product, 'Cantidad:', quantity); 
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                setPopupMessage('Debes estar registrado para usar el carrito de compras');
-                setShowPopup(true);  // Mostrar el PopUp si no está autenticado
+
+                setPopupMessage('Inicia sesión para usar el carrito de compras');
+                setPopupType('error');
+                setShowPopup(true);  
+
                 return;
             }
-
-            // Obtener o crear carrito
+    
             let cartId = localStorage.getItem('cartId');
+            console.log('Cart ID:', cartId); 
+    
             if (!cartId) {
                 try {
                     const cartResponse = await axios.get(CART, {
@@ -53,27 +53,38 @@ function ProductStore() {
                             'Content-Type': 'application/json',
                         },
                     });
-
+    
+                    console.log('Respuesta del carrito:', cartResponse.data);
                     if (cartResponse.data && cartResponse.data.length > 0) {
                         cartId = cartResponse.data[0].id;
                         localStorage.setItem('cartId', cartId);
                     } else {
-                        console.error('No se encontró un carrito existente.');
-                        return;
+                        console.error('No se encontró un carrito existente. Creando uno nuevo...');
+                      
+                        const newCartResponse = await axios.post(CART, {}, {
+                            headers: {
+                                Authorization: `Token ${token}`,
+                                'Content-Type': 'application/json',
+                            },
+                        });
+                        cartId = newCartResponse.data.id;
+                        localStorage.setItem('cartId', cartId);
                     }
                 } catch (error) {
                     console.error('Error al obtener el carrito existente:', error.response?.data || error);
+                    setPopupMessage('Error al obtener el carrito existente');
+                    setPopupType('error');
+                    setShowPopup(true);
                     return;
                 }
             }
-
-            // Agregar producto al carrito
+    
             const cartItem = {
                 product_id: product.id,
                 quantity,
                 cart_id: cartId,
             };
-
+    
             await axios.post(CARTITEM, cartItem, {
                 headers: {
                     Authorization: `Token ${token}`,
@@ -81,9 +92,16 @@ function ProductStore() {
                 },
             });
 
+            setPopupMessage('Producto agregado al carrito con éxito');
+            setPopupType('success');  
+            setShowPopup(true);
+
             console.log('Producto añadido al carrito');
+
         } catch (error) {
             console.error('Error al añadir producto al carrito:', error.response?.data || error);
+            setPopupMessage('Error al añadir producto al carrito');
+            setShowPopup(true); 
         }
     };
 
@@ -91,7 +109,10 @@ function ProductStore() {
     if (errorProducts || errorCategories || errorSellers) return <p>Error al cargar datos: {errorProducts || errorCategories || errorSellers}</p>;
 
     const filteredProducts = products?.filter((product) => {
-        const matchesSearchTerm = product.name.toLowerCase().trim().includes(searchTerm.toLowerCase().trim());
+        const productName = product.name ? product.name.toLowerCase().trim() : '';
+        const searchQuery = searchTerm ? searchTerm.toLowerCase().trim() : '';
+
+        const matchesSearchTerm = productName.includes(searchQuery);
         const matchesCategory = selectedCategory === '' || product.category_name === selectedCategory;
         const matchesSeller = selectedSeller === '' || product.seller === parseInt(selectedSeller);
         const matchesProvince = selectedProvince === '' || sellers.find(seller => seller.id === product.seller)?.province === selectedProvince;
@@ -167,29 +188,29 @@ function ProductStore() {
                     </select>
                 </div>
 
-                <div className="w-5/6 pl-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                        {filteredProducts.length > 0 ? (
-                            filteredProducts.map((product) => (
+                <div className="w-5/6">
+                    {filteredProducts.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                            {filteredProducts.map(product => (
                                 <ProductCard
                                     key={product.id}
                                     product={product}
-                                    handleAddToCart={handleAddToCart}
+                                    handleAddToCart={handleAddToCart} 
                                 />
-                            ))
-                        ) : (
-                            <p>No hay productos disponibles.</p>
-                        )}
-                    </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p>No se encontraron productos que coincidan con los criterios de búsqueda.</p>
+                    )}
                 </div>
             </div>
 
-            {/* Mostrar el PopUp si es necesario */}
             {showPopup && (
                 <PopUp
                     message={popupMessage}
-                    type="error"
+                    type={authenticated ? 'success' : 'error'} 
                     onClose={handlePopupClose}
+                    showCreateAccountButton={!authenticated}
                 />
             )}
         </div>
