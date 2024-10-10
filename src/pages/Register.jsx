@@ -56,10 +56,24 @@ function Register() {
   const validatePassword = () => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
     return passwordRegex.test(password);
+    
+  };
+
+  const validateUsername = (username) => {
+    const usernameRegex = /^[^\s]+$/; // Verifica que no haya espacios
+    return usernameRegex.test(username);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateUsername(username)) {
+      setError('El nombre de usuario debe ser una sola palabra, sin espacios.');
+      setPopupMessage('El nombre de usuario debe ser una sola palabra, sin espacios.');
+      setPopupType('error');
+      setShowPopup(true);
+      return;
+  }
 
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden');
