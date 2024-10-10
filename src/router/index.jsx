@@ -88,7 +88,7 @@ const router = createBrowserRouter([
         element: <PasswordResetDone />
       },
       {
-        path: 'reset/:uid/:token',
+        path: 'reset/uid/token',
         element: <PasswordResetConfirm />
       },
       {
