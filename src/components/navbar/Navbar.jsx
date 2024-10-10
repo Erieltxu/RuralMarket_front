@@ -47,11 +47,11 @@ const Navbar = () => {
                     <SearchBar />
                 </div>
                 <div className="hidden md:flex items-center">
-                    <UserIcon />
-                    <Link to="/carrito" onClick={closeMenu}>
-                        <ShoppingCart />
-                    </Link>
-                </div>
+                <UserIcon />
+                <Link to="/carrito" onClick={closeMenu}>
+                    <ShoppingCart />
+                </Link>
+            </div>
             </div>
             <div className="md:hidden mx-7 mt-1 ">
                 
@@ -79,7 +79,7 @@ const Navbar = () => {
                         ) : null}
 
                         {loggedIn && userType === 'seller' && (
-                            <Link to="/altaProducto" className="text-#1a1a1a" onClick={closeMenu}>Dar de alta un producto</Link>
+                            <Link to="/product" className="text-#1a1a1a" onClick={closeMenu}>Dar de alta un producto</Link>
                         )}
 
                         <Link to="/quienessomos" className="text-#1a1a1a" onClick={closeMenu}>Quiénes somos</Link>

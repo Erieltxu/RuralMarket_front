@@ -3,11 +3,11 @@ import UseApi from '../../services/useApi';
 import { CART, ORDERS_URL } from "../../config/urls"; 
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../../context/CartContext'; // Importa el contexto
+import { useCart } from '../../context/CartContext'; 
 
 const Order = () => {
     const navigate = useNavigate();
-    const { clearCart, cartItems, setCartItems } = useCart(); // Agrega setCartItems para sincronizar el carrito
+    const { clearCart, cartItems, setCartItems } = useCart(); 
     const { data: cartData, loading, error } = UseApi({ apiEndpoint: CART });
     const [total, setTotal] = useState(0);
 
@@ -18,9 +18,8 @@ const Order = () => {
             }, 0);
             setTotal(totalAmount);
 
-            // Verificar que los datos de cartItems no estén vacíos antes de sincronizar
             if (!cartItems || cartItems.length === 0) {
-                setCartItems(cartData[0].items); // Sincroniza los datos de la API con el contexto
+                setCartItems(cartData[0].items);
             }
         }
     }, [cartData, cartItems, setCartItems]);
@@ -33,7 +32,7 @@ const Order = () => {
             }));
     
             try {
-                // Enviar el pedido al backend
+                
                 const response = await axios.post(ORDERS_URL, {
                     cart_items: cartItemsToSend,
                     total: total.toFixed(2),
@@ -47,11 +46,11 @@ const Order = () => {
     
                 console.log('Pedido enviado:', response.data);
     
-                // Vaciar el carrito
+             
                 clearCart();
     
-                // Redirigir después de vaciar el carrito
-                navigate('/confirmation'); // Cambia la ruta según la estructura de tu app
+              
+                navigate('/confirmation'); 
             } catch (error) {
                 console.error('Error al enviar el pedido:', error.response?.data || error);
             }
@@ -64,11 +63,11 @@ const Order = () => {
     if (loading) return <p>Cargando...</p>;
     if (error) return <p>Error al cargar la orden</p>;
 
-    // Verificar que cartData está disponible antes de usarlo
+
     const items = cartData?.length > 0 ? cartData[0].items : [];
 
     return (
-        <div className="max-w-lg mx-auto mb-16 mt-16">
+        <div className="max-w-lg mx-auto mb-24 mt-24">
             <div className="bg-white shadow-md rounded-lg p-8 border-2 border-gray-300">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Recibo de compra</h2>
 

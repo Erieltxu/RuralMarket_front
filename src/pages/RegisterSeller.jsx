@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useApi from '../services/useApi'; 
 import { USERS_REGISTER } from '../config/urls'; 
+import { checkUsernameExists, checkEmailExists, checkFirstNameExists } from '../services/userService'; 
 import arrowIcon from '/icons/arrow.svg'; 
 import eyeIcon from '/icons/eye.svg'; 
 import eyeOffIcon from '/icons/eye-off.svg'; 
+import PopUp from '../components/PopUp'; 
+
 
 function RegisterSeller() {
   const [firstName, setFirstName] = useState('');
@@ -23,6 +26,9 @@ function RegisterSeller() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
+  const [popupType, setPopupType] = useState('');
   const navigate = useNavigate();
 
   const { data, loading, error: apiError } = useApi({
@@ -51,35 +57,68 @@ function RegisterSeller() {
     }
   }, [apiError]);
 
+  useEffect(() => {
+    if (data) {
+      setPopupMessage('¡Cuenta de vendedora creada con éxito!');
+      setPopupType('success');
+      setShowPopup(true);
+
+      setTimeout(() => {
+        navigate('/iniciosesion');
+      }, 2000);
+    }
+  }, [data, navigate]);
+
   const validatePassword = () => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
     return passwordRegex.test(password);
   };
 
-  const handleSubmit = (e) => {
+  const validateUsername = (username) => {
+    const usernameRegex = /^[^\s]+$/; // Verifica que no haya espacios
+    return usernameRegex.test(username);
+  };
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!validateUsername(username)) {
+      setError('El nombre de usuario debe ser una sola palabra, sin espacios.');
+      setPopupMessage('El nombre de usuario debe ser una sola palabra, sin espacios.');
+      setPopupType('error');
+      setShowPopup(true);
+      return;
+  }
+    // Validaciones
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden');
+      setPopupMessage('Las contraseñas no coinciden');
+      setPopupType('error');
+      setShowPopup(true);
       return;
     }
 
     if (!validatePassword()) {
       setError('La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula y un número.');
+      setPopupMessage('La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula y un número.');
+      setPopupType('error');
+      setShowPopup(true);
       return;
     }
 
-    if (phone.length !== 9) {
-      setError('El teléfono debe tener exactamente 9 dígitos.');
-      return;
-    }
+    try {
+      // Llamadas a funciones asíncronas con await
+      await checkUsernameExists(username);
+      await checkEmailExists(email);
+      await checkFirstNameExists(firstName);
 
-    if (description.length > 1000) {
-      setError('La descripción no debe superar los 1000 caracteres.');
-      return;
+      setSubmitted(true); // Cambia el estado a enviado
+    } catch (error) {
+      setError(error.message);
+      setPopupMessage(error.message);
+      setPopupType('error');
+      setShowPopup(true);
     }
-
-    setSubmitted(true);
   };
 
   const handlePhotoUpload = (e) => {
@@ -119,7 +158,7 @@ function RegisterSeller() {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Campo de Nombre de usuario */}
+          
           <div>
             <label htmlFor="firstName" className="block text-sm font-medium leading-6 text-gray-900">
               Nombre
@@ -199,7 +238,7 @@ function RegisterSeller() {
             </div>
           </div>
 
-          {/* Campo de Repetir contraseña */}
+          
           <div>
             <label htmlFor="confirm-password" className="block text-sm font-medium leading-6 text-gray-900">
               Repetir contraseña
@@ -224,7 +263,7 @@ function RegisterSeller() {
             </div>
           </div>
 
-          {/* Campo oculto para el tipo de usuario (vendedora) */}
+          
           <input
             id="userType"
             name="userType"
@@ -252,131 +291,131 @@ function RegisterSeller() {
             </div>
             </div>
 
-{/* Campo de Dirección */}
-<div>
-  <label htmlFor="address" className="block text-sm font-medium leading-6 text-gray-900">
-    Dirección
-  </label>
-  <div className="mt-2">
-    <input
-      id="address"
-      name="address"
-      type="text"
-      placeholder="Dirección"
-      value={address}
-      onChange={(e) => setAddress(e.target.value)}
-      required
-      className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-    />
-  </div>
-</div>
+          
+          <div>
+            <label htmlFor="address" className="block text-sm font-medium leading-6 text-gray-900">
+              Dirección
+            </label>
+            <div className="mt-2">
+              <input
+                id="address"
+                name="address"
+                type="text"
+                placeholder="Dirección"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                required
+                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+              />
+            </div>
+          </div>
 
-{/* Campo de Provincia */}
-<div>
-  <label htmlFor="province" className="block text-sm font-medium leading-6 text-gray-900">
-    Provincia
-  </label>
-  <div className="mt-2">
-    <input
-      id="province"
-      name="province"
-      type="text"
-      placeholder="Provincia"
-      value={province}
-      onChange={(e) => setProvince(e.target.value)}
-      required
-      className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-    />
-  </div>
-</div>
+          <div>
+            <label htmlFor="province" className="block text-sm font-medium leading-6 text-gray-900">
+              Provincia
+            </label>
+            <div className="mt-2">
+              <input
+                id="province"
+                name="province"
+                type="text"
+                placeholder="Provincia"
+                value={province}
+                onChange={(e) => setProvince(e.target.value)}
+                required
+                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+              />
+            </div>
+          </div>
 
-{/* Campo de Código Postal */}
-<div>
-  <label htmlFor="postalCode" className="block text-sm font-medium leading-6 text-gray-900">
-    Código Postal
-  </label>
-  <div className="mt-2">
-    <input
-      id="postalCode"
-      name="postalCode"
-      type="text"
-      placeholder="Código Postal"
-      value={postalCode}
-      onChange={(e) => setPostalCode(e.target.value)}
-      required
-      className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-    />
-  </div>
-</div>
+          
+          <div>
+            <label htmlFor="postalCode" className="block text-sm font-medium leading-6 text-gray-900">
+              Código Postal
+            </label>
+            <div className="mt-2">
+              <input
+                id="postalCode"
+                name="postalCode"
+                type="text"
+                placeholder="Código Postal"
+                value={postalCode}
+                onChange={(e) => setPostalCode(e.target.value)}
+                required
+                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+              />
+            </div>
+          </div>
 
-{/* Campo de Descripción */}
-<div>
-  <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
-    Descripción
-  </label>
-  <div className="mt-2">
-    <textarea
-      id="description"
-      name="description"
-      placeholder="Descripción (máximo 1000 caracteres)"
-      value={description}
-      onChange={(e) => setDescription(e.target.value)}
-      maxLength={1000}
-      required
-      className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-    />
-  </div>
-</div>
+          
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
+              Descripción
+            </label>
+            <div className="mt-2">
+              <textarea
+                id="description"
+                name="description"
+                placeholder="Descripción (máximo 1000 caracteres)"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                maxLength={1000}
+                required
+                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+              />
+            </div>
+          </div>
 
-{/* Campo de Foto */}
-<div>
-  <label htmlFor="photo" className="block text-sm font-medium leading-6 text-gray-900">
-    Foto de perfil
-  </label>
-  <div className="mt-2">
-    <input
-      id="photo"
-      name="photo"
-      type="file"
-      accept="image/*"
-      onChange={handlePhotoUpload}
-      required
-      className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-    />
-  </div>
-</div>
+          
+          <div>
+            <label htmlFor="photo" className="block text-sm font-medium leading-6 text-gray-900">
+              Foto de perfil
+            </label>
+            <div className="mt-2">
+              <input
+                id="photo"
+                name="photo"
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                required
+                className="block w-full rounded-xl border-0 py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+              />
+            </div>
+          </div>
 
-{error && <p className="text-sm text-red-600">{error}</p>}
-{loading && <p className="text-sm text-gray-600">Registrando...</p>}
-{data && <p className="text-sm text-green-600">Registro exitoso</p>}
+          {error && <p className="text-sm text-red-600">{error}</p>}
+          {loading && <p className="text-sm text-gray-600">Registrando...</p>}
+          {data && <p className="text-sm text-green-600">Registro exitoso</p>}
 
-<div>
-  <button
-    type="submit"
-    className="flex w-full justify-center rounded-xl bg-customGreen px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-customGreenL focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-    disabled={loading}
-  >
-    Crear cuenta de Vendedora
-  </button>
-</div>
+          <div>
+            <button
+              type="submit"
+              className="flex w-full justify-center rounded-xl bg-customGreen px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-customGreenL focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              disabled={loading}
+            >
+              Crear cuenta de Vendedora
+            </button>
+          </div>
 
-<div className="mt-4 text-center">
-  <p className="text-sm text-gray-600">
-    ¿Ya tienes una cuenta?{' '}
-    <span
-      onClick={handleLoginRedirect}
-      className="font-bold cursor-pointer text-customPurple"
-    >
-      Inicia sesión
-    </span>
-  </p>
-</div>
-</form>
-</div>
-</div>
-);
+          <div className="mt-4 text-center">
+            <p className="text-sm text-gray-600">
+              ¿Ya tienes una cuenta?{' '}
+              <span
+                onClick={handleLoginRedirect}
+                className="font-bold cursor-pointer text-customPurple"
+              >
+                Inicia sesión
+              </span>
+            </p>
+          </div>
+        </form>
+        {showPopup && (
+          <PopUp message={popupMessage} type={popupType} onClose={() => setShowPopup(false)} />
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default RegisterSeller;
-
-         

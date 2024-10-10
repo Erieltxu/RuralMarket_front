@@ -5,6 +5,7 @@ import UseApi from '../services/useApi';
 import { USER_DETAIL, UPDATE_USER, DELETE_USER } from '../config/urls';
 import eyeIcon from '/icons/eye.svg';
 import eyeOffIcon from '/icons/eye-off.svg';
+import PopUp from '../components/PopUp';
 
 function Profile({ onLogout }) {
     const [user, setUser] = useState({
@@ -20,7 +21,7 @@ function Profile({ onLogout }) {
         postalCode: '',
         description: '',
         photo: null,
-        user_type: '', // Para determinar si es comprador, vendedor o admin
+        user_type: '', 
     });
     const [previewPhoto, setPreviewPhoto] = useState(null);
     const [isConfirmed, setIsConfirmed] = useState(false);
@@ -30,6 +31,9 @@ function Profile({ onLogout }) {
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [showPopup, setShowPopup] = useState(false);  
+    const [popupMessage, setPopupMessage] = useState(''); 
+    const [popupType, setPopupType] = useState('success');  
     const { data: userData, loading: userLoading, error: userError } = UseApi({ apiEndpoint: USER_DETAIL });
 
     const navigate = useNavigate();
@@ -49,7 +53,7 @@ function Profile({ onLogout }) {
                 postalCode: userData.zip_code || '',
                 description: userData.user_description || '',
                 photo: userData.photo || null,
-                user_type: userData.user_type || '', // Aquí obtenemos el tipo de usuario
+                user_type: userData.user_type || '', 
             });
             if (userData.photo) {
                 setPreviewPhoto(userData.photo);
@@ -79,6 +83,23 @@ function Profile({ onLogout }) {
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
+        // Validaciones manuales de campos obligatorios
+    if (!user.first_name || !user.email || !user.username || !user.current_password) {
+        setPopupMessage('Por favor, completa todos los campos obligatorios');
+        setPopupType('error');
+        setShowPopup(true);
+        setIsSubmitting(false);
+        return;
+    }
+
+    // Verificar si las contraseñas coinciden
+    if (user.password && user.password !== user.confirm_password) {
+        setPopupMessage('Las contraseñas no coinciden');
+        setPopupType('error');
+        setShowPopup(true);
+        setIsSubmitting(false);
+        return;
+    }
 
         try {
             const formData = new FormData();
@@ -108,14 +129,15 @@ function Profile({ onLogout }) {
                 },
             });
 
+            setPopupMessage('Perfil actualizado correctamente');
+            setPopupType('success');
+            setShowPopup(true);
+
             console.log('Perfil actualizado correctamente');
         } catch (error) {
-            if (error.response) {
-                console.error('Error al actualizar el perfil:', error.response.data);
-            } else {
-                console.error('Error al actualizar el perfil:', error.message);
-            }
-            setUpdateError('Error al actualizar el perfil');
+            setPopupMessage('Error al actualizar el perfil');
+            setPopupType('error');
+            setShowPopup(true);
         } finally {
             setIsSubmitting(false);
         }
@@ -130,12 +152,21 @@ function Profile({ onLogout }) {
                     Authorization: `Token ${localStorage.getItem('token')}`,
                 },
             });
+            setPopupMessage('Perfil borrado correctamente');
+            setPopupType('success');
+            setShowPopup(true);
 
             localStorage.removeItem('token');
             onLogout();
-            navigate('/');
+
+            setTimeout(() => {
+                navigate('/');
+            }, 3000);  
         } catch (error) {
             setDeleteError('Error al borrar el perfil');
+            setPopupMessage('Error al borrar el perfil');
+            setPopupType('error');
+            setShowPopup(true);
         }
     };
 
@@ -153,6 +184,10 @@ function Profile({ onLogout }) {
 
     const toggleConfirmPasswordVisibility = () => {
         setShowConfirmPassword(!showConfirmPassword);
+    };
+
+    const handlePopupClose = () => {
+        setShowPopup(false); // Cierra el PopUp
     };
 
     return (
@@ -262,7 +297,7 @@ function Profile({ onLogout }) {
                         {/* Confirmar nueva contraseña */}
                         <div>
                             <label className="block text-sm font-medium text-gray-900">Confirmar nueva contraseña</label>
-                            <div className="relative mb-6"> 
+                            <div className="relative mb-6">
 
                                 <input
                                     type={showConfirmPassword ? 'text' : 'password'}
@@ -303,9 +338,9 @@ function Profile({ onLogout }) {
                         {/* Mostrar solo campos básicos si es comprador */}
                         {user.user_type !== 'buyer' && (
                             <>
-                               
 
-                                
+
+
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-900">Provincia</label>
@@ -388,6 +423,14 @@ function Profile({ onLogout }) {
                     {deleteError && <p className="text-red-600">{deleteError}</p>}
                 </div>
             </div>
+            {/* Mostrar PopUp en caso de éxito o error */}
+            {showPopup && (
+                <PopUp
+                    message={popupMessage}
+                    type={popupType}
+                    onClose={handlePopupClose}
+                />
+            )}
         </div>
     );
 }

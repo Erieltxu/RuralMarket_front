@@ -38,8 +38,10 @@ const UserIcon = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user_type');
         setIsAuthenticated(false);
+        setIsAuthenticated(false);
         setShowDropdown(false);
         navigate('/');
+        window.location.reload(); // Recargar para asegurarnos de que el estado se restablezca correctamente
         window.location.reload(); // Recargar para asegurarnos de que el estado se restablezca correctamente
     };
 
@@ -49,6 +51,7 @@ const UserIcon = () => {
     };
 
     const handleOrders = () => {
+        navigate('/pedidos');
         navigate('/pedidos');
         setShowDropdown(false);
     };
@@ -83,6 +86,7 @@ const UserIcon = () => {
                 src="../../../public/img/user-icon.svg"
                 alt="User Icon"
                 className="h-6 w-6 cursor-pointer text-black"
+                
                 onClick={toggleDropdown}
             />
 

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PRODUCT, CATEGORIES, USER_DETAIL } from '../../config/urls';
 import ButtonGreen from '../ButtonGreen';
 import ProductDetails from '../createProduct/ProductDetails';
 import CategoryForm from '../createProduct/CategoryForm';
 import UseApi from '../../services/UseApi';
 import axios from 'axios';
+import PopUp from '../PopUp';
 
 const CreateProductForm = ({ addProduct }) => {
     const [productName, setProductName] = useState('');
@@ -19,8 +21,11 @@ const CreateProductForm = ({ addProduct }) => {
     const [newCategory, setNewCategory] = useState('');
     const [newCategoryDescription, setNewCategoryDescription] = useState('');
     const [isAddingCategory, setIsAddingCategory] = useState(false);
+    const [showPopup, setShowPopup] = useState(false);  
+    const [popupMessage, setPopupMessage] = useState('');  
+    const [popupType, setPopupType] = useState('success');
+    const navigate = useNavigate();
 
-    // Utiliza el hook UseApi para obtener la información del usuario logueado
     const { data: userData, loading: userLoading, error: userError } = UseApi({
         apiEndpoint: USER_DETAIL,
         headers: {
@@ -28,14 +33,14 @@ const CreateProductForm = ({ addProduct }) => {
         },
     });
 
-    // Utiliza el hook UseApi para cargar las categorías desde la base de datos
+
     const { data: categories, loading: categoriesLoading, error: categoriesError } = UseApi({
         apiEndpoint: CATEGORIES,
     });
 
     useEffect(() => {
         if (userData) {
-            setSeller(userData.id); // Establecer el ID del vendedor logueado
+            setSeller(userData.id);
         }
     }, [userData]);
 
@@ -45,28 +50,28 @@ const CreateProductForm = ({ addProduct }) => {
 
     const validateForm = () => {
         let formErrors = {};
-        
+
         if (!productName) formErrors.productName = 'El nombre del producto es obligatorio.';
-    
+
         if (!productCategory && !newCategory) formErrors.productCategory = 'Selecciona o agrega una categoría.';
-    
+
         if (!productDescription) formErrors.productDescription = 'La descripción del producto es obligatoria.';
-    
+
         const isService = productCategory === 'Servicios' || newCategory === 'Servicios';
-    
+
         if (!isService) {
-            // Validar que el precio no sea negativo ni cero
+
             if (!productPrice || isNaN(productPrice) || productPrice <= 0) {
                 formErrors.productPrice = 'El precio debe ser mayor que 0.';
             }
-            // Validar que el stock no sea negativo
+
             if (!productStock || isNaN(productStock) || productStock < 0) {
                 formErrors.productStock = 'El stock debe ser mayor o igual a 0.';
             }
         }
-    
+
         if (!productImage) formErrors.productImage = 'Debes subir una imagen del producto.';
-    
+
         return formErrors;
     };
 
@@ -75,28 +80,31 @@ const CreateProductForm = ({ addProduct }) => {
         const formErrors = validateForm();
         if (Object.keys(formErrors).length > 0) {
             setErrors(formErrors);
+            setPopupMessage('Error al crear el producto. Verifica los campos obligatorios.');
+            setPopupType('error');
+            setShowPopup(true);
             return;
         }
-    
+
         const formData = new FormData();
         formData.append('name', productName);
         formData.append('category', productCategory || newCategory);
         formData.append('description', productDescription);
-    
-        // Verifica si el producto es un servicio
+
+
         const isService = productCategory === 'Servicios' || newCategory === 'Servicios';
-    
+
         if (isService) {
-            formData.append('price', 1);  // Precio de 1 para "Servicios"
-            formData.append('stock', productStock === "1" ? 1 : 0);  // Establece el stock en 1 o 0 para servicios
+            formData.append('price', 1);
+            formData.append('stock', productStock === "1" ? 1 : 0);
         } else {
-            formData.append('price', parseFloat(productPrice));  // Enviar precio normal
-            formData.append('stock', parseInt(productStock, 10));  // Stock numérico para productos normales
+            formData.append('price', parseFloat(productPrice));
+            formData.append('stock', parseInt(productStock, 10));
         }
-    
-        formData.append('seller', seller); 
+
+        formData.append('seller', seller);
         formData.append('photo', productImage);
-    
+
         try {
             setMessage('Creando producto...');
             const response = await axios.post(PRODUCT, formData, {
@@ -108,21 +116,27 @@ const CreateProductForm = ({ addProduct }) => {
             if (response && response.status === 201) {
                 console.log('Producto creado:', response.data);
                 resetForm();
-                setMessage('Producto creado exitosamente.');
+                setPopupMessage('Producto creado exitosamente.');  
+                setPopupType('success');  
+                setShowPopup(true); 
             } else {
-                setMessage('Error al crear el producto. Inténtalo nuevamente.');
                 setErrors({ api: response.data });
+                setPopupMessage('Error al crear el producto. Inténtalo nuevamente.');
+                setPopupType('error');  
+                setShowPopup(true);  
             }
         } catch (error) {
             console.error('Error al crear el producto:', error);
-            setMessage('Error al crear el producto. Inténtalo nuevamente.');
             setErrors({ api: 'Error al crear el producto. Inténtalo nuevamente.' });
+            setPopupMessage('Error al crear el producto. Inténtalo nuevamente.');
+            setPopupType('error');  
+            setShowPopup(true);
         }
     };
-    
-    
-    
-    
+
+
+
+
 
     const handleAddCategory = async () => {
         if (!newCategory || !newCategoryDescription) {
@@ -159,6 +173,7 @@ const CreateProductForm = ({ addProduct }) => {
         }
     };
 
+
     const resetForm = () => {
         setProductName('');
         setProductCategory('');
@@ -174,53 +189,49 @@ const CreateProductForm = ({ addProduct }) => {
     if (userLoading || categoriesLoading) return <p>Cargando...</p>;
     if (userError || categoriesError) return <p>Error al cargar datos: {userError?.message || categoriesError?.message}</p>;
 
+    const handlePopupClose = () => {
+        setShowPopup(false);  
+        navigate('/Store');  
+    };
     return (
-        <form onSubmit={handleSubmit} className='max-w-md mx-auto p-4 mb-6 border rounded-lg shadow mt-10'>
-            {message && <p className="text-red-500">{message}</p>}
+        <>
+            <form onSubmit={handleSubmit} className='max-w-md mx-auto p-4 mb-6 border rounded-lg shadow mt-10'>
+                {message && <p className="text-red-500">{message}</p>}
 
-            {/* Campo oculto para el ID del vendedor */}
-            <input type="hidden" value={seller} name="seller" />
+                
+                <input type="hidden" value={seller} name="seller" />
 
-            <CategoryForm
-                productCategory={productCategory}
-                setProductCategory={setProductCategory}
-                categories={categories}
-                isAddingCategory={isAddingCategory}
-                setIsAddingCategory={setIsAddingCategory}
-                newCategory={newCategory}
-                setNewCategory={setNewCategory}
-                newCategoryDescription={newCategoryDescription}
-                setNewCategoryDescription={setNewCategoryDescription}
-                handleAddCategory={handleAddCategory}
-                errors={errors}
-            />
-
-            {/* Campo para el nombre del producto */}
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Nombre del Producto</label>
-                <input
-                    type="text"
-                    className={`w-full p-2 border rounded ${errors.productName ? 'border-red-500' : ''}`}
-                    value={productName}
-                    onChange={(e) => setProductName(e.target.value)}
-                    placeholder="Nombre del producto"
-                    required
+                <CategoryForm
+                    productCategory={productCategory}
+                    setProductCategory={setProductCategory}
+                    categories={categories}
+                    isAddingCategory={isAddingCategory}
+                    setIsAddingCategory={setIsAddingCategory}
+                    newCategory={newCategory}
+                    setNewCategory={setNewCategory}
+                    newCategoryDescription={newCategoryDescription}
+                    setNewCategoryDescription={setNewCategoryDescription}
+                    handleAddCategory={handleAddCategory}
+                    errors={errors}
                 />
-                {errors.productName && <p className="text-red-500">{errors.productName}</p>}
-            </div>
+
+
+                <div className="mb-4">
+                    <label className="block text-sm font-bold mb-2">Nombre del Producto</label>
+                    <input
+                        type="text"
+                        className={`w-full p-2 border rounded ${errors.productName ? 'border-red-500' : ''}`}
+                        value={productName}
+                        onChange={(e) => setProductName(e.target.value)}
+                        placeholder="Nombre del producto"
+                        required
+                    />
+                    {errors.productName && <p className="text-red-500">{errors.productName}</p>}
+                </div>
 
             {/* Campo para el precio */}
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Precio</label>
-                {productCategory === 'Servicios' || newCategory === 'Servicios' ? (
-                    <select
-                        className="w-full p-2 border rounded"
-                        value={productPrice}
-                        onChange={(e) => setProductPrice(e.target.value)}
-                    >
-                        <option value="1">Consultar con la empresa</option>
-                    </select>
-                ) : (
+                <div className="mb-4">
+                    <label className="block text-sm font-bold mb-2">Precio</label>
                     <input
                         type="number"
                         className={`w-full p-2 border rounded ${errors.productPrice ? 'border-red-500' : ''}`}
@@ -228,25 +239,16 @@ const CreateProductForm = ({ addProduct }) => {
                         onChange={(e) => setProductPrice(e.target.value)}
                         placeholder="Precio del producto"
                         required
-                        min="0"  // Restricción para no permitir negativos
+                        min="0" 
+                        step="0.01" 
                     />
-                )}
-                {errors.productPrice && <p className="text-red-500">{errors.productPrice}</p>}
-            </div>
+                    {errors.productPrice && <p className="text-red-500">{errors.productPrice}</p>}
+                </div>
 
-            {/* Campo para el stock */}
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Stock</label>
-                {productCategory === 'Servicios' || newCategory === 'Servicios' ? (
-                    <select
-                        className="w-full p-2 border rounded"
-                        value={productStock}
-                        onChange={(e) => setProductStock(e.target.value)}
-                    >
-                        <option value="1">Disponible</option>
-                        <option value="0">No disponible</option>
-                    </select>
-                ) : (
+
+           
+                <div className="mb-4">
+                    <label className="block text-sm font-bold mb-2">Stock</label>
                     <input
                         type="number"
                         className={`w-full p-2 border rounded ${errors.productStock ? 'border-red-500' : ''}`}
@@ -254,13 +256,13 @@ const CreateProductForm = ({ addProduct }) => {
                         onChange={(e) => setProductStock(e.target.value)}
                         placeholder="Stock del producto"
                         required
-                        min="0"  // Restricción para no permitir negativos
+                        min="0"  
                     />
-                )}
-                {errors.productStock && <p className="text-red-500">{errors.productStock}</p>}
-            </div>
+                    {errors.productStock && <p className="text-red-500">{errors.productStock}</p>}
+                </div>
 
-            {/* Campo para la descripción */}
+
+           
             <div className="mb-4">
                 <label className="block text-sm font-bold mb-2">Descripción del Producto</label>
                 <textarea
@@ -273,27 +275,36 @@ const CreateProductForm = ({ addProduct }) => {
                 {errors.productDescription && <p className="text-red-500">{errors.productDescription}</p>}
             </div>
 
-            {/* Campo para la imagen */}
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Imagen del Producto</label>
-                <input
-                    type="file"
-                    className="w-full p-2 border rounded"
-                    onChange={handleImageChange}
-                    required
-                />
-                {errors.productImage && <p className="text-red-500">{errors.productImage}</p>}
-            </div>
 
-            {/* Botón para enviar el formulario */}
-            <ButtonGreen
-                backgroundColor="bg-customGreen"
-                textColor="text-white"
-                type="submit"
-            >
-                Crear Producto
-            </ButtonGreen>
-        </form>
+                <div className="mb-4">
+                    <label className="block text-sm font-bold mb-2">Imagen del Producto</label>
+                    <input
+                        type="file"
+                        className="w-full p-2 border rounded"
+                        onChange={handleImageChange}
+                        required
+                    />
+                    {errors.productImage && <p className="text-red-500">{errors.productImage}</p>}
+                </div>
+
+
+                <ButtonGreen
+                    backgroundColor="bg-customGreen"
+                    textColor="text-white"
+                    type="submit"
+                >
+                    Crear Producto
+                </ButtonGreen>
+            </form>
+            {
+                showPopup && (
+                    <PopUp
+                        message={popupMessage} 
+                        type={popupType}  
+                        onClose={handlePopupClose} 
+                    />
+                )}
+        </>
     );
 };
 

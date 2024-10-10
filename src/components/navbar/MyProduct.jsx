@@ -40,12 +40,12 @@ const MyProduct = () => {
 
     if (errorProducts) {
         console.error("Error al cargar productos:", errorProducts);
-        return <p>Error al cargar productos: {errorProducts.message}</p>;
+        return <p>Error al cargar productos: {errorProducts}</p>;
     }
 
     if (errorUser) {
         console.error("Error al cargar usuario:", errorUser);
-        return <p>Error al cargar el usuario: {errorUser.message}</p>;
+        return <p>Error al cargar el usuario: {errorUser}</p>;
     }
 
     // Función para eliminar productos
@@ -54,24 +54,17 @@ const MyProduct = () => {
         if (!confirmDelete) return;
 
         try {
-            const response = await fetch(`${PRODUCT}${id}/`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Token ${localStorage.getItem('token')}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Error al eliminar el producto');
+            // Realizar la llamada a la API para eliminar el producto
+            const { error } = await UseApi({ apiEndpoint: `${PRODUCT}${id}/`, method: 'DELETE' });
+            if (!error) {
+                setProductos(prev => prev.filter(producto => producto.id !== id));
+                alert("Producto eliminado con éxito");
+            } else {
+                alert("Hubo un error al eliminar el producto: " + error.message);
             }
-
-            // Actualizar la lista de productos después de eliminar
-            setProductos(prev => prev.filter(producto => producto.id !== id));
-            alert("Producto eliminado con éxito");
         } catch (error) {
             console.error("Error al eliminar el producto:", error);
-            alert("Hubo un error al eliminar el producto: " + error.message);
+            alert("Hubo un error al eliminar el producto");
         }
     };
 
@@ -95,23 +88,20 @@ const MyProduct = () => {
     // Función para guardar cambios
     const handleSave = async (id) => {
         try {
-            const response = await fetch(`${PRODUCT}${id}/`, {
+            // Realizar la llamada a la API para actualizar el producto
+            const response = await UseApi({
+                apiEndpoint: `${PRODUCT}${id}/`,
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Token ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify(formData)
+                body: formData
             });
 
-            if (!response.ok) {
-                throw new Error('Error al actualizar el producto');
+            if (response.data) {
+                setProductos(prev => prev.map(p => (p.id === id ? { ...p, ...formData } : p)));
+                setEditingProductId(null);
+                alert("Producto actualizado con éxito");
+            } else {
+                throw new Error("No se pudo actualizar el producto");
             }
-
-            // Actualizar el producto en el estado
-            setProductos(prev => prev.map(p => (p.id === id ? { ...p, ...formData } : p)));
-            setEditingProductId(null);
-            alert("Producto actualizado con éxito");
         } catch (error) {
             console.error("Error al actualizar el producto:", error);
             alert("Hubo un error al actualizar el producto: " + error.message);
