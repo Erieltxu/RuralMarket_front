@@ -4,12 +4,14 @@ import { CART, ORDERS_URL } from "../../config/urls";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext'; 
+import Spinner from './Spinner';
 
 const Order = () => {
     const navigate = useNavigate();
     const { clearCart, cartItems, setCartItems } = useCart(); 
     const { data: cartData, loading, error } = UseApi({ apiEndpoint: CART });
     const [total, setTotal] = useState(0);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (cartData && cartData.length > 0 && cartData[0].items) {
@@ -31,6 +33,7 @@ const Order = () => {
                 quantity: item.quantity,
             }));
     
+            setIsSubmitting(true);   
             try {
                 
                 const response = await axios.post(ORDERS_URL, {
@@ -53,6 +56,8 @@ const Order = () => {
                 navigate('/confirmation'); 
             } catch (error) {
                 console.error('Error al enviar el pedido:', error.response?.data || error);
+            } finally {
+                setIsSubmitting(false); 
             }
         }
     };
@@ -90,12 +95,15 @@ const Order = () => {
                         <div className="mt-6 border-t pt-4 text-center">
                             <h3 className="text-xl font-bold text-gray-800">Total: €{total.toFixed(2)}</h3>
                         </div>
-                        <div className="mt-4 flex justify-center">
+                        <div className="mt-4 flex justify-center text-center">
                             <button 
                                 onClick={handleSendOrder} 
-                                className="bg-blue-500 text-white px-4 py-2 rounded"
+                                className="bg-blue-500 text-white px-4 py-2 rounded flex items-center justify-center"
+                                disabled={isSubmitting}
                             >
-                                Enviar
+                                {isSubmitting && <Spinner />}
+                                <span className={`ml-2 ${isSubmitting ? 'text-center' : ''}`}>
+                                {isSubmitting ? 'Enviando...' : 'Enviar'}</span>
                             </button>
                         </div>
                     </>
