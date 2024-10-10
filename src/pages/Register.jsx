@@ -78,12 +78,12 @@ function Register() {
     }
 
     try {
-      // Validar si los campos ya están en uso
+    
       await checkUsernameExists(username);
       await checkEmailExists(email);
       await checkFirstNameExists(firstName);
 
-      // Si todo es válido, procede con el registro
+    
       setSubmitted(true);
     } catch (error) {
       setError(error.message);
@@ -143,7 +143,7 @@ function Register() {
             </div>
           </div>
 
-          {/* Nuevo campo: Nombre */}
+  
           <div>
             <label htmlFor="firstName" className="block text-sm font-medium leading-6 text-gray-900">
               Nombre
@@ -161,7 +161,7 @@ function Register() {
             </div>
           </div>
 
-          {/* Otros campos: teléfono, dirección, email */}
+       
           <div>
             <label htmlFor="phone" className="block text-sm font-medium leading-6 text-gray-900">
               Teléfono
@@ -213,7 +213,7 @@ function Register() {
             </div>
           </div>
 
-          {/* Contraseña y repetir contraseña */}
+          
           <div>
             <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
               Contraseña

@@ -57,6 +57,18 @@ function RegisterSeller() {
     }
   }, [apiError]);
 
+  useEffect(() => {
+    if (data) {
+      setPopupMessage('¡Cuenta de vendedora creada con éxito!');
+      setPopupType('success');
+      setShowPopup(true);
+
+      setTimeout(() => {
+        navigate('/iniciosesion');
+      }, 2000);
+    }
+  }, [data, navigate]);
+
   const validatePassword = () => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
     return passwordRegex.test(password);
@@ -65,6 +77,7 @@ function RegisterSeller() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validaciones
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden');
       setPopupMessage('Las contraseñas no coinciden');
@@ -81,30 +94,13 @@ function RegisterSeller() {
       return;
     }
 
-    if (phone.length !== 9) {
-      setError('El teléfono debe tener exactamente 9 dígitos.');
-      setPopupMessage('El teléfono debe tener exactamente 9 dígitos.');
-      setPopupType('error');
-      setShowPopup(true);
-      return;
-    }
-
-    if (description.length > 1000) {
-      setError('La descripción no debe superar los 1000 caracteres.');
-      setPopupMessage('La descripción no debe superar los 1000 caracteres.');
-      setPopupType('error');
-      setShowPopup(true);
-      return;
-    }
-
     try {
-      
+      // Llamadas a funciones asíncronas con await
       await checkUsernameExists(username);
       await checkEmailExists(email);
       await checkFirstNameExists(firstName);
 
-      
-      setSubmitted(true);
+      setSubmitted(true); // Cambia el estado a enviado
     } catch (error) {
       setError(error.message);
       setPopupMessage(error.message);
@@ -186,7 +182,7 @@ function RegisterSeller() {
             </div>
           </div>
 
-          
+          {/* Campo de Correo electrónico */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
               Correo electrónico
@@ -205,7 +201,7 @@ function RegisterSeller() {
             </div>
           </div>
 
-          
+          {/* Campo de Contraseña */}
           <div>
             <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
               Contraseña
@@ -263,7 +259,7 @@ function RegisterSeller() {
             value={userType} 
           />
 
-          
+          {/* Campo de Teléfono */}
           <div>
             <label htmlFor="phone" className="block text-sm font-medium leading-6 text-gray-900">
               Teléfono
