@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PRODUCT, CATEGORIES, USER_DETAIL } from '../../config/urls';
 import ButtonGreen from '../ButtonGreen';
 import ProductDetails from '../createProduct/ProductDetails';
 import CategoryForm from '../createProduct/CategoryForm';
 import UseApi from '../../services/UseApi';
 import axios from 'axios';
+import PopUp from '../PopUp';
 
 const CreateProductForm = ({ addProduct }) => {
     const [productName, setProductName] = useState('');
@@ -19,7 +21,10 @@ const CreateProductForm = ({ addProduct }) => {
     const [newCategory, setNewCategory] = useState('');
     const [newCategoryDescription, setNewCategoryDescription] = useState('');
     const [isAddingCategory, setIsAddingCategory] = useState(false);
-
+    const [showPopup, setShowPopup] = useState(false);  
+    const [popupMessage, setPopupMessage] = useState('');  
+    const [popupType, setPopupType] = useState('success');
+    const navigate = useNavigate();
 
     const { data: userData, loading: userLoading, error: userError } = UseApi({
         apiEndpoint: USER_DETAIL,
@@ -75,6 +80,9 @@ const CreateProductForm = ({ addProduct }) => {
         const formErrors = validateForm();
         if (Object.keys(formErrors).length > 0) {
             setErrors(formErrors);
+            setPopupMessage('Error al crear el producto. Verifica los campos obligatorios.');
+            setPopupType('error');
+            setShowPopup(true);
             return;
         }
 
@@ -108,15 +116,21 @@ const CreateProductForm = ({ addProduct }) => {
             if (response && response.status === 201) {
                 console.log('Producto creado:', response.data);
                 resetForm();
-                setMessage('Producto creado exitosamente.');
+                setPopupMessage('Producto creado exitosamente.');  
+                setPopupType('success');  
+                setShowPopup(true); 
             } else {
-                setMessage('Error al crear el producto. Inténtalo nuevamente.');
                 setErrors({ api: response.data });
+                setPopupMessage('Error al crear el producto. Inténtalo nuevamente.');
+                setPopupType('error');  
+                setShowPopup(true);  
             }
         } catch (error) {
             console.error('Error al crear el producto:', error);
-            setMessage('Error al crear el producto. Inténtalo nuevamente.');
             setErrors({ api: 'Error al crear el producto. Inténtalo nuevamente.' });
+            setPopupMessage('Error al crear el producto. Inténtalo nuevamente.');
+            setPopupType('error');  
+            setShowPopup(true);
         }
     };
 
@@ -159,6 +173,7 @@ const CreateProductForm = ({ addProduct }) => {
         }
     };
 
+
     const resetForm = () => {
         setProductName('');
         setProductCategory('');
@@ -174,40 +189,45 @@ const CreateProductForm = ({ addProduct }) => {
     if (userLoading || categoriesLoading) return <p>Cargando...</p>;
     if (userError || categoriesError) return <p>Error al cargar datos: {userError?.message || categoriesError?.message}</p>;
 
+    const handlePopupClose = () => {
+        setShowPopup(false);  
+        navigate('/Store');  
+    };
     return (
-        <form onSubmit={handleSubmit} className='max-w-md mx-auto p-4 mb-6 border rounded-lg shadow mt-10'>
-            {message && <p className="text-red-500">{message}</p>}
+        <>
+            <form onSubmit={handleSubmit} className='max-w-md mx-auto p-4 mb-6 border rounded-lg shadow mt-10'>
+                {message && <p className="text-red-500">{message}</p>}
 
-            {/* Campo oculto para el ID del vendedor */}
-            <input type="hidden" value={seller} name="seller" />
+                
+                <input type="hidden" value={seller} name="seller" />
 
-            <CategoryForm
-                productCategory={productCategory}
-                setProductCategory={setProductCategory}
-                categories={categories}
-                isAddingCategory={isAddingCategory}
-                setIsAddingCategory={setIsAddingCategory}
-                newCategory={newCategory}
-                setNewCategory={setNewCategory}
-                newCategoryDescription={newCategoryDescription}
-                setNewCategoryDescription={setNewCategoryDescription}
-                handleAddCategory={handleAddCategory}
-                errors={errors}
-            />
-
-
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Nombre del Producto</label>
-                <input
-                    type="text"
-                    className={`w-full p-2 border rounded ${errors.productName ? 'border-red-500' : ''}`}
-                    value={productName}
-                    onChange={(e) => setProductName(e.target.value)}
-                    placeholder="Nombre del producto"
-                    required
+                <CategoryForm
+                    productCategory={productCategory}
+                    setProductCategory={setProductCategory}
+                    categories={categories}
+                    isAddingCategory={isAddingCategory}
+                    setIsAddingCategory={setIsAddingCategory}
+                    newCategory={newCategory}
+                    setNewCategory={setNewCategory}
+                    newCategoryDescription={newCategoryDescription}
+                    setNewCategoryDescription={setNewCategoryDescription}
+                    handleAddCategory={handleAddCategory}
+                    errors={errors}
                 />
-                {errors.productName && <p className="text-red-500">{errors.productName}</p>}
-            </div>
+
+
+                <div className="mb-4">
+                    <label className="block text-sm font-bold mb-2">Nombre del Producto</label>
+                    <input
+                        type="text"
+                        className={`w-full p-2 border rounded ${errors.productName ? 'border-red-500' : ''}`}
+                        value={productName}
+                        onChange={(e) => setProductName(e.target.value)}
+                        placeholder="Nombre del producto"
+                        required
+                    />
+                    {errors.productName && <p className="text-red-500">{errors.productName}</p>}
+                </div>
 
             {/* Campo para el precio */}
                 <div className="mb-4">
@@ -256,26 +276,35 @@ const CreateProductForm = ({ addProduct }) => {
             </div>
 
 
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Imagen del Producto</label>
-                <input
-                    type="file"
-                    className="w-full p-2 border rounded"
-                    onChange={handleImageChange}
-                    required
-                />
-                {errors.productImage && <p className="text-red-500">{errors.productImage}</p>}
-            </div>
+                <div className="mb-4">
+                    <label className="block text-sm font-bold mb-2">Imagen del Producto</label>
+                    <input
+                        type="file"
+                        className="w-full p-2 border rounded"
+                        onChange={handleImageChange}
+                        required
+                    />
+                    {errors.productImage && <p className="text-red-500">{errors.productImage}</p>}
+                </div>
 
 
-            <ButtonGreen
-                backgroundColor="bg-customGreen"
-                textColor="text-white"
-                type="submit"
-            >
-                Crear Producto
-            </ButtonGreen>
-        </form>
+                <ButtonGreen
+                    backgroundColor="bg-customGreen"
+                    textColor="text-white"
+                    type="submit"
+                >
+                    Crear Producto
+                </ButtonGreen>
+            </form>
+            {
+                showPopup && (
+                    <PopUp
+                        message={popupMessage} 
+                        type={popupType}  
+                        onClose={handlePopupClose} 
+                    />
+                )}
+        </>
     );
 };
 
