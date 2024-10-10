@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
 const UserIcon = () => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -106,7 +107,7 @@ const UserIcon = () => {
                                     onClick={handleOrders}
                                 >
                                     <img
-                                        src="/icons/orders.svg"
+                                        src="public\icons\compras.png"
                                         alt="Orders Icon"
                                         className="h-5 w-5 mr-2"
                                     />
@@ -118,7 +119,7 @@ const UserIcon = () => {
                                         onClick={handleSales}
                                     >
                                         <img
-                                            src="/icons/sales.svg"
+                                            src="public\icons\venta.png"
                                             alt="Sales Icon"
                                             className="h-5 w-5 mr-2"
                                         />
@@ -131,7 +132,7 @@ const UserIcon = () => {
                                     onClick={handleMyProducts}
                                 >
                                     <img
-                                        src="/icons/orders.svg"
+                                        src="public\icons\tienda (1).png"
                                         alt="Orders Icon"
                                         className="h-5 w-5 mr-2"
                                     />
