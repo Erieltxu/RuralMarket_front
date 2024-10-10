@@ -24,6 +24,7 @@ import Order from '../components/cart/Order';
 import OrderSeller from "../components/OrderSeller";
 import Confirmation from '../components/cart/Confirmation';
 import Suborders from "../components/Suborders";
+import MyProduct from "../components/navbar/MyProduct";
 
 const handleLogout = () => {
 
@@ -135,6 +136,10 @@ const router = createBrowserRouter([
       {
         path: 'ventas', 
         element: <Suborders />,
+      },
+      {
+        path: 'mis-productos', 
+        element: <MyProduct/>,
       },
     ],
   },
