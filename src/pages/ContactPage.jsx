@@ -4,7 +4,7 @@ const ContactPage = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    description: ""
+    description: "",
   });
   const [submitted, setSubmitted] = useState(false);
 
@@ -21,13 +21,18 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mb-16 rounded-lg shadow-xl mt-24 border border-gray-300"> 
+    <div className="max-w-md mx-auto mb-16 rounded-lg shadow-xl mt-24 border border-gray-300">
       <div className="bg-white rounded-lg p-8">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Contacto</h2>
+        <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">
+          Contacto
+        </h2>
         {!submitted ? (
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Nombre
               </label>
               <input
@@ -42,7 +47,10 @@ const ContactPage = () => {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Correo Electrónico
               </label>
               <input
@@ -57,7 +65,10 @@ const ContactPage = () => {
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Descripción
               </label>
               <textarea

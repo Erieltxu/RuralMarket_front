@@ -1,21 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-// Función para obtener el token CSRF de las cookies
 function getCsrfToken() {
   let csrfToken = null;
-  const cookies = document.cookie.split(';');
-  cookies.forEach(cookie => {
-    if (cookie.trim().startsWith('csrftoken=')) {
-      csrfToken = cookie.split('=')[1];
+  const cookies = document.cookie.split(";");
+  cookies.forEach((cookie) => {
+    if (cookie.trim().startsWith("csrftoken=")) {
+      csrfToken = cookie.split("=")[1];
     }
   });
   return csrfToken;
 }
 
 const PasswordReset = () => {
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -25,20 +24,20 @@ const PasswordReset = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/api/users/password_reset/',
+        "http://localhost:8000/api/users/password_reset/",
         { email },
         {
           headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken, // Asegúrate de enviar el token CSRF
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
           },
-          withCredentials: true, // Asegúrate de que las cookies se envíen con la solicitud
+          withCredentials: true,
         }
       );
-      setMessage('Correo de restablecimiento de contraseña enviado.');
+      setMessage("Correo de restablecimiento de contraseña enviado.");
     } catch (error) {
-      console.error('Error al enviar correo:', error);
-      setMessage('Error al enviar el correo. Inténtalo nuevamente.');
+      console.error("Error al enviar correo:", error);
+      setMessage("Error al enviar el correo. Inténtalo nuevamente.");
     } finally {
       setLoading(false);
     }
@@ -47,10 +46,15 @@ const PasswordReset = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-12 px-4">
       <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Recuperar Contraseña</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">
+          Recuperar Contraseña
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Correo Electrónico
             </label>
             <input
@@ -67,17 +71,13 @@ const PasswordReset = () => {
             type="submit"
             disabled={loading}
             className={`w-full px-4 py-2 text-white bg-customGreen rounded-xl shadow-sm ${
-              loading ? 'bg-opacity-50' : 'hover:bg-customGreenL'
+              loading ? "bg-opacity-50" : "hover:bg-customGreenL"
             }`}
           >
-            {loading ? 'Enviando...' : 'Enviar'}
+            {loading ? "Enviando..." : "Enviar"}
           </button>
         </form>
-        {message && (
-          <p className="mt-4 text-center text-gray-700">
-            {message}
-          </p>
-        )}
+        {message && <p className="mt-4 text-center text-gray-700">{message}</p>}
       </div>
     </div>
   );
