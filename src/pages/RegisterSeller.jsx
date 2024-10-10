@@ -74,9 +74,21 @@ function RegisterSeller() {
     return passwordRegex.test(password);
   };
 
+  const validateUsername = (username) => {
+    const usernameRegex = /^[^\s]+$/; // Verifica que no haya espacios
+    return usernameRegex.test(username);
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!validateUsername(username)) {
+      setError('El nombre de usuario debe ser una sola palabra, sin espacios.');
+      setPopupMessage('El nombre de usuario debe ser una sola palabra, sin espacios.');
+      setPopupType('error');
+      setShowPopup(true);
+      return;
+  }
     // Validaciones
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden');
