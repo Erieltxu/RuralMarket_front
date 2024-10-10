@@ -229,69 +229,51 @@ const CreateProductForm = ({ addProduct }) => {
                     {errors.productName && <p className="text-red-500">{errors.productName}</p>}
                 </div>
 
-
+            {/* Campo para el precio */}
                 <div className="mb-4">
                     <label className="block text-sm font-bold mb-2">Precio</label>
-                    {productCategory === 'Servicios' || newCategory === 'Servicios' ? (
-                        <select
-                            className="w-full p-2 border rounded"
-                            value={productPrice}
-                            onChange={(e) => setProductPrice(e.target.value)}
-                        >
-                            <option value="1">Consultar con la empresa</option>
-                        </select>
-                    ) : (
-                        <input
-                            type="number"
-                            className={`w-full p-2 border rounded ${errors.productPrice ? 'border-red-500' : ''}`}
-                            value={productPrice}
-                            onChange={(e) => setProductPrice(e.target.value)}
-                            placeholder="Precio del producto"
-                            required
-                            min="0"
-                        />
-                    )}
+                    <input
+                        type="number"
+                        className={`w-full p-2 border rounded ${errors.productPrice ? 'border-red-500' : ''}`}
+                        value={productPrice}
+                        onChange={(e) => setProductPrice(e.target.value)}
+                        placeholder="Precio del producto"
+                        required
+                        min="0" 
+                        step="0.01" 
+                    />
                     {errors.productPrice && <p className="text-red-500">{errors.productPrice}</p>}
                 </div>
 
 
+           
                 <div className="mb-4">
                     <label className="block text-sm font-bold mb-2">Stock</label>
-                    {productCategory === 'Servicios' || newCategory === 'Servicios' ? (
-                        <select
-                            className="w-full p-2 border rounded"
-                            value={productStock}
-                            onChange={(e) => setProductStock(e.target.value)}
-                        >
-                            <option value="1">Disponible</option>
-                            <option value="0">No disponible</option>
-                        </select>
-                    ) : (
-                        <input
-                            type="number"
-                            className={`w-full p-2 border rounded ${errors.productStock ? 'border-red-500' : ''}`}
-                            value={productStock}
-                            onChange={(e) => setProductStock(e.target.value)}
-                            placeholder="Stock del producto"
-                            required
-                            min="0"
-                        />
-                    )}
+                    <input
+                        type="number"
+                        className={`w-full p-2 border rounded ${errors.productStock ? 'border-red-500' : ''}`}
+                        value={productStock}
+                        onChange={(e) => setProductStock(e.target.value)}
+                        placeholder="Stock del producto"
+                        required
+                        min="0"  
+                    />
                     {errors.productStock && <p className="text-red-500">{errors.productStock}</p>}
                 </div>
 
 
-                <div className="mb-4">
-                    <label className="block text-sm font-bold mb-2">Descripción del Producto</label>
-                    <textarea
-                        className={`w-full p-2 border rounded ${errors.productDescription ? 'border-red-500' : ''}`}
-                        value={productDescription}
-                        onChange={(e) => setProductDescription(e.target.value)}
-                        placeholder="Escribe una breve descripción del producto"
-                        required
-                    />
-                    {errors.productDescription && <p className="text-red-500">{errors.productDescription}</p>}
-                </div>
+           
+            <div className="mb-4">
+                <label className="block text-sm font-bold mb-2">Descripción del Producto</label>
+                <textarea
+                    className={`w-full p-2 border rounded ${errors.productDescription ? 'border-red-500' : ''}`}
+                    value={productDescription}
+                    onChange={(e) => setProductDescription(e.target.value)}
+                    placeholder="Escribe una breve descripción del producto"
+                    required
+                />
+                {errors.productDescription && <p className="text-red-500">{errors.productDescription}</p>}
+            </div>
 
 
                 <div className="mb-4">

@@ -21,7 +21,7 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mb-16 rounded-lg shadow-xl mt-16 border border-gray-300"> 
+    <div className="max-w-md mx-auto mb-16 rounded-lg shadow-xl mt-24 border border-gray-300"> 
       <div className="bg-white rounded-lg p-8">
         <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Contacto</h2>
         {!submitted ? (

@@ -12,18 +12,6 @@ const UserIcon = () => {
         checkAuthentication();
     }, []);
 
-    useEffect(() => {
-        const handleStorageChange = () => {
-            checkAuthentication();
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-        };
-    }, []);
-
     const checkAuthentication = () => {
         const token = localStorage.getItem('token');
         const type = localStorage.getItem('user_type');
@@ -48,10 +36,10 @@ const UserIcon = () => {
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user_type');
-        window.dispatchEvent(new Event('storage'));
+        setIsAuthenticated(false);
         setShowDropdown(false);
         navigate('/');
-        window.location.reload();
+        window.location.reload(); // Recargar para asegurarnos de que el estado se restablezca correctamente
     };
 
     const handleSettings = () => {
@@ -60,12 +48,12 @@ const UserIcon = () => {
     };
 
     const handleOrders = () => {
-        navigate('/pedidos'); // Ruta para ver los pedidos del comprador
+        navigate('/pedidos');
         setShowDropdown(false);
     };
 
     const handleSales = () => {
-        navigate('/ventas'); // Ruta para ver las ventas del vendedor
+        navigate('/ventas');
         setShowDropdown(false);
     };
 
@@ -87,7 +75,7 @@ const UserIcon = () => {
             <img
                 src="../../../public/img/user-icon.svg"
                 alt="User Icon"
-                className="h-6 w-6 cursor-pointer"
+                className="h-6 w-6 cursor-pointer text-black"
                 onClick={toggleDropdown}
             />
 
@@ -124,7 +112,7 @@ const UserIcon = () => {
                                         onClick={handleSales}
                                     >
                                         <img
-                                            src="/icons/sales.svg" // Asegúrate de tener un ícono para ventas
+                                            src="/icons/sales.svg"
                                             alt="Sales Icon"
                                             className="h-5 w-5 mr-2"
                                         />
