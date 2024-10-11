@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import UseApi from '../../services/useApi';
 import { PRODUCT, USER_DETAIL } from '../../config/urls';
-
-
-import { useNavigate } from 'react-router-dom'; 
-
+import { useNavigate } from 'react-router-dom';  // Asegúrate de tener esta importación
 
 const MyProducts = () => {
     const navigate = useNavigate();
@@ -57,23 +54,45 @@ const MyProducts = () => {
     };
 
     return (
-        <div className="max-w-2xl mx-auto p-4">
-            <h2 className="text-lg font-bold mb-4">Mis Productos</h2>
+        <div className="max-w-7xl mx-auto p-4 mt-10 ml-6 mr-6"> {/* Añadido ml-6 y mr-6 para márgenes */}
+            <h2 className="text-2xl font-bold mb-4">Mis Productos</h2> {/* Texto más grande con text-2xl */}
             {products.length > 0 ? (
-                <ul className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4"> {/* gap-4 para ajustar el espacio entre tarjetas */}
                     {products.map((product) => (
-                        <li key={product.id} className="border p-4 rounded shadow">
-                            <h3 className="font-bold">{product.name}</h3>
-                            <p>Precio: {product.price} €</p>
-                            <p>Cantidad: {product.stock}</p>
-                            {product.photo && <img src={product.photo} alt={product.name} className="w-full h-40 object-cover mb-3 rounded-md cursor-pointer" />}
-                            <div className="flex space-x-2 mt-2">
-                                <button onClick={() => handleEdit(product.id)} className="bg-blue-500 text-white px-2 py-1 rounded">Editar</button>
-                                <button onClick={() => handleDelete(product.id)} className="bg-red-500 text-white px-2 py-1 rounded">Eliminar</button>
+                        <div key={product.id} className="border p-2 rounded shadow flex flex-col justify-between h-full w-full">
+                            <div>
+                                <h3 className="font-bold mb-2 min-h-[3rem]">
+                                    {product.name}
+                                </h3>
+                                {product.photo && (
+                                    <img
+                                        src={product.photo}
+                                        alt={product.name}
+                                        className="w-full h-40 object-cover mb-3 rounded-md cursor-pointer"
+                                    />
+                                )}
                             </div>
-                        </li>
+                            <div className="flex flex-col justify-between h-full">
+                                <p className="mb-2">Precio: {product.price} €</p>
+                                <p className="mb-2">Cantidad: {product.stock}</p>
+                                <div className="flex space-x-2 mt-2">
+                                    <button
+                                        onClick={() => handleEdit(product.id)}
+                                        className="bg-customGreen text-white px-2 py-1 rounded w-full"
+                                    >
+                                        Editar
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(product.id)}
+                                        className="bg-red-500 text-white px-2 py-1 rounded w-full"
+                                    >
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     ))}
-                </ul>
+                </div>
             ) : (
                 <p>No has subido productos aún.</p>
             )}
@@ -82,4 +101,3 @@ const MyProducts = () => {
 };
 
 export default MyProducts;
-

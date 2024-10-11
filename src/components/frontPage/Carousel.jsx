@@ -78,7 +78,7 @@ const Carousel = () => {
   }, [currentIndex, totalImages]);
 
   return (
-    <div className="bg-[#00B207] bg-opacity-20 p-4 rounded-lg w-full">
+    <div className="p-6 rounded-lg w-full -mt-4">
       <h2 className="text-3xl font-bold text-center mb-4">
         Productos y Servicios
       </h2>
@@ -105,7 +105,7 @@ const Carousel = () => {
               <img
                 src={image}
                 alt={`Slide ${index}`}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover rounded-[15px]"
               />
             </div>
           ))}

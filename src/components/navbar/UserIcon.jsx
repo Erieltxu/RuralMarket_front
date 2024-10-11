@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
-const UserIcon = () => {
+const UserIcon = ({ closeMenu }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userType, setUserType] = useState(null);
-  const navigate = useNavigate();
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     checkAuthentication();
@@ -23,41 +23,35 @@ const UserIcon = () => {
     setShowDropdown(!showDropdown);
   };
 
-  const handleLogin = () => {
-    navigate("/iniciosesion");
-    setShowDropdown(false);
-  };
-
-  const handleRegister = () => {
-    navigate("/registro");
-    setShowDropdown(false);
-  };
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user_type");
     setIsAuthenticated(false);
     setIsAuthenticated(false);
     setShowDropdown(false);
+    closeMenu();
     navigate("/");
     window.location.reload();
     window.location.reload();
   };
 
+  const handleSales = () => {
+    navigate("/ventas");
+    setShowDropdown(false);
+    closeMenu();
+  };
+
   const handleSettings = () => {
     navigate("/perfil");
     setShowDropdown(false);
+    closeMenu();
   };
 
   const handleOrders = () => {
     navigate("/pedidos");
     navigate("/pedidos");
     setShowDropdown(false);
-  };
-
-  const handleSales = () => {
-    navigate("/ventas");
-    setShowDropdown(false);
+    closeMenu();
   };
 
   const handleMyProducts = () => {
@@ -88,47 +82,57 @@ const UserIcon = () => {
       />
 
       {showDropdown && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+        <div className="absolute left mt-2 w-40 bg-white rounded-md shadow-lg z-20">
           <ul className="py-1 text-gray-700">
             {isAuthenticated ? (
               <>
-                <li
-                  className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                  onClick={handleSettings}
-                >
-                  <img
-                    src="/icons/settings.svg"
-                    alt="Settings Icon"
-                    className="h-5 w-5 mr-2"
-                  />
-                  Configuración
-                </li>
-                <li
-                  className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                  onClick={handleOrders}
-                >
-                  <img
-                    src="public\icons\compras.png"
-                    alt="Orders Icon"
-                    className="h-5 w-5 mr-2"
-                  />
-                  Mis pedidos
-                </li>
-                {userType === "seller" && (
-                  <li
-                    className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                    onClick={handleSales}
+                <li className="flex items-center px-4 py-2 cursor-pointer hover:text-customHoverColorLila">
+                  <Link
+                    to="/perfil"
+                    onClick={closeMenu}
+                    className="flex items-center"
                   >
                     <img
-                      src="public\icons\venta.png"
-                      alt="Sales Icon"
+                      src="public\icons\settings.svg" 
+                      alt="Settings Icon"
                       className="h-5 w-5 mr-2"
                     />
-                    Mis ventas
+                    Configuración
+                  </Link>
+                </li>
+                <li className="flex items-center px-4 py-2 cursor-pointer hover:text-customHoverColorLila">
+                  <Link
+                    to="/pedidos"
+                    onClick={closeMenu}
+                    className="flex items-center"
+                  >
+                    <img
+                      src="public\icons\compras.png"
+                      alt="Orders Icon"
+                      className="h-5 w-5 mr-2"
+                    />
+                    Mis pedidos
+                  </Link>
+                </li>
+                {userType === "seller" && (
+                  <li className="flex items-center px-4 py-2 cursor-pointer hover:text-customHoverColorLila">
+                    <Link
+                      to="/ventas"
+                      onClick={closeMenu}
+                      className="flex items-center"
+                    >
+                      <img
+                        src="public\icons\venta.png"
+                        alt="Sales Icon"
+                        className="h-5 w-5 mr-2"
+                      />
+                      Mis ventas
+                    </Link>
                   </li>
                 )}
+                {userType === "seller" && (
                 <li
-                  className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                  className="flex items-center px-4 py-2 cursor-pointer hover:text-customHoverColorLila"
                   onClick={handleMyProducts}
                 >
                   <img
@@ -138,31 +142,45 @@ const UserIcon = () => {
                   />
                   Mis productos
                 </li>
-                <li
-                  className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
-                  onClick={handleLogout}
-                >
-                  <img
-                    src="/icons/logout.svg"
-                    alt="Logout Icon"
-                    className="h-5 w-5 mr-2"
-                  />
-                  Cerrar sesión
+                )}
+                <li className="flex items-center px-4 py-2 cursor-pointer hover:text-customHoverColorLila">
+                  <Link
+                    to="/"
+                    onClick={handleLogout}
+                    className="flex items-center"
+                  >
+                    <img
+                      src="/icons/logout.svg"
+                      alt="Logout Icon"
+                      className="h-5 w-5 mr-2"
+                    />
+                    Cerrar sesión
+                  </Link>
                 </li>
               </>
             ) : (
               <>
-                <li
-                  className="block px-4 py-2 cursor-pointer hover:bg-gray-100"
-                  onClick={handleLogin}
-                >
-                  Inicia sesión
+                <li className="block px-4 py-2 cursor-pointer hover:text-customHoverColorLila">
+                  <Link
+                    to="/iniciosesion"
+                    onClick={() => {
+                      closeMenu();
+                      setShowDropdown(false);
+                    }}
+                  >
+                    Inicia sesión
+                  </Link>
                 </li>
-                <li
-                  className="block px-4 py-2 cursor-pointer hover:bg-gray-100"
-                  onClick={handleRegister}
-                >
-                  Regístrate
+                <li className="block px-4 py-2 cursor-pointer hover:text-customHoverColorLila">
+                  <Link
+                    to="/registro"
+                    onClick={() => {
+                      closeMenu();
+                      setShowDropdown(false);
+                    }}
+                  >
+                    Regístrate
+                  </Link>
                 </li>
               </>
             )}

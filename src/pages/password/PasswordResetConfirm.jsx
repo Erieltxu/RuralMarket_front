@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
 const PasswordResetConfirm = () => {
   const { uid, token } = useParams();
   const [newPassword, setNewPassword] = useState("");
-  const [submitRequest, setSubmitRequest] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -21,6 +20,7 @@ const PasswordResetConfirm = () => {
 
     try {
       const response = await axios.post(
+        `http://localhost:8000/api/users/password_reset_confirm/`,
         `http://localhost:8000/api/users/password_reset_confirm/`,
         {
           uid,
@@ -44,23 +44,40 @@ const PasswordResetConfirm = () => {
   };
 
   return (
-    <div>
-      <h2>Restablecer Contraseña</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Nueva Contraseña:
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
-        </label>
-        <button type="submit" disabled={loading}>
-          {loading ? "Restableciendo..." : "Restablecer"}
-        </button>
-      </form>
-      {message && <p>{message}</p>}
+    <div className="max-w-md mx-auto mb-16 rounded-lg shadow-xl mt-24 border border-gray-300">
+      <div className="bg-white rounded-lg p-8">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">
+          Restablecer Contraseña
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label
+              htmlFor="newPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Nueva Contraseña:
+            </label>
+            <input
+              type="password"
+              id="newPassword"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full px-4 py-2 text-white bg-customGreen rounded-xl shadow-sm ${
+              loading ? "bg-opacity-50" : "hover:bg-customGreenL"
+            }`}
+          >
+            {loading ? "Restableciendo..." : "Restablecer"}
+          </button>
+        </form>
+        {message && <p className="mt-4 text-center text-gray-700">{message}</p>}
+      </div>
     </div>
   );
 };

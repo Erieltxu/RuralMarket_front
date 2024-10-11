@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 function getCsrfToken() {
@@ -44,12 +44,12 @@ const PasswordReset = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-12 px-4">
-      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">
+    <div className="max-w-md mx-auto mb-16 rounded-lg shadow-xl mt-24 border border-gray-300">
+      <div className="bg-white rounded-lg p-8">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">
           Recuperar Contraseña
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label
               htmlFor="email"
@@ -64,18 +64,20 @@ const PasswordReset = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
           </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full px-4 py-2 text-white bg-customGreen rounded-xl shadow-sm ${
-              loading ? "bg-opacity-50" : "hover:bg-customGreenL"
-            }`}
-          >
-            {loading ? "Enviando..." : "Enviar"}
-          </button>
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              disabled={loading}
+              className={`flex w-full justify-center rounded-xl bg-customGreen px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-customGreenL ${
+                loading ? "bg-opacity-50" : ""
+              }`}
+            >
+              {loading ? "Enviando..." : "Enviar"}
+            </button>
+          </div>
         </form>
         {message && <p className="mt-4 text-center text-gray-700">{message}</p>}
       </div>

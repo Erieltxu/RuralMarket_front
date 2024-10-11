@@ -33,7 +33,7 @@ const FrontPagePhoto = () => {
             <ButtonGreen
               backgroundColor="bg-customGreen"
               textColor="text-white"
-              onClick={() => navigate("/product")}
+              onClick={() => navigate("/store")}
               className="px-4 py-2 text-md"
             >
               Compra ahora →
@@ -44,7 +44,7 @@ const FrontPagePhoto = () => {
             <ButtonGreen
               backgroundColor="bg-white"
               textColor="text-customGreen"
-              onClick={() => navigate("/product")}
+              onClick={() => navigate("/store")}
               className="px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 text-base sm:text-lg md:text-xl -mt-8"
             >
               Compra ahora →
@@ -101,14 +101,6 @@ const FrontPagePhoto = () => {
             <FrontPageCarousel images={images} />
           </div>
         </div>
-      </div>
-
-      <div className="justify-center container mx-auto flex -mt-10">
-        <img
-          src="/img/SectionHeading 2.png"
-          alt="icono header"
-          className="w-full h-auto object-cover rounded-lg items-center"
-        />
       </div>
     </div>
   );
