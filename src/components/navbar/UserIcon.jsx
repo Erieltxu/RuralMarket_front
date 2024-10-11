@@ -1,65 +1,65 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 const UserIcon = () => {
-    const [showDropdown, setShowDropdown] = useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [userType, setUserType] = useState(null);
-    const navigate = useNavigate();
-    const dropdownRef = useRef(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userType, setUserType] = useState(null);
+  const navigate = useNavigate();
+  const dropdownRef = useRef(null);
 
-    useEffect(() => {
-        checkAuthentication();
-    }, []);
+  useEffect(() => {
+    checkAuthentication();
+  }, []);
 
-    const checkAuthentication = () => {
-        const token = localStorage.getItem('token');
-        const type = localStorage.getItem('user_type');
-        setIsAuthenticated(!!token);
-        setUserType(type);
-    };
+  const checkAuthentication = () => {
+    const token = localStorage.getItem("token");
+    const type = localStorage.getItem("user_type");
+    setIsAuthenticated(!!token);
+    setUserType(type);
+  };
 
-    const toggleDropdown = () => {
-        setShowDropdown(!showDropdown);
-    };
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
 
-    const handleLogin = () => {
-        navigate('/iniciosesion');
-        setShowDropdown(false);
-    };
+  const handleLogin = () => {
+    navigate("/iniciosesion");
+    setShowDropdown(false);
+  };
 
-    const handleRegister = () => {
-        navigate('/registro');
-        setShowDropdown(false);
-    };
+  const handleRegister = () => {
+    navigate("/registro");
+    setShowDropdown(false);
+  };
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user_type');
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user_type");
         setIsAuthenticated(false);
-        setIsAuthenticated(false);
-        setShowDropdown(false);
-        navigate('/');
+    setIsAuthenticated(false);
+    setShowDropdown(false);
+    navigate("/");
+    window.location.reload();
         window.location.reload(); // Recargar para asegurarnos de que el estado se restablezca correctamente
-        window.location.reload(); // Recargar para asegurarnos de que el estado se restablezca correctamente
-    };
+  };
 
-    const handleSettings = () => {
-        navigate('/perfil');
-        setShowDropdown(false);
-    };
+  const handleSettings = () => {
+    navigate("/perfil");
+    setShowDropdown(false);
+  };
 
-    const handleOrders = () => {
+  const handleOrders = () => {
         navigate('/pedidos');
-        navigate('/pedidos');
-        setShowDropdown(false);
-    };
+    navigate("/pedidos");
+    setShowDropdown(false);
+  };
 
-    const handleSales = () => {
-        navigate('/ventas');
-        setShowDropdown(false);
-    };
+  const handleSales = () => {
+    navigate("/ventas");
+    setShowDropdown(false);
+  };
 
     const handleMyProducts = () => {
         navigate('/mis-productos');  
@@ -67,28 +67,28 @@ const UserIcon = () => {
     };
     
 
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setShowDropdown(false);
-            }
-        };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
 
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
-    return (
-        <div className="relative mx-4" ref={dropdownRef}>
-            <img
-                src="../../../public/img/user-icon.svg"
-                alt="User Icon"
-                className="h-6 w-6 cursor-pointer text-black"
+  return (
+    <div className="relative mx-4" ref={dropdownRef}>
+      <img
+        src="../../../public/img/user-icon.svg"
+        alt="User Icon"
+        className="h-6 w-6 cursor-pointer text-black"
                 
-                onClick={toggleDropdown}
-            />
+        onClick={toggleDropdown}
+      />
 
             {showDropdown && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
