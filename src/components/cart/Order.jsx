@@ -113,7 +113,7 @@ const Order = () => {
             <div className="mt-4 flex justify-center text-center">
               <button
                 onClick={handleSendOrder}
-                className="bg-blue-500 text-white px-4 py-2 rounded flex items-center justify-center"
+                className="bg-customGreen text-white px-4 py-2 rounded flex items-center justify-center"
                 disabled={isSubmitting}
               >
                 {isSubmitting && <Spinner />}

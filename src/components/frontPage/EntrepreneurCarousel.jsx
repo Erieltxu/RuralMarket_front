@@ -90,7 +90,7 @@ const EntrepreneurCarousel = () => {
   }, [currentIndex, totalImages]);
 
   return (
-    <div className="p-9 rounded-lg w-full -mt-4">
+    <div className="p-6 rounded-lg w-full -mt-4">
       <Link to="/nuestrasemprendedoras">
         <h2 className="text-3xl font-bold text-center mb-4 cursor-pointer">
           Nuestras Emprendedoras Rurales

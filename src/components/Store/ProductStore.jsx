@@ -156,22 +156,22 @@ function ProductStore() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto p-4 mt-12">
+    <div className="w-full px-4 mt-12">
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold">
           Catálogo de Productos y Servicios
         </h1>
       </div>
 
-      <div className="mb-8 flex justify-center">
-        <input
-          type="text"
-          placeholder="Buscar productos..."
-          className="w-1/4 p-2 border rounded-md mx-auto"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
+        <div className="mb-10 mt-15 flex justify-start">
+          <input
+            type="text"
+            placeholder="Buscar productos..."
+            className="w-1/4 p-2 border border-black rounded-md ml-72"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
 
       <div className="flex flex-col md:flex-row">
         <div className="w-full md:w-1/6 pr-4 mb-4 md:mb-0 ml-4">
@@ -232,17 +232,17 @@ function ProductStore() {
           </select>
         </div>
 
-        <div className="w-full md:w-5/6">
+        <div className="w-full ">
           {filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  handleAddToCart={handleAddToCart}
-                />
-              ))}
-            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                handleAddToCart={handleAddToCart}
+              />
+            ))}
+          </div>
           ) : (
             <p>
               No se encontraron productos que coincidan con los criterios de

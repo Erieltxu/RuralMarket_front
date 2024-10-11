@@ -27,9 +27,11 @@ const UserIcon = ({ closeMenu }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user_type");
     setIsAuthenticated(false);
+    setIsAuthenticated(false);
     setShowDropdown(false);
     closeMenu();
     navigate("/");
+    window.location.reload();
     window.location.reload();
   };
 
@@ -47,8 +49,14 @@ const UserIcon = ({ closeMenu }) => {
 
   const handleOrders = () => {
     navigate("/pedidos");
+    navigate("/pedidos");
     setShowDropdown(false);
     closeMenu();
+  };
+
+  const handleMyProducts = () => {
+    navigate("/mis-productos");
+    setShowDropdown(false);
   };
 
   useEffect(() => {
@@ -85,7 +93,7 @@ const UserIcon = ({ closeMenu }) => {
                     className="flex items-center"
                   >
                     <img
-                      src="/icons/settings.svg"
+                      src="public\icons\settings.svg" 
                       alt="Settings Icon"
                       className="h-5 w-5 mr-2"
                     />
@@ -99,7 +107,7 @@ const UserIcon = ({ closeMenu }) => {
                     className="flex items-center"
                   >
                     <img
-                      src="/icons/orders.svg"
+                      src="public\icons\compras.png"
                       alt="Orders Icon"
                       className="h-5 w-5 mr-2"
                     />
@@ -114,13 +122,26 @@ const UserIcon = ({ closeMenu }) => {
                       className="flex items-center"
                     >
                       <img
-                        src="/icons/sales.svg"
+                        src="public\icons\venta.png"
                         alt="Sales Icon"
                         className="h-5 w-5 mr-2"
                       />
                       Mis ventas
                     </Link>
                   </li>
+                )}
+                {userType === "seller" && (
+                <li
+                  className="flex items-center px-4 py-2 cursor-pointer hover:text-customHoverColorLila"
+                  onClick={handleMyProducts}
+                >
+                  <img
+                    src="public\icons\tienda (1).png"
+                    alt="Orders Icon"
+                    className="h-5 w-5 mr-2"
+                  />
+                  Mis productos
+                </li>
                 )}
                 <li className="flex items-center px-4 py-2 cursor-pointer hover:text-customHoverColorLila">
                   <Link

@@ -8,6 +8,7 @@ export const PRODUCT = `${BASE_URL}product/`;
 export const CART = `${BASE_URL}cart/cart/`;
 export const CARTITEM = `${BASE_URL}cart/cartitem/`;
 
+export const ORDER_URL = `${BASE_URL}order/order/`;
 export const ORDER_SELLER_URL = `${BASE_URL}order/seller/`;
 export const ORDERS_URL = `${BASE_URL}order/create/`;
 
