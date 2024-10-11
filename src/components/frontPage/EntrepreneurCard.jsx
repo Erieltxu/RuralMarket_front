@@ -4,7 +4,7 @@ const EntrepreneurCard = ({ name, image }) => {
       <img
         src={image}
         alt={name}
-        className="w-full h-64 object-cover rounded-lg lg:h-72 xl:h-80" // Ajuste de la altura en pantallas grandes
+        className="w-full h-64 object-cover rounded-lg lg:h-72 xl:h-80"
       />
       <div className="mt-5">
         <h3 className="text-xl font-bold">{name}</h3>

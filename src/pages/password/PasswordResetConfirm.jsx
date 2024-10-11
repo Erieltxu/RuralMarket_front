@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const PasswordResetConfirm = () => {
   const { uid, token } = useParams();
-  const [newPassword, setNewPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [newPassword, setNewPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -25,7 +25,7 @@ const PasswordResetConfirm = () => {
         {
           uid,
           token,
-          new_password: newPassword
+          new_password: newPassword,
         },
         {
           headers: {
@@ -46,10 +46,15 @@ const PasswordResetConfirm = () => {
   return (
     <div className="max-w-md mx-auto mb-16 rounded-lg shadow-xl mt-24 border border-gray-300">
       <div className="bg-white rounded-lg p-8">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Restablecer Contraseña</h2>
+        <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">
+          Restablecer Contraseña
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="newPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
               Nueva Contraseña:
             </label>
             <input
@@ -65,17 +70,13 @@ const PasswordResetConfirm = () => {
             type="submit"
             disabled={loading}
             className={`w-full px-4 py-2 text-white bg-customGreen rounded-xl shadow-sm ${
-              loading ? 'bg-opacity-50' : 'hover:bg-customGreenL'
+              loading ? "bg-opacity-50" : "hover:bg-customGreenL"
             }`}
           >
-            {loading ? 'Restableciendo...' : 'Restablecer'}
+            {loading ? "Restableciendo..." : "Restablecer"}
           </button>
         </form>
-        {message && (
-          <p className="mt-4 text-center text-gray-700">
-            {message}
-          </p>
-        )}
+        {message && <p className="mt-4 text-center text-gray-700">{message}</p>}
       </div>
     </div>
   );

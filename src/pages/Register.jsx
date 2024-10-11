@@ -176,7 +176,7 @@ function Register() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                autoComplete="username" 
+                autoComplete="username"
                 className="block w-full rounded-xl border-2 border-gray-300 py-2 px-4 text-gray-900"
               />
             </div>
@@ -197,7 +197,7 @@ function Register() {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
-                autoComplete="firstName" 
+                autoComplete="firstName"
                 className="block w-full rounded-xl border-2 border-gray-300 py-2 px-4 text-gray-900"
               />
             </div>
@@ -218,7 +218,7 @@ function Register() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 required
-                autoComplete="phone" 
+                autoComplete="phone"
                 className="block w-full rounded-xl border-2 border-gray-300 py-2 px-4 text-gray-900"
               />
             </div>
@@ -239,7 +239,7 @@ function Register() {
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 required
-                autoComplete="adress" 
+                autoComplete="adress"
                 className="block w-full rounded-xl border-2 border-gray-300 py-2 px-4 text-gray-900"
               />
             </div>
@@ -260,7 +260,7 @@ function Register() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                autoComplete="email" 
+                autoComplete="email"
                 className="block w-full rounded-xl border-2 border-gray-300 py-2 px-4 text-gray-900"
               />
             </div>
@@ -281,7 +281,7 @@ function Register() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                autoComplete="password" 
+                autoComplete="password"
                 className="block w-full rounded-xl border-2 border-gray-300 py-2 px-4 text-gray-900"
               />
               <img
@@ -308,7 +308,7 @@ function Register() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                autoComplete="password" 
+                autoComplete="password"
                 className="block w-full rounded-xl border-2 border-gray-300 py-2 px-4 text-gray-900"
               />
               <img

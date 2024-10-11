@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import { useState } from "react";
+import axios from "axios";
 
 function getCsrfToken() {
   let csrfToken = null;
@@ -28,10 +28,10 @@ const PasswordReset = () => {
         { email },
         {
           headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken, 
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
           },
-          withCredentials: true, 
+          withCredentials: true,
         }
       );
       setMessage("Correo de restablecimiento de contraseña enviado.");
@@ -46,7 +46,9 @@ const PasswordReset = () => {
   return (
     <div className="max-w-md mx-auto mb-16 rounded-lg shadow-xl mt-24 border border-gray-300">
       <div className="bg-white rounded-lg p-8">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Recuperar Contraseña</h2>
+        <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">
+          Recuperar Contraseña
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label
@@ -69,9 +71,11 @@ const PasswordReset = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`flex w-full justify-center rounded-xl bg-customGreen px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-customGreenL ${loading ? 'bg-opacity-50' : ''}`}
+              className={`flex w-full justify-center rounded-xl bg-customGreen px-4 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-customGreenL ${
+                loading ? "bg-opacity-50" : ""
+              }`}
             >
-              {loading ? 'Enviando...' : 'Enviar'}
+              {loading ? "Enviando..." : "Enviar"}
             </button>
           </div>
         </form>
