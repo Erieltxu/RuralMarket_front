@@ -1,5 +1,4 @@
 import React, { useState, useEffect, } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { PRODUCT, CATEGORIES, USER_DETAIL } from '../../config/urls';
 import ButtonGreen from '../ButtonGreen';
 import ProductDetails from '../createProduct/ProductDetails';
@@ -21,10 +20,10 @@ const CreateProductForm = ({ addProduct }) => {
     const [newCategory, setNewCategory] = useState('');
     const [newCategoryDescription, setNewCategoryDescription] = useState('');
     const [isAddingCategory, setIsAddingCategory] = useState(false);
-    const [showPopup, setShowPopup] = useState(false);  
-    const [popupMessage, setPopupMessage] = useState('');  
+    const [showPopup, setShowPopup] = useState(false);
+    const [popupMessage, setPopupMessage] = useState('');
     const [popupType, setPopupType] = useState('success');
-    const navigate = useNavigate();
+
 
     const { data: userData, loading: userLoading, error: userError } = UseApi({
         apiEndpoint: USER_DETAIL,
@@ -116,20 +115,20 @@ const CreateProductForm = ({ addProduct }) => {
             if (response && response.status === 201) {
                 console.log('Producto creado:', response.data);
                 resetForm();
-                setPopupMessage('Producto creado exitosamente.');  
-                setPopupType('success');  
-                setShowPopup(true); 
+                setPopupMessage('Producto creado exitosamente.');
+                setPopupType('success');
+                setShowPopup(true);
             } else {
                 setErrors({ api: response.data });
                 setPopupMessage('Error al crear el producto. Inténtalo nuevamente.');
-                setPopupType('error');  
-                setShowPopup(true);  
+                setPopupType('error');
+                setShowPopup(true);
             }
         } catch (error) {
             console.error('Error al crear el producto:', error);
             setErrors({ api: 'Error al crear el producto. Inténtalo nuevamente.' });
             setPopupMessage('Error al crear el producto. Inténtalo nuevamente.');
-            setPopupType('error');  
+            setPopupType('error');
             setShowPopup(true);
         }
     };
@@ -140,7 +139,9 @@ const CreateProductForm = ({ addProduct }) => {
 
     const handleAddCategory = async () => {
         if (!newCategory || !newCategoryDescription) {
-            setMessage('Por favor, completa el nombre y la descripción de la categoría.');
+            setPopupMessage('Por favor, completa el nombre y la descripción de la categoría.');
+            setPopupType('error');
+            setShowPopup(true);
             return;
         }
 
@@ -163,13 +164,24 @@ const CreateProductForm = ({ addProduct }) => {
                 setNewCategory('');
                 setNewCategoryDescription('');
                 setIsAddingCategory(false);
-                setMessage('Categoría agregada exitosamente.');
+
+                setPopupMessage('Categoría creada exitosamente.');
+                setPopupType('success');
+                setShowPopup(true);
             } else {
-                setMessage('Error al agregar la categoría. Inténtalo nuevamente.');
+                setPopupMessage('Error al agregar la categoría. Inténtalo nuevamente.');
+                setPopupType('error');
+                setShowPopup(true);
             }
         } catch (error) {
-            console.error('Error al agregar la categoría:', error.response?.data || error.message);
-            setMessage(`Error al agregar la categoría: ${error.response?.data?.message || error.message}`);
+            if (error.response && error.response.status === 400) {
+                const errorMessage = error.response.data.message || 'La categoría ya existe.';
+                setPopupMessage(`Error al agregar la categoría: ${errorMessage}`);
+            } else {
+                setPopupMessage('Error al agregar la categoría. Inténtalo nuevamente.');
+            }
+            setPopupType('error');
+            setShowPopup(true);
         }
     };
 
@@ -190,15 +202,15 @@ const CreateProductForm = ({ addProduct }) => {
     if (userError || categoriesError) return <p>Error al cargar datos: {userError?.message || categoriesError?.message}</p>;
 
     const handlePopupClose = () => {
-        setShowPopup(false);  
-        navigate('/Store');  
+        setShowPopup(false);
+        window.location.reload();
     };
     return (
         <>
             <form onSubmit={handleSubmit} className='max-w-md mx-auto p-4 mb-6 border rounded-lg shadow mt-10'>
                 {message && <p className="text-red-500">{message}</p>}
 
-                
+
                 <input type="hidden" value={seller} name="seller" />
 
                 <CategoryForm
@@ -229,7 +241,7 @@ const CreateProductForm = ({ addProduct }) => {
                     {errors.productName && <p className="text-red-500">{errors.productName}</p>}
                 </div>
 
-            {/* Campo para el precio */}
+                {/* Campo para el precio */}
                 <div className="mb-4">
                     <label className="block text-sm font-bold mb-2">Precio</label>
                     <input
@@ -239,14 +251,14 @@ const CreateProductForm = ({ addProduct }) => {
                         onChange={(e) => setProductPrice(e.target.value)}
                         placeholder="Precio del producto"
                         required
-                        min="0" 
-                        step="0.01" 
+                        min="0"
+                        step="0.01"
                     />
                     {errors.productPrice && <p className="text-red-500">{errors.productPrice}</p>}
                 </div>
 
 
-           
+
                 <div className="mb-4">
                     <label className="block text-sm font-bold mb-2">Stock</label>
                     <input
@@ -256,24 +268,24 @@ const CreateProductForm = ({ addProduct }) => {
                         onChange={(e) => setProductStock(e.target.value)}
                         placeholder="Stock del producto"
                         required
-                        min="0"  
+                        min="0"
                     />
                     {errors.productStock && <p className="text-red-500">{errors.productStock}</p>}
                 </div>
 
 
-           
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Descripción del Producto</label>
-                <textarea
-                    className={`w-full p-2 border rounded ${errors.productDescription ? 'border-red-500' : ''}`}
-                    value={productDescription}
-                    onChange={(e) => setProductDescription(e.target.value)}
-                    placeholder="Escribe una breve descripción del producto"
-                    required
-                />
-                {errors.productDescription && <p className="text-red-500">{errors.productDescription}</p>}
-            </div>
+
+                <div className="mb-4">
+                    <label className="block text-sm font-bold mb-2">Descripción del Producto</label>
+                    <textarea
+                        className={`w-full p-2 border rounded ${errors.productDescription ? 'border-red-500' : ''}`}
+                        value={productDescription}
+                        onChange={(e) => setProductDescription(e.target.value)}
+                        placeholder="Escribe una breve descripción del producto"
+                        required
+                    />
+                    {errors.productDescription && <p className="text-red-500">{errors.productDescription}</p>}
+                </div>
 
 
                 <div className="mb-4">
@@ -299,9 +311,9 @@ const CreateProductForm = ({ addProduct }) => {
             {
                 showPopup && (
                     <PopUp
-                        message={popupMessage} 
-                        type={popupType}  
-                        onClose={handlePopupClose} 
+                        message={popupMessage}
+                        type={popupType}
+                        onClose={handlePopupClose}
                     />
                 )}
         </>
