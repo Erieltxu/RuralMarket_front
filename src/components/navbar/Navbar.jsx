@@ -13,22 +13,22 @@ const Navbar = () => {
     const [loggedIn, setLoggedIn] = useState(false);
     const menuRef = useRef(null);
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        const storedUserType = localStorage.getItem('user_type');
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const storedUserType = localStorage.getItem("user_type");
 
-        if (token && storedUserType) {
-            setLoggedIn(true);
-            setUserType(storedUserType);
-        } else {
-            setLoggedIn(false);
-            setUserType(null);
-        }
-    }, []);
+    if (token && storedUserType) {
+      setLoggedIn(true);
+      setUserType(storedUserType);
+    } else {
+      setLoggedIn(false);
+      setUserType(null);
+    }
+  }, []);
 
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen);
-    };
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
     const closeMenu = () => {
         setIsMenuOpen(false);
@@ -126,3 +126,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

@@ -1,5 +1,3 @@
-import React from 'react';
-
 function PasswordResetComplete() {
   return (
     <div className="max-w-md mx-auto mb-16 rounded-lg shadow-xl mt-24 border border-gray-300">

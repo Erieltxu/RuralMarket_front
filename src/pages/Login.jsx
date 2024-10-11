@@ -1,41 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import useApi from '../services/useApi';
-import { USER_LOGIN, USER_DETAIL } from '../config/urls';
-import eyeIcon from '/icons/eye.svg';
-import eyeOffIcon from '/icons/eye-off.svg';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import useApi from "../services/useApi";
+import { USER_LOGIN, USER_DETAIL } from "../config/urls";
+import eyeIcon from "/icons/eye.svg";
+import eyeOffIcon from "/icons/eye-off.svg";
 
 function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [userType, setUserType] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const { data, loading, error: apiError } = useApi({
+  const {
+    data,
+    loading,
+    error: apiError,
+  } = useApi({
     apiEndpoint: submitted ? USER_LOGIN : null,
-    method: 'POST',
+    method: "POST",
     body: { username, password },
-    headers: { 'Content-Type': 'application/json' },
+    headers: { "Content-Type": "application/json" },
   });
 
   useEffect(() => {
     if (data && data.token) {
-      localStorage.setItem('token', data.token);
-      console.log("Token almacenado en localStorage:", localStorage.getItem('token'));
-      window.dispatchEvent(new Event('storage'));
+      localStorage.setItem("token", data.token);
+      console.log(
+        "Token almacenado en localStorage:",
+        localStorage.getItem("token")
+      );
+      window.dispatchEvent(new Event("storage"));
 
       const fetchUserDetails = async () => {
         const response = await fetch(USER_DETAIL, {
           headers: {
-            'Authorization': `Token ${data.token}`,
+            Authorization: `Token ${data.token}`,
           },
         });
         const userDetails = await response.json();
-        localStorage.setItem('user_type', userDetails.user_type);
-        window.location.href = '/';
+        localStorage.setItem("user_type", userDetails.user_type);
+        window.location.href = "/";
       };
 
       fetchUserDetails();
@@ -44,7 +51,9 @@ function Login() {
 
   useEffect(() => {
     if (apiError) {
-      setError('Error en el login: ' + (apiError.message || 'Inténtalo de nuevo.'));
+      setError(
+        "Error en el login: " + (apiError.message || "Inténtalo de nuevo.")
+      );
       setSubmitted(false);
     }
   }, [apiError]);
@@ -55,11 +64,11 @@ function Login() {
   };
 
   const handleRegisterRedirect = () => {
-    navigate('/registro');
+    navigate("/registro");
   };
 
   const handleForgotPassword = () => {
-    navigate('/password_reset'); 
+    navigate("/password_reset");
   };
 
   const togglePasswordVisibility = () => {
@@ -67,15 +76,18 @@ function Login() {
   };
 
   return (
-    <div className="max-w-md mx-auto mb-16 mt-24"> 
-      <div className="bg-white shadow-xl border border-gray-300 rounded-lg p-8"> 
+    <div className="max-w-md mx-auto mb-16 mt-24">
+      <div className="bg-white shadow-xl border border-gray-300 rounded-lg p-8">
         <h2 className="text-2xl font-bold leading-9 tracking-tight text-gray-900 text-center mb-4">
           Iniciar sesión
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
               Nombre de usuario
             </label>
             <div className="mt-2">
@@ -94,14 +106,17 @@ function Login() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
               Contraseña
             </label>
             <div className="mt-2 relative">
               <input
                 id="password"
                 name="password"
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 placeholder="Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -119,7 +134,9 @@ function Login() {
           </div>
 
           {error && <p className="text-sm text-red-600">{error}</p>}
-          {loading && <p className="text-sm text-gray-600">Iniciando sesión...</p>}
+          {loading && (
+            <p className="text-sm text-gray-600">Iniciando sesión...</p>
+          )}
 
           <div>
             <button
@@ -133,7 +150,7 @@ function Login() {
 
           <div className="mt-4 text-center">
             <p className="text-sm text-gray-600">
-              ¿No tienes una cuenta?{' '}
+              ¿No tienes una cuenta?{" "}
               <span
                 onClick={handleRegisterRedirect}
                 className="font-bold cursor-pointer text-customPink"
@@ -145,7 +162,7 @@ function Login() {
 
           <div className="mt-2 text-center">
             <p className="text-sm text-gray-600">
-              ¿Ha olvidado su contraseña?{' '}
+              ¿Ha olvidado su contraseña?{" "}
               <span
                 onClick={handleForgotPassword}
                 className="font-bold cursor-pointer text-customPink"

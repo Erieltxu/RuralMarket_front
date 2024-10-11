@@ -13,13 +13,14 @@ const PasswordResetConfirm = () => {
     setLoading(true);
 
     if (newPassword.length < 6) {
-      setMessage('La contraseña debe tener al menos 6 caracteres.');
+      setMessage("La contraseña debe tener al menos 6 caracteres.");
       setLoading(false);
       return;
     }
 
     try {
       const response = await axios.post(
+        `http://localhost:8000/api/users/password_reset_confirm/`,
         `http://localhost:8000/api/users/password_reset_confirm/`,
         {
           uid,
@@ -28,15 +29,15 @@ const PasswordResetConfirm = () => {
         },
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             withCredentials: true,
-          }
+          },
         }
       );
-      setMessage('Contraseña restablecida correctamente.');
+      setMessage("Contraseña restablecida correctamente.");
     } catch (error) {
-      console.error('Error al restablecer la contraseña:', error);
-      setMessage('Error al restablecer la contraseña. Inténtalo nuevamente.');
+      console.error("Error al restablecer la contraseña:", error);
+      setMessage("Error al restablecer la contraseña. Inténtalo nuevamente.");
     } finally {
       setLoading(false);
     }

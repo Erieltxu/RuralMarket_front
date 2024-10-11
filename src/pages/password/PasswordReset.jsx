@@ -3,18 +3,18 @@ import axios from 'axios';
 
 function getCsrfToken() {
   let csrfToken = null;
-  const cookies = document.cookie.split(';');
-  cookies.forEach(cookie => {
-    if (cookie.trim().startsWith('csrftoken=')) {
-      csrfToken = cookie.split('=')[1];
+  const cookies = document.cookie.split(";");
+  cookies.forEach((cookie) => {
+    if (cookie.trim().startsWith("csrftoken=")) {
+      csrfToken = cookie.split("=")[1];
     }
   });
   return csrfToken;
 }
 
 const PasswordReset = () => {
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -24,7 +24,7 @@ const PasswordReset = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/api/users/password_reset/',
+        "http://localhost:8000/api/users/password_reset/",
         { email },
         {
           headers: {
@@ -34,10 +34,10 @@ const PasswordReset = () => {
           withCredentials: true, 
         }
       );
-      setMessage('Correo de restablecimiento de contraseña enviado.');
+      setMessage("Correo de restablecimiento de contraseña enviado.");
     } catch (error) {
-      console.error('Error al enviar correo:', error);
-      setMessage('Error al enviar el correo. Inténtalo nuevamente.');
+      console.error("Error al enviar correo:", error);
+      setMessage("Error al enviar el correo. Inténtalo nuevamente.");
     } finally {
       setLoading(false);
     }
@@ -49,7 +49,10 @@ const PasswordReset = () => {
         <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Recuperar Contraseña</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Correo Electrónico
             </label>
             <input
@@ -72,11 +75,7 @@ const PasswordReset = () => {
             </button>
           </div>
         </form>
-        {message && (
-          <p className="mt-4 text-center text-gray-700">
-            {message}
-          </p>
-        )}
+        {message && <p className="mt-4 text-center text-gray-700">{message}</p>}
       </div>
     </div>
   );

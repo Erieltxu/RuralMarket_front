@@ -8,16 +8,16 @@ const UserIcon = ({ closeMenu }) => {
     const dropdownRef = useRef(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        checkAuthentication();
-    }, []);
+  useEffect(() => {
+    checkAuthentication();
+  }, []);
 
-    const checkAuthentication = () => {
-        const token = localStorage.getItem('token');
-        const type = localStorage.getItem('user_type');
-        setIsAuthenticated(!!token);
-        setUserType(type);
-    };
+  const checkAuthentication = () => {
+    const token = localStorage.getItem("token");
+    const type = localStorage.getItem("user_type");
+    setIsAuthenticated(!!token);
+    setUserType(type);
+  };
 
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
@@ -51,27 +51,27 @@ const UserIcon = ({ closeMenu }) => {
         closeMenu(); // Cerrar el menú hamburguesa
     };
 
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setShowDropdown(false);
-            }
-        };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
 
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
-    return (
-        <div className="relative mx-4" ref={dropdownRef}>
-            <img
-                src="../../../public/img/user-icon.svg"
-                alt="User Icon"
-                className="h-6 w-6 cursor-pointer text-black"
-                onClick={toggleDropdown}
-            />
+  return (
+    <div className="relative mx-4" ref={dropdownRef}>
+      <img
+        src="../../../public/img/user-icon.svg"
+        alt="User Icon"
+        className="h-6 w-6 cursor-pointer text-black"
+        onClick={toggleDropdown}
+      />
 
             {showDropdown && (
                 <div className="absolute left mt-2 w-40 bg-white rounded-md shadow-lg z-20">
