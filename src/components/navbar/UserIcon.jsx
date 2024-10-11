@@ -37,8 +37,10 @@ const UserIcon = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user_type");
     setIsAuthenticated(false);
+    setIsAuthenticated(false);
     setShowDropdown(false);
     navigate("/");
+    window.location.reload();
     window.location.reload();
   };
 
@@ -49,11 +51,17 @@ const UserIcon = () => {
 
   const handleOrders = () => {
     navigate("/pedidos");
+    navigate("/pedidos");
     setShowDropdown(false);
   };
 
   const handleSales = () => {
     navigate("/ventas");
+    setShowDropdown(false);
+  };
+
+  const handleMyProducts = () => {
+    navigate("/mis-productos");
     setShowDropdown(false);
   };
 
@@ -100,7 +108,7 @@ const UserIcon = () => {
                   onClick={handleOrders}
                 >
                   <img
-                    src="/icons/orders.svg"
+                    src="public\icons\compras.png"
                     alt="Orders Icon"
                     className="h-5 w-5 mr-2"
                   />
@@ -112,13 +120,24 @@ const UserIcon = () => {
                     onClick={handleSales}
                   >
                     <img
-                      src="/icons/sales.svg"
+                      src="public\icons\venta.png"
                       alt="Sales Icon"
                       className="h-5 w-5 mr-2"
                     />
                     Mis ventas
                   </li>
                 )}
+                <li
+                  className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+                  onClick={handleMyProducts}
+                >
+                  <img
+                    src="public\icons\tienda (1).png"
+                    alt="Orders Icon"
+                    className="h-5 w-5 mr-2"
+                  />
+                  Mis productos
+                </li>
                 <li
                   className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
                   onClick={handleLogout}
