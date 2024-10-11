@@ -1,54 +1,72 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import useApi from '../services/useApi';
-import { USERS_REGISTER } from '../config/urls';
-import { checkUsernameExists, checkEmailExists, checkFirstNameExists } from '../services/userService';
-import arrowIcon from '/icons/arrow.svg';
-import eyeIcon from '/icons/eye.svg';
-import eyeOffIcon from '/icons/eye-off.svg';
-import PopUp from '../components/PopUp';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import useApi from "../services/useApi";
+import { USERS_REGISTER } from "../config/urls";
+import {
+  checkUsernameExists,
+  checkEmailExists,
+  checkFirstNameExists,
+} from "../services/userService";
+import arrowIcon from "/icons/arrow.svg";
+import eyeIcon from "/icons/eye.svg";
+import eyeOffIcon from "/icons/eye-off.svg";
+import PopUp from "../components/PopUp";
 
 function Register() {
-  const [username, setUsername] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [userType] = useState('buyer');
+  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [userType] = useState("buyer");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [showPopup, setShowPopup] = useState(false);
-  const [popupMessage, setPopupMessage] = useState('');
-  const [popupType, setPopupType] = useState('');
+  const [popupMessage, setPopupMessage] = useState("");
+  const [popupType, setPopupType] = useState("");
   const navigate = useNavigate();
 
-  const { data, loading, error: apiError } = useApi({
+  const {
+    data,
+    loading,
+    error: apiError,
+  } = useApi({
     apiEndpoint: submitted ? USERS_REGISTER : null,
-    method: 'POST',
-    body: { username, first_name: firstName, phone, address, email, password, user_type: userType },
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    body: {
+      username,
+      first_name: firstName,
+      phone,
+      address,
+      email,
+      password,
+      user_type: userType,
+    },
+    headers: { "Content-Type": "application/json" },
   });
 
   useEffect(() => {
     if (data) {
-      setPopupMessage('¡Cuenta creada con éxito!');
-      setPopupType('success');
+      setPopupMessage("¡Cuenta creada con éxito!");
+      setPopupType("success");
       setShowPopup(true);
 
       setTimeout(() => {
-        navigate('/iniciosesion');
+        navigate("/iniciosesion");
       }, 2000);
     }
   }, [data, navigate]);
 
   useEffect(() => {
     if (apiError) {
-      setPopupMessage(apiError.message || 'Error en el registro. Inténtalo de nuevo.');
-      setPopupType('error');
+      setPopupMessage(
+        apiError.message || "Error en el registro. Inténtalo de nuevo."
+      );
+      setPopupType("error");
       setShowPopup(true);
     }
   }, [apiError]);
@@ -56,11 +74,10 @@ function Register() {
   const validatePassword = () => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
     return passwordRegex.test(password);
-    
   };
 
   const validateUsername = (username) => {
-    const usernameRegex = /^[^\s]+$/; // Verifica que no haya espacios
+    const usernameRegex = /^[^\s]+$/;
     return usernameRegex.test(username);
   };
 
@@ -68,41 +85,45 @@ function Register() {
     e.preventDefault();
 
     if (!validateUsername(username)) {
-      setError('El nombre de usuario debe ser una sola palabra, sin espacios.');
-      setPopupMessage('El nombre de usuario debe ser una sola palabra, sin espacios.');
-      setPopupType('error');
+      setError("El nombre de usuario debe ser una sola palabra, sin espacios.");
+      setPopupMessage(
+        "El nombre de usuario debe ser una sola palabra, sin espacios."
+      );
+      setPopupType("error");
       setShowPopup(true);
       return;
-  }
+    }
 
     if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden');
-      setPopupMessage('Las contraseñas no coinciden');
-      setPopupType('error');
+      setError("Las contraseñas no coinciden");
+      setPopupMessage("Las contraseñas no coinciden");
+      setPopupType("error");
       setShowPopup(true);
       return;
     }
 
     if (!validatePassword()) {
-      setError('La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula y un número.');
-      setPopupMessage('La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula y un número.');
-      setPopupType('error');
+      setError(
+        "La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula y un número."
+      );
+      setPopupMessage(
+        "La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula y un número."
+      );
+      setPopupType("error");
       setShowPopup(true);
       return;
     }
 
     try {
-    
       await checkUsernameExists(username);
       await checkEmailExists(email);
       await checkFirstNameExists(firstName);
 
-    
       setSubmitted(true);
     } catch (error) {
       setError(error.message);
       setPopupMessage(error.message);
-      setPopupType('error');
+      setPopupType("error");
       setShowPopup(true);
     }
   };
@@ -116,11 +137,11 @@ function Register() {
   };
 
   const handleBackToHome = () => {
-    navigate('/');
+    navigate("/");
   };
 
   const handleLoginRedirect = () => {
-    navigate('/iniciosesion');
+    navigate("/iniciosesion");
   };
 
   return (
@@ -141,7 +162,10 @@ function Register() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
               Nombre de usuario
             </label>
             <div className="mt-2">
@@ -157,9 +181,11 @@ function Register() {
             </div>
           </div>
 
-  
           <div>
-            <label htmlFor="firstName" className="block text-sm font-medium leading-6 text-gray-900">
+            <label
+              htmlFor="firstName"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
               Nombre
             </label>
             <div className="mt-2">
@@ -175,9 +201,11 @@ function Register() {
             </div>
           </div>
 
-       
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium leading-6 text-gray-900">
+            <label
+              htmlFor="phone"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
               Teléfono
             </label>
             <div className="mt-2">
@@ -194,7 +222,10 @@ function Register() {
           </div>
 
           <div>
-            <label htmlFor="address" className="block text-sm font-medium leading-6 text-gray-900">
+            <label
+              htmlFor="address"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
               Dirección
             </label>
             <div className="mt-2">
@@ -211,7 +242,10 @@ function Register() {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
               Correo electrónico
             </label>
             <div className="mt-2">
@@ -227,16 +261,18 @@ function Register() {
             </div>
           </div>
 
-          
           <div>
-            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
               Contraseña
             </label>
             <div className="relative mt-2">
               <input
                 id="password"
                 name="password"
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -252,14 +288,17 @@ function Register() {
           </div>
 
           <div>
-            <label htmlFor="confirm-password" className="block text-sm font-medium leading-6 text-gray-900">
+            <label
+              htmlFor="confirm-password"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
               Repetir contraseña
             </label>
             <div className="relative mt-2">
               <input
                 id="confirm-password"
                 name="confirm-password"
-                type={showConfirmPassword ? 'text' : 'password'}
+                type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
@@ -288,7 +327,7 @@ function Register() {
 
           <div className="mt-4 text-center">
             <p className="text-sm text-gray-600">
-              ¿Ya tienes una cuenta?{' '}
+              ¿Ya tienes una cuenta?{" "}
               <span
                 onClick={handleLoginRedirect}
                 className="font-bold cursor-pointer text-customPurple"
@@ -300,7 +339,11 @@ function Register() {
         </form>
 
         {showPopup && (
-          <PopUp message={popupMessage} type={popupType} onClose={() => setShowPopup(false)} />
+          <PopUp
+            message={popupMessage}
+            type={popupType}
+            onClose={() => setShowPopup(false)}
+          />
         )}
       </div>
     </div>
