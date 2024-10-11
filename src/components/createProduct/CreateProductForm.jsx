@@ -1,4 +1,4 @@
-import React, { useState, useEffect, } from 'react';
+import { useState, useEffect, } from 'react';
 import { PRODUCT, CATEGORIES, USER_DETAIL } from '../../config/urls';
 import ButtonGreen from '../ButtonGreen';
 import ProductDetails from '../createProduct/ProductDetails';
@@ -25,15 +25,22 @@ const CreateProductForm = ({ addProduct }) => {
     const [popupType, setPopupType] = useState('success');
 
 
-    const { data: userData, loading: userLoading, error: userError } = UseApi({
+    const {
+        data: userData,
+        loading: userLoading,
+        error: userError,
+    } = UseApi({
         apiEndpoint: USER_DETAIL,
         headers: {
-            Authorization: `Token ${localStorage.getItem('token')}`,
+            Authorization: `Token ${localStorage.getItem("token")}`,
         },
     });
 
-
-    const { data: categories, loading: categoriesLoading, error: categoriesError } = UseApi({
+    const {
+        data: categories,
+        loading: categoriesLoading,
+        error: categoriesError,
+    } = UseApi({
         apiEndpoint: CATEGORIES,
     });
 
@@ -50,26 +57,31 @@ const CreateProductForm = ({ addProduct }) => {
     const validateForm = () => {
         let formErrors = {};
 
-        if (!productName) formErrors.productName = 'El nombre del producto es obligatorio.';
+        if (!productName)
+            formErrors.productName = "El nombre del producto es obligatorio.";
 
-        if (!productCategory && !newCategory) formErrors.productCategory = 'Selecciona o agrega una categoría.';
+        if (!productCategory && !newCategory)
+            formErrors.productCategory = "Selecciona o agrega una categoría.";
 
-        if (!productDescription) formErrors.productDescription = 'La descripción del producto es obligatoria.';
+        if (!productDescription)
+            formErrors.productDescription =
+                "La descripción del producto es obligatoria.";
 
-        const isService = productCategory === 'Servicios' || newCategory === 'Servicios';
+        const isService =
+            productCategory === "Servicios" || newCategory === "Servicios";
 
         if (!isService) {
-
             if (!productPrice || isNaN(productPrice) || productPrice <= 0) {
-                formErrors.productPrice = 'El precio debe ser mayor que 0.';
+                formErrors.productPrice = "El precio debe ser mayor que 0.";
             }
 
             if (!productStock || isNaN(productStock) || productStock < 0) {
-                formErrors.productStock = 'El stock debe ser mayor o igual a 0.';
+                formErrors.productStock = "El stock debe ser mayor o igual a 0.";
             }
         }
 
-        if (!productImage) formErrors.productImage = 'Debes subir una imagen del producto.';
+        if (!productImage)
+            formErrors.productImage = "Debes subir una imagen del producto.";
 
         return formErrors;
     };
@@ -79,30 +91,32 @@ const CreateProductForm = ({ addProduct }) => {
         const formErrors = validateForm();
         if (Object.keys(formErrors).length > 0) {
             setErrors(formErrors);
-            setPopupMessage('Error al crear el producto. Verifica los campos obligatorios.');
-            setPopupType('error');
+            setPopupMessage(
+                "Error al crear el producto. Verifica los campos obligatorios."
+            );
+            setPopupType("error");
             setShowPopup(true);
             return;
         }
 
         const formData = new FormData();
-        formData.append('name', productName);
-        formData.append('category', productCategory || newCategory);
-        formData.append('description', productDescription);
+        formData.append("name", productName);
+        formData.append("category", productCategory || newCategory);
+        formData.append("description", productDescription);
 
-
-        const isService = productCategory === 'Servicios' || newCategory === 'Servicios';
+        const isService =
+            productCategory === "Servicios" || newCategory === "Servicios";
 
         if (isService) {
-            formData.append('price', 1);
-            formData.append('stock', productStock === "1" ? 1 : 0);
+            formData.append("price", 1);
+            formData.append("stock", productStock === "1" ? 1 : 0);
         } else {
-            formData.append('price', parseFloat(productPrice));
-            formData.append('stock', parseInt(productStock, 10));
+            formData.append("price", parseFloat(productPrice));
+            formData.append("stock", parseInt(productStock, 10));
         }
 
-        formData.append('seller', seller);
-        formData.append('photo', productImage);
+        formData.append("seller", seller);
+        formData.append("photo", productImage);
 
         try {
             setMessage('Creando producto...');
@@ -153,8 +167,8 @@ const CreateProductForm = ({ addProduct }) => {
 
             const response = await axios.post(CATEGORIES, newCategoryData, {
                 headers: {
-                    Authorization: `Token ${localStorage.getItem('token')}`,
-                    'Content-Type': 'application/json',
+                    Authorization: `Token ${localStorage.getItem("token")}`,
+                    "Content-Type": "application/json",
                 },
             });
 
@@ -187,19 +201,24 @@ const CreateProductForm = ({ addProduct }) => {
 
 
     const resetForm = () => {
-        setProductName('');
-        setProductCategory('');
-        setProductDescription('');
-        setProductPrice('');
-        setProductStock('');
+        setProductName("");
+        setProductCategory("");
+        setProductDescription("");
+        setProductPrice("");
+        setProductStock("");
         setProductImage(null);
-        setSeller('');
-        setMessage('');
+        setSeller("");
+        setMessage("");
         setErrors({});
     };
 
     if (userLoading || categoriesLoading) return <p>Cargando...</p>;
-    if (userError || categoriesError) return <p>Error al cargar datos: {userError?.message || categoriesError?.message}</p>;
+    if (userError || categoriesError)
+        return (
+            <p>
+                Error al cargar datos: {userError?.message || categoriesError?.message}
+            </p>
+        );
 
     const handlePopupClose = () => {
         setShowPopup(false);
@@ -227,18 +246,22 @@ const CreateProductForm = ({ addProduct }) => {
                     errors={errors}
                 />
 
-
                 <div className="mb-4">
-                    <label className="block text-sm font-bold mb-2">Nombre del Producto</label>
+                    <label className="block text-sm font-bold mb-2">
+                        Nombre del Producto
+                    </label>
                     <input
                         type="text"
-                        className={`w-full p-2 border rounded ${errors.productName ? 'border-red-500' : ''}`}
+                        className={`w-full p-2 border rounded ${errors.productName ? "border-red-500" : ""
+                            }`}
                         value={productName}
                         onChange={(e) => setProductName(e.target.value)}
                         placeholder="Nombre del producto"
                         required
                     />
-                    {errors.productName && <p className="text-red-500">{errors.productName}</p>}
+                    {errors.productName && (
+                        <p className="text-red-500">{errors.productName}</p>
+                    )}
                 </div>
 
                 {/* Campo para el precio */}
@@ -289,16 +312,19 @@ const CreateProductForm = ({ addProduct }) => {
 
 
                 <div className="mb-4">
-                    <label className="block text-sm font-bold mb-2">Imagen del Producto</label>
+                    <label className="block text-sm font-bold mb-2">
+                        Imagen del Producto
+                    </label>
                     <input
                         type="file"
                         className="w-full p-2 border rounded"
                         onChange={handleImageChange}
                         required
                     />
-                    {errors.productImage && <p className="text-red-500">{errors.productImage}</p>}
+                    {errors.productImage && (
+                        <p className="text-red-500">{errors.productImage}</p>
+                    )}
                 </div>
-
 
                 <ButtonGreen
                     backgroundColor="bg-customGreen"

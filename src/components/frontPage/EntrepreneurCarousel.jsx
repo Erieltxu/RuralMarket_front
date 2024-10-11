@@ -1,22 +1,28 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link } from 'react-router-dom';  // Importamos Link
-import EntrepreneurCard from './EntrepreneurCard';  
-import useApi from '../../services/useApi';  
-import { USERS } from '../../config/urls';  
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import EntrepreneurCard from "./EntrepreneurCard";
+import useApi from "../../services/useApi";
+import { USERS } from "../../config/urls";
 
 const EntrepreneurCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);  
-  const [isTransitioning, setIsTransitioning] = useState(true);  
-  const [visibleImages, setVisibleImages] = useState(4);  
-  const transitionDuration = 500;  
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(true);
+  const [visibleImages, setVisibleImages] = useState(4);
+  const transitionDuration = 500;
   const intervalRef = useRef(null);
 
-  const { data: users, loading, error } = useApi({
+  const {
+    data: users,
+    loading,
+    error,
+  } = useApi({
     apiEndpoint: USERS,
-    method: 'GET'
+    method: "GET",
   });
 
-  const entrepreneurs = users ? users.filter(user => user.user_type === 'seller') : [];
+  const entrepreneurs = users
+    ? users.filter((user) => user.user_type === "seller")
+    : [];
   const totalImages = entrepreneurs.length;
 
   const extendedEntrepreneurs = [...entrepreneurs, ...entrepreneurs];
@@ -24,18 +30,18 @@ const EntrepreneurCarousel = () => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 900) {
-        setVisibleImages(4);  
+        setVisibleImages(4);
       } else if (window.innerWidth >= 691 && window.innerWidth < 1000) {
-        setVisibleImages(3);  
+        setVisibleImages(3);
       } else if (window.innerWidth >= 500 && window.innerWidth < 690) {
-        setVisibleImages(2);  
+        setVisibleImages(2);
       } else {
-        setVisibleImages(1);  
+        setVisibleImages(1);
       }
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize();  
+    handleResize();
 
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -51,7 +57,7 @@ const EntrepreneurCarousel = () => {
     stopAutoSlide();
     intervalRef.current = setInterval(() => {
       nextSlide();
-    }, 3000);  
+    }, 3000);
   };
 
   const stopAutoSlide = () => {
@@ -72,21 +78,19 @@ const EntrepreneurCarousel = () => {
     if (currentIndex === totalImages) {
       setIsTransitioning(false);
       setTimeout(() => {
-        setCurrentIndex(0);  
-      }, 0); 
+        setCurrentIndex(0);
+      }, 0);
     }
 
     if (currentIndex === 0 || currentIndex !== totalImages) {
       setTimeout(() => {
         setIsTransitioning(true);
-      }, 50);  
+      }, 50);
     }
-
   }, [currentIndex, totalImages]);
 
   return (
     <div className="p-9 rounded-lg w-full -mt-4">
-      {/* Título como enlace */}
       <Link to="/nuestrasemprendedoras">
         <h2 className="text-3xl font-bold text-center mb-4 cursor-pointer">
           Nuestras Emprendedoras Rurales
@@ -95,25 +99,26 @@ const EntrepreneurCarousel = () => {
       <div className="relative w-full overflow-hidden">
         {loading && <p>Cargando emprendedoras...</p>}
         {error && <p>Error: {error}</p>}
-        
+
         <div
-          className={`flex transition-transform ease-in-out ${isTransitioning ? `duration-${transitionDuration}ms` : 'duration-0'}`}
+          className={`flex transition-transform ease-in-out ${
+            isTransitioning ? `duration-${transitionDuration}ms` : "duration-0"
+          }`}
           style={{
             transform: `translateX(-${currentIndex * (100 / visibleImages)}%)`,
-            gap: '1rem',  
+            gap: "1rem",
           }}
         >
           {extendedEntrepreneurs.map((entrepreneur, index) => (
             <div
               key={index}
-              style={{ width: `${100 / visibleImages}%` }} 
-              className="h-auto p-3 flex-shrink-0" 
+              style={{ width: `${100 / visibleImages}%` }}
+              className="h-auto p-3 flex-shrink-0"
             >
-              {/* Usamos Link para hacer la foto clickeable */}
               <Link to={`/nuestrasemprendedoras/${entrepreneur.id}`}>
                 <EntrepreneurCard
-                  name={entrepreneur.first_name}  
-                  image={entrepreneur.photo}  
+                  name={entrepreneur.first_name}
+                  image={entrepreneur.photo}
                 />
               </Link>
             </div>
