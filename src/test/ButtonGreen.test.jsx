@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from "@testing-library/react";
-import ButtonGreen from '../components/ButtonGreen';  // Ajusta la ruta según tu estructura de proyecto
+import ButtonGreen from '../components/ButtonGreen';  
 import { vi } from 'vitest';
 
 describe("ButtonGreen Component", () => {
@@ -12,7 +12,7 @@ describe("ButtonGreen Component", () => {
       </ButtonGreen>
     );
 
-    // Verificar que el texto se renderiza correctamente
+    
     expect(screen.getByText(/Click me/i)).toBeInTheDocument();
   });
 
@@ -25,11 +25,11 @@ describe("ButtonGreen Component", () => {
       </ButtonGreen>
     );
 
-    // Hacer clic en el botón
+   
     const button = screen.getByText(/Click me/i);
     fireEvent.click(button);
 
-    // Verificar que la función onClick se haya llamado
+    
     expect(onClickMock).toHaveBeenCalledTimes(1);
   });
 
@@ -40,7 +40,7 @@ describe("ButtonGreen Component", () => {
       </ButtonGreen>
     );
 
-    // Verificar que las clases dinámicas se aplican correctamente
+    
     const button = container.querySelector('button');
     expect(button).toHaveClass('bg-green-500');
     expect(button).toHaveClass('text-white');
