@@ -1,52 +1,94 @@
-# 🌾 RuralMarket Front-end
+# 🌳 Rural Market Front-end
 
-¡Bienvenid@ a RuralMarket! 🌟
+Welcome to the **Rural Market** frontend repository 🌟
 
-## Índice
+## 🌐 Table of Contents
 
-- [Descripción](#descripción)
-- [Características](#características)
-- [Tecnologías Utilizadas](#tecnologías-utilizadas)
-- [Instalación](#instalación)
-- [Uso](#uso)
-- [Pruebas](#pruebas)
-- [Contribuyendo](#contribuyendo)
-- [Licencia](#licencia)
-- [Contacto](#contacto)
+1. [Project Description](#-project-description)
+2. [Technologies Used](#-technologies-used)
+3. [Installation](#-installation)
+4. [Usage](#-usage)
+5. [Back-end Repository](#-back-end-repository)
+6. [Development Team](#-development-team)
+7. [License](#-license)
 
-## Descripción
+## 📖 Project Description
 
-**RuralMarket** es una plataforma en línea que visibiliza el trabajo, productos y servicios que desarrollan con tanto esmero las **mujeres emprendedoras** en entornos rurales.
+**RuralMarket** is an online platform that connects rural women entrepreneurs with consumers interested in quality products, promoting transparency in production and facilitating direct contact. It also fosters collaboration networks, improving service for both producers and buyers.
 
-Emprendedoras que, desde distintos puntos geográficos y entornos rurales, comparten un interés común: hacerte llegar el resultado del esfuerzo y dedicación hasta la puerta de tu casa 🏡, facilitando que productos de calidad y servicios innovadores puedan ser disfrutados por cualquier persona interesada.
+In **RuralMarket**, you can:
 
-En **RuralMarket** encontrarás:
+- Connect directly with the producers.
+- Learn about production processes with full transparency.
+- Be part of a community that fosters collaboration among entrepreneurs.
 
-- Un entorno global y cercano que permite el **contacto directo** con las productoras y gestoras.
-- Transparencia en la forma de producir y resolución de dudas **en directo**.
-- Una comunidad que crea **redes de colaboración** entre emprendedoras, mejorando el servicio para ti.
+## Features
 
-¡Esperamos que encuentres lo que buscas! 🌻
+- 🛍️ **Wide catalog** of quality products and services.
+- 💬 **Direct communication** with entrepreneurs.
+- 🌐 **User-friendly interface** accessible to all users.
+- 📱 **Responsive design** for mobile and desktop devices.
 
-## Características
+## 🛠 Technologies Used
 
-- 🛍️ **Amplio catálogo** de productos y servicios de calidad.
-- 💬 **Comunicación directa** con las emprendedoras.
-- 🌐 **Interfaz amigable** y accesible para todos los usuarios.
-- 📱 **Diseño responsivo** para dispositivos móviles y de escritorio.
+- ⚛️ **React**: Version 18.2.0.
+- 💨 **Tailwind CSS**: Version 3.3.
+- ⚡ **Vite**: Version 4.4.
+- 🧪 **Vitest**: Version 1.2.
 
-## Tecnologías Utilizadas
+## ⚙️ Installation
 
-- ⚛️ **React**: Biblioteca de JavaScript para construir interfaces de usuario.
-- 💨 **Tailwind CSS**: Framework de CSS para diseño rápido y responsivo.
-- ⚡ **Vite**: Herramienta de desarrollo y compilación ultrarrápida.
-- 🧪 **Vitest**: Framework de pruebas unitarias para proyectos con Vite.
+Follow these steps to install and run the project in your local environment:
 
-## Instalación
-
-Sigue estos pasos para instalar y ejecutar el proyecto en tu entorno local:
-
-1. **Clona el repositorio**
-
+1. **Clone the repository**
    ```bash
-   git clone https://github.com/tu-usuario/ruralmarket-frontend.git
+   https://github.com/Erieltxu/RuralMarket_front.git
+   ```
+2. **Navigate to the project directory**
+  ```bash
+   cd ruralmarket-frontend
+ ```
+4. **Install dependencies**
+  ```bash
+   npm install
+ ```
+
+## 🚀 Usage
+
+5. **To start the application in development mode**
+  ```bash
+   npm run dev
+ ```
+
+## 🧪 Test Examples with Vitest
+
+You can run unit tests with the following command:
+
+ ```bash
+npx vitest
+ ```
+
+## Back-end Repository
+
+This project works alongside the RuralMarket back-end. For access to the code and more details about the back-end, visit the following link:
+
+🔗 **RuralMarket Back-end Repository**
+
+[https://github.com/Seda07/RuralMarket_back](https://github.com/Seda07/RuralMarket_back)
+
+## 👥 Development Team
+
+| Nombre               | Rol                   | Contacto                      |
+|----------------------|-----------------------|-------------------------------|
+| Seda Gevorgian         | Scrum Manager | [GitHub](https://github.com/Seda07) |
+| Belén Sanchez         | Product Owner | [GitHub](https://github.com/Belensanchez1989) |
+| Carla Sanchez   | Desarrolladora Back End | [GitHub](https://github.com/Carlassanchez24) |
+| Gabriela Rosas        | Desarrolladora Back End       | [GitHub](https://github.com/GabyRosas) |
+| Leire Del Hoyo Aldecoa   | Desarrolladora Front End     | [GitHub](https://github.com/Erieltxu)
+| Evelyn Quevedo Garrido       | Desarrolladora Front End      | [GitHub](https://github.com/evymari)  
+
+
+## Licence
+
+**This project is licensed under Factoría F5.** 📄
+   
