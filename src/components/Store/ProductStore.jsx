@@ -120,6 +120,7 @@ function ProductStore() {
             );
             setPopupMessage("Has sobrepasado el stock disponible para este producto");
             setPopupType("error"); 
+            setShowPopup(true);
         }
     };
 
