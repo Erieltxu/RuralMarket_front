@@ -4,6 +4,7 @@ import { CART, CARTITEM } from "../../config/urls";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
@@ -51,6 +52,11 @@ const Cart = () => {
         "Error al actualizar la cantidad:",
         error.response?.data || error
       );
+      if (error.response?.data === "Stock no disponible") {
+        alert("No hay stock disponible para este producto.");
+      } else {
+        alert("Has sobrepasado el stock disponible para este producto.");
+      }
     }
   };
 

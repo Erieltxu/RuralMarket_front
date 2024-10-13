@@ -1,11 +1,11 @@
 import Cart from "../components/cart/Cart";
 
 const CartPage = () => {
-  return (
-    <>
-      <Cart />
-    </>
-  );
+    return (
+        <>
+            <Cart />
+        </>
+    );
 };
 
 export default CartPage;
