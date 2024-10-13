@@ -264,7 +264,7 @@ const CreateProductForm = ({ addProduct }) => {
                     )}
                 </div>
 
-                {/* Campo para el precio */}
+                
                 <div className="mb-4">
                     <label className="block text-sm font-bold mb-2">Precio</label>
                     <input

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import UseApi from '../../services/useApi'; // Asegúrate de que esta importación sea correcta
-import { PRODUCT } from '../../config/urls'; // Asegúrate de que esta importación sea correcta
+import UseApi from '../../services/useApi'; 
+import { PRODUCT } from '../../config/urls'; 
 
 const EditProduct = () => {
-    const { id } = useParams(); // Obtiene el ID del producto desde la URL
-    const navigate = useNavigate(); // Hook para navegar entre rutas
+    const { id } = useParams(); 
+    const navigate = useNavigate(); 
     const [product, setProduct] = useState({
         name: '',
         price: '',
@@ -13,12 +13,12 @@ const EditProduct = () => {
         photo: ''
     });
 
-    // Llama a la API para obtener los datos del producto
+    
     const { data: productData, loading, error } = UseApi({ apiEndpoint: `${PRODUCT}${id}/` });
 
     useEffect(() => {
         if (productData) {
-            // Almacena los datos del producto en el estado
+            
             setProduct({
                 name: productData.name,
                 price: productData.price,
@@ -28,45 +28,45 @@ const EditProduct = () => {
         }
     }, [productData]);
 
-    // Maneja los cambios en los campos del formulario
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setProduct(prev => ({ ...prev, [name]: value }));
     };
 
-    // Maneja el evento de guardar cambios
+    
     const handleSave = async (e) => {
         e.preventDefault();
         try {
-            const token = localStorage.getItem('token'); // Obtiene el token de localStorage
+            const token = localStorage.getItem('token'); 
 
             const response = await fetch(`${PRODUCT}${id}/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`, // Configura la cabecera de autorización
+                    'Authorization': `Bearer ${token}`, 
                 },
-                body: JSON.stringify(product), // Convierte el producto a formato JSON
+                body: JSON.stringify(product), 
             });
 
             if (!response.ok) {
-                throw new Error('Error al actualizar el producto'); // Lanza error si la respuesta no es válida
+                throw new Error('Error al actualizar el producto'); 
             }
 
-            alert('Producto actualizado con éxito'); // Muestra mensaje de éxito
-            navigate('/mis-productos'); // Redirige a la lista de productos
+            alert('Producto actualizado con éxito'); 
+            navigate('/mis-productos'); 
         } catch (err) {
-            console.error("Error al actualizar el producto:", err); // Muestra error en consola
-            alert('Error al actualizar el producto'); // Muestra mensaje de error
+            console.error("Error al actualizar el producto:", err); 
+            alert('Error al actualizar el producto'); 
         }
     };
 
-    // Muestra un mensaje de carga mientras se obtienen los datos
+    
     if (loading) {
         return <p>Cargando producto...</p>;
     }
 
-    // Muestra un mensaje de error si hubo un problema al cargar el producto
+
     if (error) {
         console.error("Error al cargar el producto:", error);
         return <p>Error al cargar el producto: {error.message}</p>;
