@@ -78,7 +78,7 @@ This project works alongside the RuralMarket back-end. For access to the code an
 
 ## 👥 Development Team
 
-| Nombre               | Rol                   | Contacto                      |
+| Name               | Rol                   | Contact                     |
 |----------------------|-----------------------|-------------------------------|
 | Seda Gevorgian         | Scrum Manager | [GitHub](https://github.com/Seda07) |
 | Belén Sanchez         | Product Owner | [GitHub](https://github.com/Belensanchez1989) |
