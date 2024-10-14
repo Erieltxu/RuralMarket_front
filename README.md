@@ -82,10 +82,10 @@ This project works alongside the RuralMarket back-end. For access to the code an
 |----------------------|-----------------------|-------------------------------|
 | Seda Gevorgian         | Scrum Manager | [GitHub](https://github.com/Seda07) |
 | Belén Sanchez         | Product Owner | [GitHub](https://github.com/Belensanchez1989) |
-| Carla Sanchez   | Desarrolladora Back End | [GitHub](https://github.com/Carlassanchez24) |
-| Gabriela Rosas        | Desarrolladora Back End       | [GitHub](https://github.com/GabyRosas) |
-| Leire Del Hoyo Aldecoa   | Desarrolladora Front End     | [GitHub](https://github.com/Erieltxu)
-| Evelyn Quevedo Garrido       | Desarrolladora Front End      | [GitHub](https://github.com/evymari)  
+| Carla Sanchez   | Back-end Developer | [GitHub](https://github.com/Carlassanchez24) |
+| Gabriela Rosas        | Back-end Developer      | [GitHub](https://github.com/GabyRosas) |
+| Leire Del Hoyo Aldecoa   | Front-end Developer     | [GitHub](https://github.com/Erieltxu)
+| Evelyn Quevedo Garrido       | Front-end Developer   | [GitHub](https://github.com/evymari)  
 
 
 ## Licence
